@@ -1,0 +1,84 @@
+@font-face {
+   font-family: "Inter";
+   src: url("fonts/InterVariable.woff2") format("woff2");
+   font-weight: 100 900;
+   font-display: swap;
+}
+:root {
+   --nav: #e5e5e5;
+   --table-head: #f2f2f2;
+   --grey-button: #d9d9d9;
+   --dark: #333333;
+   --border: #bdbdbd;
+   --error: #d32f2f;
+}
+body{
+   margin: 0;
+   font-family: "Inter", sans-serif;
+   color: black;
+}
+.navBar {
+   padding: 0 80px;
+   background-color: var(--nav);
+   height: 64px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   font-size: 18px;
+}
+.navLinks {
+   display: flex;
+   gap: 20px;
+}
+.navLinks a {
+   text-decoration: none;
+   color: var(--dark);
+}
+.navLinks a.active {
+   font-weight: bold;
+}
+
+main.config{
+   padding: 0px 80px;
+}
+h1{
+   font-size: 32px;
+   font-weight: 700;
+   margin: 32px 0px 36px;
+}
+.configTabs {
+   margin-bottom: 33px;
+   display: flex;
+   gap: 40px;
+}
+.configTabs button {
+   padding: 0px 0px 8px;
+   border: 0px;
+   border-bottom: 3px solid transparent;
+   background: none;
+   font: inherit;
+   font-size: 16px;
+   cursor: pointer;
+}
+.configTabs button.active {
+   border-bottom-color: var(--dark);
+}
+table.list{
+   width: 100%;
+   border-collapse: collapse;
+   font-size: 14px;
+}
+table.list th {
+   height: 48px;
+   padding: 0px 20px;
+   background: var(--table-head);
+   font-weight: 400;
+   text-align: left;
+}
+table.list td {
+   height: 56px;
+   padding: 0px 20px;
+}
+table.list td:first-child{
+   font-weight: 600;
+}
