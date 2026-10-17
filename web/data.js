@@ -3,61 +3,114 @@ const equipment = [
     equipmentName: "Oven A",
     canDo: ["Bake"],
     quantity: 1,
-    capacity: [12, "Trays"],
+    capacity: {
+      amount: 12,
+      unit: "Trays" 
+      },
     loads: "When full",
-    switchTime: 5,
-    warmUpTime: 20,
+    switchTime: {
+      amount: 5,
+      unit: "min"
+    },
+    warmUpTime: {
+      amount: 20,
+      unit: "min"
+    },
     turnOn: "At shift start",
    },
    {
       equipmentName: "Oven B",
       canDo: ["Bake"],
       quantity: 1,
-      capacity: [6, "Trays"],
+      capacity: {
+        amount: 6,
+        unit: "Trays"
+      },
       loads: "When full",
-      switchTime: 5,
-      warmUpTime: 20,
+      switchTime: {
+        amount: 5,
+        unit: "min"
+      },
+      warmUpTime: {
+        amount: 20,
+        unit: "min"
+      },
       turnOn: "At shift start",
    },
    {
       equipmentName: "Mixer A",
       canDo: ["Mix"],
       quantity: 1,
-      capacity: [100, "Pounds"],
+      capacity: {
+        amount: 100,
+        unit: "Pounds"
+      },
       loads: "When full",
-      switchTime: 10,
-      warmUpTime: 0,
+      switchTime: {
+        amount: 10,
+        unit: "min"
+      },
+      warmUpTime: {
+         amount: null,  
+         unit: "min"
+      },
       turnOn: "At shift start",
    },
    {
       equipmentName: "Proofer A",
       canDo: ["Proof"],
       quantity: 1,
-      capacity: [4, "Racks"],
+      capacity: {
+        amount: 4,
+        unit: "Racks"
+      },
       loads: "When full",
-      switchTime: 0,
-      warmUpTime: 15,
+      switchTime: {
+        amount: 0,
+        unit: "min"
+      },
+      warmUpTime: {
+        amount: 15,
+        unit: "min"
+      },
       turnOn: "At shift start",
    },
    {
       equipmentName: "Fryer",
       canDo: ["Fry"],
       quantity: 1,
-      capacity: [48, "Pieces"],
+      capacity: {
+        amount: 48,
+        unit: "Pieces"
+      },
       loads: "When full",
-      switchTime: 0,
-      warmUpTime: 10,
-      turnOn: "At shift start",
+      switchTime: {
+        amount: 0,
+        unit: "min"
+      },
+      warmUpTime: {
+        amount: 10,
+        unit: "min"
+      },
+      turnOn: "When first needed",
    },
    {
       equipmentName: "Sheeter",
       canDo: ["Laminate"],
       quantity: 1,
-      capacity: [40, "Pounds"],
+      capacity: {
+        amount: 40,
+        unit: "Pounds"
+      },
       loads: "When full",
-      switchTime: 0,
-      warmUpTime: 0,
+      switchTime: {
+        amount: 0,
+        unit: "min"
+      },
+      warmUpTime: {
+        amount: null,
+        unit: "min"
+      },
       turnOn: "At shift start",
    }
 ]
-console.log(equipment[0].equipmentName, equipment[0].canDo);
