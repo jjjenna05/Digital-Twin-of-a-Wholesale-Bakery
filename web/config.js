@@ -6,3 +6,11 @@ function showAmount(value) {
     }
   return `${value.amount} ${value.unit}`;
 }
+//create and fill the cell from data.js
+function createCell(row, text) {
+  const cell = document.createElement("td");
+  //use textContent instead of innerHTML since user is filling the data
+  cell.textContent = text;
+  row.appendChild(cell);
+}
+
