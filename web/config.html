@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+   <nav class="navBar">
+      <span class="navTitle">Bakery</span>
+        <div class="navLinks">
+            <a href="#">Dashboard</a>
+            <a href="config.html" class="active">Config</a>
+            <a href="#">Compare</a>
+         </div>
+   </nav>
+
+   <main class="config">
+      <h1>Config</h1>
+      <div class="configTabs">
+         <button type="button"> Steps</button>
+         <button type="button"> Units</button>
+         <button type="button"> Roles</button>
+         <button type="button" class="active"> Equipment</button>
+         <button type="button"> Recipe</button>
+         <button type="button"> Preferences</button>
+      </div>
+
+      <table class="list">
+         <thead>
+            <tr>
+               <th>Name</th>
+               <th>Can do</th>
+               <th>Quantity</th>
+               <th>Capacity per batch</th>
+               <th>Loads</th>
+               <th>Switch time</th>
+               <th>Warm up</th>
+               <th>Turn on</th>              
+            </tr>
+         </thead>
+         <tbody id="equipment-row"></tbody>
+      </table>
+   </main>
+   <script src="data.js"></script>
+   <script src="config.js"></script>
+</body>
+</html>
