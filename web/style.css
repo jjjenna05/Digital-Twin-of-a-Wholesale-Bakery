@@ -16,6 +16,7 @@ body{
    margin: 0;
    font-family: "Inter", sans-serif; 
    color: black;
+   background-color: #ffffff;
 }
 .navBar {
    padding: 0 80px;
@@ -40,6 +41,52 @@ body{
 
 main.config{
    padding: 0px 80px;
+}
+main.login {
+   min-height: calc(100vh - 64px);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 40px 80px;
+}
+.loginBox {
+   width: 100%;
+   max-width: 560px;
+   padding: 32px 48px 40px;
+   border: 1px solid var(--border);
+   box-sizing: border-box;
+}
+.loginBox h1 {
+   margin: 0 0 36px;
+}
+main.login form {
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+}
+main.login label {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+   font-size: 14px;
+   color: var(--dark);
+}
+main.login input {
+   height: 48px;
+   padding: 0 16px;
+   border: 1px solid var(--border);
+   font: inherit;
+   font-size: 16px;
+}
+main.login button[type="submit"] {
+   height: 48px;
+   margin-top: 8px;
+   border: 0;
+   background: var(--grey-button);
+   color: var(--dark);
+   font: inherit;
+   font-size: 16px;
+   cursor: pointer;
 }
 h1{
    font-size: 32px;
