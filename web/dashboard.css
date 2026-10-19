@@ -1,4 +1,3 @@
-
 .dashboard {
     padding: 36px 80px;
 }
@@ -36,16 +35,9 @@
     color: white;
     border-color: #777777;
 }
-
-.runSimulation:disabled, .dashboardButton:disabled {
-    opacity: 1;
-    cursor: not-allowed;
-}
-
-.dashboardButton:not(:disabled):hover {
+.dashboardButton:hover {
     background-color: #f2f2f2;
 }
-
 .lastRun {
     max-width: 950px;
     margin-top: 60px;
