@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders</title>
+  <link rel="stylesheet" href="orders.css">
+</head>
+<body>
+  <!-- DTWB-77: page layout (nav bar, Back link, title) -->
+  <nav class="nav">
+    <span class="brand">Bakery</span>
+    <div class="links">
+      <a href="#">Dashboard</a>
+      <a href="config.html">Config</a>
+      <a href="orders.html" class="active">Orders</a>
+      <a href="#">Compare</a>
+    </div>
+  </nav>
+
+  <main>
+    <a href="#" class="back">&lt; Back</a>
+    <h1>Orders</h1>
+
+    <!-- DTWB-77: orders table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Quantity</th>
+          <th>Recipe</th>
+          <th>Deadline</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="orders-body"></tbody>
+    </table>
+
+    <div class="actions">
+      <button id="add-btn" class="btn-light">Add order</button>
+      <button id="save-btn" class="btn-dark">Save</button>
+    </div>
+  </main>
+
+  <!-- DTWB-78: Add order pop-up -->
+  <div id="add-dialog" class="overlay hidden">
+    <form id="add-form" class="dialog">
+      <h2>Add order</h2>
+      <label>Item<input name="item" required></label>
+      <label>Quantity<input name="quantity" type="number" min="1" required></label>
+      <label>Recipe<input name="recipe" required></label>
+      <label>Deadline<input name="deadline" type="time" value="05:00" required></label>
+      <div class="dialog-actions">
+        <button type="button" id="cancel-btn" class="btn-light">Cancel</button>
+        <button type="submit" class="btn-dark">Add</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="orders.js"></script>
+</body>
+</html>
