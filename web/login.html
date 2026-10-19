@@ -23,5 +23,18 @@
          </form>
       </div>
    </main>
+   <script>
+   document.querySelector("main.login form").addEventListener("submit", function (e) {
+      e.preventDefault(); //stops the page reload
+
+      const userID = this.elements.userID.value.trim();
+      if (!userID) {
+         this.elements.userID.focus();
+         return;
+      }
+      // TODO: handle login here
+      console.log("Logging in as", userID);
+   });
+   </script>
 </body>
 </html>
