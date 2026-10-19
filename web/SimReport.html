@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulation Report | Bakery</title>
+  <style>
+    @font-face {
+      font-family: "Inter";
+      src: url("fonts/InterVariable.woff2") format("woff2");
+      font-weight: 100 900;
+      font-display: swap;
+    }
+
+    :root {
+      --nav: #e5e5e5;
+      --dark: #333333;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", Arial, sans-serif;
+      color: #000;
+      background: #fff;
+    }
+
+    .navBar {
+      height: 64px;
+      margin: 0 4px;
+      padding: 0 80px;
+      background: var(--nav);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 18px;
+    }
+
+    .brand {
+      color: #000;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .navLinks {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .navLinks a {
+      color: var(--dark);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .navLinks a.active {
+      font-weight: 700;
+    }
+
+    main {
+      padding: 24px 80px 0;
+    }
+
+    .backLink {
+      display: inline-block;
+      margin: 0 0 34px;
+      color: #000;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+
+    .equipmentAnalysis {
+      margin: 24px 7px 0;
+      border: 1px solid #bdbdbd;
+      padding: 0 16px 16px;
+    }
+
+    .equipmentAnalysis h2 {
+      margin: 0 -16px 4px;
+      padding: 10px 16px 8px;
+      background: #f2f2f2;
+      font-size: 20px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    table.equipmentTable {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .equipmentTable th,
+    .equipmentTable td {
+      border: 1px solid #bdbdbd;
+      height: 34px;
+      padding: 6px 12px;
+      font-weight: 400;
+    }
+
+    .equipmentTable th {
+      background: #f2f2f2;
+    }
+
+
+    .analysisPanel {
+      margin: 24px 7px 0;
+      border: 1px solid #bdbdbd;
+      padding: 0 16px 16px;
+    }
+
+    .analysisPanel h2 {
+      margin: 0 -16px 4px;
+      padding: 10px 16px 8px;
+      background: #f2f2f2;
+      font-size: 20px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    .productionCards {
+      display: grid;
+      grid-template-columns: 1fr 1.08fr 0.78fr;
+      gap: 12px;
+    }
+
+    .productionCard {
+      border: 1px solid #bdbdbd;
+      padding: 16px 12px;
+      min-height: 164px;
+      font-size: 14px;
+    }
+
+    .productionCard h3 {
+      margin: 0 0 8px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .productionCard ul {
+      margin: 0;
+      padding-left: 16px;
+      line-height: 1.6;
+    }
+
+    table.employeeTable {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .employeeTable th,
+    .employeeTable td {
+      border: 1px solid #bdbdbd;
+      height: 34px;
+      padding: 6px 12px;
+      font-weight: 400;
+    }
+
+    .employeeTable th {
+      background: #f2f2f2;
+    }
+
+    @media (max-width: 760px) {
+      .analysisPanel {
+        margin: 24px 0 0;
+        padding: 0 8px 8px;
+        overflow-x: auto;
+      }
+
+      .analysisPanel h2 {
+        margin: 0 -8px 4px;
+        padding: 10px 8px 8px;
+      }
+
+      .productionCards {
+        min-width: 540px;
+      }
+
+      table.employeeTable {
+        min-width: 560px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .equipmentAnalysis {
+        margin: 24px 0 0;
+        padding: 0 8px 8px;
+        overflow-x: auto;
+      }
+
+      .equipmentAnalysis h2 {
+        margin: 0 -8px 4px;
+        padding: 10px 8px 8px;
+      }
+
+      .equipmentTable {
+        min-width: 560px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .navBar {
+        height: auto;
+        min-height: 64px;
+        padding: 16px 20px;
+        align-items: flex-start;
+        gap: 16px;
+        flex-direction: column;
+      }
+
+      .navLinks {
+        flex-wrap: wrap;
+        gap: 12px 18px;
+        font-size: 16px;
+      }
+
+      main {
+        padding: 24px 20px 0;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="navBar">
+    <a class="brand" href="#">Bakery</a>
+    <nav class="navLinks" aria-label="Main navigation">
+      <a href="#">Dashboard</a>
+      <a href="#">Config</a>
+      <a href="#">Orders</a>
+      <a href="#">Compare</a>
+      <a href="#" class="active" aria-current="page">Simulation</a>
+    </nav>
+  </header>
+
+  <main>
+    <a class="backLink" href="#">‹ Back</a>
+    <h1>Simulation Report</h1>
+
+    <section class="equipmentAnalysis" aria-labelledby="equipment-analysis-title">
+      <h2 id="equipment-analysis-title">Equipment Analysis</h2>
+      <table class="equipmentTable">
+        <thead>
+          <tr>
+            <th scope="col">Equipment</th>
+            <th scope="col">Usage</th>
+            <th scope="col">Active Time</th>
+            <th scope="col">Inactive Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Mixer</td><td>x</td><td>x</td><td>x</td></tr>
+          <tr><td>Oven</td><td>x</td><td>x</td><td>x</td></tr>
+          <tr><td>XXXX</td><td>x</td><td>x</td><td>x</td></tr>
+          <tr><td>XXXX</td><td>x</td><td>x</td><td>x</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+
+    <section class="analysisPanel" aria-labelledby="production-time-title">
+      <h2 id="production-time-title">Production Time Analysis</h2>
+      <div class="productionCards">
+        <div class="productionCard">
+          <h3>Step:</h3>
+          <ul>
+            <li>Baking</li>
+            <li>Mixing</li>
+            <li>xxxxxx</li>
+            <li>xxxxxx</li>
+            <li>xxxxxx</li>
+          </ul>
+        </div>
+        <div class="productionCard">
+          <h3>Total Time:</h3>
+          <ul>
+            <li>xxHxxM</li>
+            <li>xxHxxM</li>
+            <li>xxHxxM</li>
+            <li>xxHxxM</li>
+            <li>xxHxxM</li>
+          </ul>
+        </div>
+        <div class="productionCard">
+          <h3>Total %</h3>
+          <ul>
+            <li>x%</li>
+            <li>x%</li>
+            <li>x%</li>
+            <li>x%</li>
+            <li>x%</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="analysisPanel" aria-labelledby="employee-analysis-title">
+      <h2 id="employee-analysis-title">Employee Analysis</h2>
+      <table class="employeeTable">
+        <thead>
+          <tr>
+            <th scope="col">Employee Name</th>
+            <th scope="col">Active Time</th>
+            <th scope="col">Wait Time</th>
+            <th scope="col">Total Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Dena</td><td>x</td><td>x</td><td>x</td></tr>
+          <tr><td>Jacky</td><td>x</td><td>x</td><td>x</td></tr>
+          <tr><td>Jenna</td><td>x</td><td>x</td><td>x</td></tr>
+          <tr><td>Johnny</td><td>x</td><td>x</td><td>x</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+</body>
+</html>
