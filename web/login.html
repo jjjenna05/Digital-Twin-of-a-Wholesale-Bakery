@@ -29,11 +29,12 @@
 
       const userID = this.elements.userID.value.trim();
       if (!userID) {
-         this.elements.userID.focus();
+         this.elements.userID.value = "";
+         this.elements.userID.reportValidity();
          return;
       }
-      // TODO: handle login here
-      console.log("Logging in as", userID);
+      //to do later: check for correct userID
+      window.location.href = "dashboard.html";
    });
    </script>
 </body>
