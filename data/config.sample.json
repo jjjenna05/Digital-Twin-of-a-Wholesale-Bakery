@@ -1,0 +1,225 @@
+{
+  "units": [
+    {
+      "unit": "Dozens", "equals": 12, "of": "Pieces"
+    },
+    {
+      "unit": "Racks", "equals": 6, "of": "Trays"
+    }
+  ],
+  "steps": [
+    {
+      "name": "Mix", "kind": "Machine"
+    },
+    {
+      "name": "Laminate", "kind": "Hands-on machine"
+    },
+    {
+      "name": "Proof", "kind": "Machine"
+    },
+    {
+      "name": "Bake", "kind": "Machine"
+    },
+    {
+      "name": "Fry", "kind": "Machine"
+    },
+    {
+      "name": "Cool", "kind": "Wait"
+    },
+    {
+      "name": "Finish", "kind": "By hand"
+    },
+    {
+      "name": "Pack", "kind": "By hand"
+    }
+  ],
+  "roles": [
+    {
+      "name":"Baker", "canDo": ["Mix", "Laminate", "Proof", "Bake", "Fry"]
+    },
+    {
+      "name": "Packer", "canDo": ["Pack"]
+    },
+    {
+      "name": "Decorator", "canDo": ["Finish"]
+    }
+  ],
+  "equipment": [
+    {
+      "name": "Oven A",
+      "canDo": ["Bake"],
+      "quantity": 1,
+      "capacity": {
+        "amount": 12, "unit": "Trays"
+      },
+      "loads": "When full",
+      "switchTime": { "amount": 5, "unit": "min" },
+      "warmUpTime": { "amount": 20, "unit": "min" },
+      "turnOn": "At shift start"
+    },
+    {
+      "name": "Oven B",
+      "canDo": ["Bake"],
+      "quantity": 1,
+      "capacity": {
+        "amount": 6, "unit": "Trays"
+      },
+      "loads": "When full",
+      "switchTime": { "amount": 5, "unit": "min" },
+      "warmUpTime": { "amount": 20, "unit": "min" },
+      "turnOn": "At shift start"
+    },
+    {
+      "name": "Mixer A",
+      "canDo": ["Mix"],
+      "quantity": 1,
+      "capacity": {
+        "amount": 100, "unit": "Pounds"
+      },
+      "loads": "When full",
+      "switchTime": { "amount": 10, "unit": "min" },
+      "warmUpTime": { "amount": null, "unit": "min" },
+      "turnOn": "At shift start"
+    },
+    {
+      "name": "Proofer A",
+      "canDo": ["Proof"],
+      "quantity": 1,
+      "capacity": {
+        "amount": 4, "unit": "Racks"
+      },
+      "loads": "When full",
+      "switchTime": { "amount": 0, "unit": "min" },
+      "warmUpTime": { "amount": 15, "unit": "min" },
+      "turnOn": "At shift start"
+    },
+    {
+      "name": "Fryer",
+      "canDo": ["Fry"],
+      "quantity": 1,
+      "capacity": {
+        "amount": 48, "unit": "Pieces"
+      },
+      "loads": "When full",
+      "switchTime": { "amount": 0, "unit": "min" },
+      "warmUpTime": { "amount": 10, "unit": "min" },
+      "turnOn": "When first needed"
+    },
+    {
+      "name": "Sheeter",
+      "canDo": ["Laminate"],
+      "quantity": 1,
+      "capacity": {
+        "amount": 40, "unit": "Pounds"
+        },
+      "loads": "When full",
+      "switchTime": { "amount": 0, "unit": "min" },
+      "warmUpTime": { "amount": null, "unit": "min" },
+      "turnOn": "At shift start"
+    }
+  ],
+  "recipes": [
+    {
+      "name": "Glazed Donuts",
+      "batchSize": { "amount": 120, "unit": "Pieces" },
+      "steps": [
+        { 
+          "step": "Mix",
+          "machineTime": 15,
+          "staffTime": 2,
+          "workers": 1
+        },
+        {
+          "step": "Proof",
+          "machineTime": 40,
+          "staffTime": 2,
+          "workers": 1
+        },
+        {
+          "step": "Fry",
+          "machineTime": 20,
+          "staffTime": 4,
+          "workers": 1
+        },
+        {
+          "step": "Cool",
+          "waitTime": 10
+        },
+        {
+          "step": "Finish",
+          "staffTime": 20,
+          "workers": 1
+        },
+        {
+          "step": "Pack",
+          "staffTime": 10,
+          "workers": 1
+        }
+      ]
+    },
+    {
+      "name": "Conchas",
+      "batchSize": { "amount": 144, "unit": "Pieces" },
+      "steps": [
+        {
+          "step": "Mix",
+          "machineTime": 15,
+          "staffTime": 2,
+          "workers": 1
+        },
+        {
+          "step": "Proof",
+          "machineTime": 45,
+          "staffTime": 2,
+          "workers": 1
+        },
+        {
+          "step": "Bake",
+          "machineTime": 18,
+          "staffTime": 2,
+          "workers": 1
+        },
+        {
+          "step": "Pack",
+          "staffTime": 10,
+          "workers": 1
+        }
+      ]
+    },
+    {
+      "name": "Croissants",
+      "batchSize": { "amount": 96, "unit": "Pieces" },
+      "steps": [
+        {
+          "step": "Mix",
+          "machineTime": 15,
+          "staffTime": 2,
+          "workers": 1
+        },
+        {
+          "step": "Laminate",
+          "machineTime": 20,
+         
+          "workers": 2
+        },
+        {
+          "step": "Proof",
+          "machineTime": 60,
+          "staffTime": 2,
+          "workers": 1
+        },
+        {
+          "step": "Bake",
+          "machineTime": 18,
+          "staffTime": 2,
+          "workers": 1
+        },
+        {
+          "step": "Pack",
+          "staffTime": 10,
+          "workers": 1
+        }
+      ]
+    }
+  ]
+}
