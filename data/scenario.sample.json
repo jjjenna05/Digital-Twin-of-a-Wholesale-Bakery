@@ -1,6 +1,6 @@
 {
   "name": "Tonight",
-  "startTime": "22:00",
+  "startClock": "22:00",
   "orders": [
     {
       "item": "Glazed Donuts",
@@ -15,7 +15,7 @@
       "recipe": "Conchas",
       "quantity":12,
       "unit": "Dozens",
-      "deadline": "05:00",
+      "deadline": "03:00",
       "notBefore": ""
     }
   ],

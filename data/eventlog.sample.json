@@ -1,0 +1,177 @@
+{
+  "scenario": "Conchas",
+  "startClock": "22:00",
+  "rows": [
+    { 
+      "who": "Baker 1", 
+      "type": "worker", 
+      "kind": "load", 
+      "batch": "Conchas 1", 
+      "step": "Mix", 
+      "start": 0, 
+      "end": 1
+    },
+    { 
+      "who": "Mixer A", 
+      "type": "machine", 
+      "kind": "load", 
+      "batch": "Conchas 1", 
+      "step": "Mix", 
+      "start": 0, 
+      "end": 1
+    },
+    { 
+      "who": "Mixer A", 
+      "type": "machine", 
+      "kind": "run", 
+      "batch": "Conchas 1", 
+      "step": "Mix", 
+      "start": 1, 
+      "end": 16
+    },
+    { 
+      "who": "Baker 1", 
+      "type": "worker", 
+      "kind": "unload", 
+      "batch": "Conchas 1", 
+      "step": "Mix", 
+      "start": 16, 
+      "end": 17
+    },
+    { 
+      "who": "Mixer A", 
+      "type": "machine", 
+      "kind": "unload", 
+      "batch": "Conchas 1", 
+      "step": "Mix", 
+      "start": 16, 
+      "end": 17
+    },
+    { 
+      "who": "Baker 1", 
+      "type": "worker", 
+      "kind": "load", 
+      "batch": "Conchas 1", 
+      "step": "Proof", 
+      "start": 17, 
+      "end": 18
+    },
+    { 
+      "who": "Proofer A", 
+      "type": "machine", 
+      "kind": "load", 
+      "batch": "Conchas 1", 
+      "step": "Proof", 
+      "start": 17, 
+      "end": 18
+    },
+    { 
+      "who": "Proofer A", 
+      "type": "machine", 
+      "kind": "run", 
+      "batch": "Conchas 1", 
+      "step": "Proof", 
+      "start": 18, 
+      "end": 63
+    },
+    { 
+      "who": "Baker 1", 
+      "type": "worker", 
+      "kind": "unload", 
+      "batch": "Conchas 1", 
+      "step": "Proof", 
+      "start": 63, 
+      "end": 64
+    },
+    { 
+      "who": "Proofer A", 
+      "type": "machine", 
+      "kind": "unload", 
+      "batch": "Conchas 1", 
+      "step": "Proof", 
+      "start": 63, 
+      "end": 64
+    },
+    { 
+      "who": "Baker 1", 
+      "type": "worker", 
+      "kind": "load", 
+      "batch": "Conchas 1", 
+      "step": "Bake", 
+      "start": 64, 
+      "end": 65
+    },
+    { 
+      "who": "Oven A", 
+      "type": "machine", 
+      "kind": "load", 
+      "batch": "Conchas 1", 
+      "step": "Bake", 
+      "start": 64, 
+      "end": 65
+    },
+    { 
+      "who": "Oven A", 
+      "type": "machine", 
+      "kind": "run", 
+      "batch": "Conchas 1", 
+      "step": "Bake", 
+      "start": 65, 
+      "end": 83
+    },
+    { 
+      "who": "Baker 1", 
+      "type": "worker", 
+      "kind": "unload", 
+      "batch": "Conchas 1", 
+      "step": "Bake", 
+      "start": 83, 
+      "end": 84
+    },
+    { 
+      "who": "Oven A", 
+      "type": "machine", 
+      "kind": "unload", 
+      "batch": "Conchas 1", 
+      "step": "Bake", 
+      "start": 83, 
+      "end": 84
+    },
+    { 
+      "who": "Conchas 1", 
+      "type": "batch", 
+      "kind": "waiting", 
+      "batch": "Conchas 1", 
+      "step": "Pack", 
+      "start": 84, 
+      "end": 240, 
+      "for": "a worker"
+    },
+    { 
+      "who": "Packer 1", 
+      "type": "worker", 
+      "kind": "work", 
+      "batch": "Conchas 1", 
+      "step": "Pack", 
+      "start": 240, 
+      "end": 250
+    }
+  ],
+  "summary": {
+    "finish": 250,
+    "orders": [
+      {
+        "item": "Conchas",
+        "recipe": "Conchas",
+        "quantity": 12,
+        "unit": "Dozens",
+        "deadline": "03:00",
+        "deadlineMinutes": 300,
+        "batches": 1,
+        "ready": 250,
+        "status": "On time",
+        "lateBy": 0
+      }
+    ]
+  }
+}
