@@ -1,4 +1,6 @@
 const bodyList = document.getElementById("equipment-row");
+const stepsListBody = document.getElementById("steps-row");
+
 // helper function to fill the amount correctly, if user dont type, return None
 function showAmount(value) {
     if (value.amount === null) {
@@ -30,10 +32,41 @@ function showEquipment(equipmentList) {
     bodyList.appendChild(row);
   }
 }
+function showSteps(stepsList) {
+  for (let i = 0; i < stepsList.length; i++) {
+    const row = document.createElement("tr");
+    createCell(row, stepsList[i].name);
+    createCell(row, stepsList[i].kind);
+    stepsListBody.appendChild(row);
+  }
+}
+
 //load data from config.sample.json
 async function loadConfig() {
   const response = await fetch("../data/config.sample.json");
   const configData = await response.json();
   showEquipment(configData.equipment);
+  showSteps(configData.steps);
 }
 loadConfig();
+
+const tabButtons = document.querySelectorAll(".configTabs button");
+const tabSections = document.querySelectorAll("main.config section");
+
+//show relevant tab as the user click
+function showTab(sectionID, userClickButton) {
+  for (let i =0; i < tabSections.length; i++){
+    tabSections[i].hidden = true;
+  }
+  document.getElementById(sectionID).hidden = false;
+
+  for(let i = 0; i < tabButtons.length; i++) {
+    tabButtons[i].classList.remove("active");
+  }
+  userClickButton.classList.add("active");
+}
+for(let i = 0; i <tabButtons.length; i++) {
+  tabButtons[i].addEventListener("click", function () {
+    showTab(tabButtons[i].dataset.tab, tabButtons[i]);
+  });
+}

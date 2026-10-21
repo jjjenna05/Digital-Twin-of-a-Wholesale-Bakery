@@ -19,29 +19,81 @@
    <main class="config">
       <h1>Config</h1>
       <div class="configTabs">
-         <button type="button"> Steps</button>
-         <button type="button"> Units</button>
-         <button type="button"> Roles</button>
-         <button type="button" class="active"> Equipment</button>
-         <button type="button"> Recipe</button>
-         <button type="button"> Preferences</button>
-      </div>
-
-      <table class="list">
-         <thead>
-            <tr>
-               <th>Name</th>
-               <th>Can do</th>
-               <th>Quantity</th>
-               <th>Capacity per batch</th>
-               <th>Loads</th>
-               <th>Switch time</th>
-               <th>Warm up</th>
-               <th>Turn on</th>              
-            </tr>
-         </thead>
-         <tbody id="equipment-row"></tbody>
-      </table>
+         <button type="button" data-tab="steps-tab">Steps</button>
+         <button type="button" data-tab="units-tab">Units</button>
+         <button type="button" data-tab="roles-tab">Roles</button>
+         <button type="button" class="active" data-tab="equipment-tab">Equipment</button>
+         <button type="button" data-tab="recipe-tab" >Recipe</button>
+         <button type="button" data-tab="preferences-tab" >Preferences</button>
+      </div>     
+         <section id="equipment-tab">
+            <h2>Config</h2>
+            <table class="list">
+               <thead>
+                  <tr>
+                     <th>Name</th>
+                     <th>Can do</th>
+                     <th>Quantity</th>
+                     <th>Capacity per batch</th>
+                     <th>Loads</th>
+                     <th>Switch time</th>
+                     <th>Warm up</th>
+                     <th>Turn on</th>              
+                  </tr>
+               </thead>
+               <tbody id="equipment-row"></tbody>
+            </table>
+         </section>
+         <section id="steps-tab" hidden>
+            <h2>Config</h2>
+            <table class="list">
+               <thead>
+                  <tr>
+                     <th>Step Name</th>
+                     <th>Kind</th>
+                  </tr>
+               </thead>
+               <tbody id="steps-row"></tbody>
+            </table>
+         </section>
+         <section id="units-tab" hidden>
+            <h2>Config</h2>
+            <table class="list">
+               <thead>
+                  <tr>
+                     <th>Unit</th>
+                     <th>Equals</th>
+                     <th>How many</th>
+                  </tr>
+               </thead>
+               <tbody id="units-row"></tbody>
+            </table>
+         </section>
+         <section id="roles-tab" hidden>
+            <h2>Config</h2>
+            <table class="list">
+               <thead>
+                  <tr>
+                     <th>Role</th>
+                     <th>Can do</th>
+                  </tr>
+               </thead>
+               <tbody id="roles-row"></tbody>
+            </table>
+         </section>
+         <section id="recipe-tab" hidden>
+            <h2>Config</h2>
+            <table class="list">
+               <thead>
+                  <tr>
+                     <th>Item Name</th>
+                     <th>Steps</th>
+                     <th>Made from</th>
+                  </tr>
+               </thead>
+               <tbody id="recipe-row"></tbody>
+            </table>
+         </section> 
    </main>
    <script src="config.js"></script>
 </body>
