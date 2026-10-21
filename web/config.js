@@ -1,4 +1,7 @@
 const bodyList = document.getElementById("equipment-row");
+const unitsListBody = document.getElementById("units-row");
+const rolesListBody = document.getElementById("roles-row");
+const recipesListBody = document.getElementById("recipe-row");
 const stepsListBody = document.getElementById("steps-row");
 
 // helper function to fill the amount correctly, if user dont type, return None
@@ -40,6 +43,39 @@ function showSteps(stepsList) {
     stepsListBody.appendChild(row);
   }
 }
+function showUnits(unitsList) {
+  for (let i = 0; i < unitsList.length; i++) {
+    const row = document.createElement("tr");
+    createCell(row, unitsList[i].unit);
+    createCell(row, `${unitsList[i].equals} ${unitsList[i].of}`);
+    //no data yet
+    createCell(row, "No limit");
+    unitsListBody.appendChild(row);
+  }
+}
+function showRoles(rolesList) {
+  for (let i = 0; i < rolesList.length; i++) {
+    const row = document.createElement("tr");
+    createCell(row, rolesList[i].name);
+    createCell(row, rolesList[i].canDo.join(", "));
+    rolesListBody.appendChild(row);
+  }
+}
+function showRecipes(recipesList) {
+  for (let i = 0; i < recipesList.length; i++) {
+    const row = document.createElement("tr");
+    //display each recipe steps
+    const stepNames = [];
+    for (let j = 0; j < recipesList[i].steps.length; j++) {
+      stepNames.push(recipesList[i].steps[j].step);
+    }
+    createCell(row, recipesList[i].name);
+    createCell(row, stepNames.join("> "));
+    //no data yet
+    createCell(row, "None");
+    recipesListBody.appendChild(row);
+  }
+}
 
 //load data from config.sample.json
 async function loadConfig() {
@@ -47,6 +83,9 @@ async function loadConfig() {
   const configData = await response.json();
   showEquipment(configData.equipment);
   showSteps(configData.steps);
+  showUnits(configData.units);
+  showRoles(configData.roles);
+  showRecipes(configData.recipes);
 }
 loadConfig();
 
