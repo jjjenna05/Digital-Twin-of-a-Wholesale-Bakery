@@ -3,7 +3,7 @@ const unitsListBody = document.getElementById("units-row");
 const rolesListBody = document.getElementById("roles-row");
 const recipesListBody = document.getElementById("recipe-row");
 const stepsListBody = document.getElementById("steps-row");
-
+let config = null;
 // helper function to fill the amount correctly, if user dont type, return None
 function showAmount(value) {
     if (value.amount === null) {
@@ -64,7 +64,7 @@ function showRoles(rolesList) {
 function showRecipes(recipesList) {
   for (let i = 0; i < recipesList.length; i++) {
     const row = document.createElement("tr");
-    //display each recipe steps
+    //display each recipe steps in correct format
     const stepNames = [];
     for (let j = 0; j < recipesList[i].steps.length; j++) {
       stepNames.push(recipesList[i].steps[j].step);
@@ -86,6 +86,8 @@ async function loadConfig() {
   showUnits(configData.units);
   showRoles(configData.roles);
   showRecipes(configData.recipes);
+
+  config = configData;
 }
 loadConfig();
 
@@ -109,3 +111,64 @@ for(let i = 0; i <tabButtons.length; i++) {
     showTab(tabButtons[i].dataset.tab, tabButtons[i]);
   });
 }
+
+
+//dropdown for canDo section of equipment dialog 
+function fillCanDoBoxes() {
+  const box = document.getElementById("can-do-boxes");
+  //empty everytime function get called
+  box.replaceChildren();
+  for (let i = 0; i < config.steps.length; i++) {
+    const kind = config.steps[i].kind;
+    if (kind!== "Machine" && kind !== "Hands-on machine") {
+      continue;
+    }
+    const label = document.createElement("label");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "canDo";
+    checkbox.value = config.steps[i].name;
+    label.appendChild(checkbox);
+    label.append(" " + config.steps[i].name);
+    box.appendChild(label);
+  }
+}
+
+function fillUnitChoices() {
+  const select = document.getElementById("equipment-unit");
+  select.replaceChildren();
+
+  const units = [];
+  for (let i = 0; i < config.units.length; i++){
+    addUnit(units, config.units[i].unit);
+    addUnit(units, config.units[i].of);
+  }
+  for (let i = 0; i < config.equipment.length; i++) {
+    addUnit(units, config.equipment[i].capacity.unit);
+  }
+  for (let i = 0; i < units.length; i++) {
+    const option = document.createElement("option");
+    option.textContent = units[i];
+    select.appendChild(option);
+  }
+}
+//add only if it isnt there yet
+function addUnit(units, name) {
+  if (!units.includes(name)) {
+    units.push(name);
+  }
+}
+
+const equipmentDialog = document.getElementById("equipment-dialog");
+const addButton = document.getElementById("add-equipment");
+const cancelButton = document.getElementById("cancel-equipment");
+
+addButton.addEventListener("click", function () {
+  fillCanDoBoxes();
+  fillUnitChoices();
+  equipmentDialog.showModal();
+});
+
+cancelButton.addEventListener("click", function () {
+  equipmentDialog.close();
+});

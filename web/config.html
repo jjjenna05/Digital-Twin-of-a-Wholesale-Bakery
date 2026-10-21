@@ -42,6 +42,42 @@
                </thead>
                <tbody id="equipment-row"></tbody>
             </table>
+            <button type="button" id="add-equipment">+ Add Equipment</button>
+            <dialog id="equipment-dialog">
+              <form id="equipment-form">
+                <h2>Add Equipment</h2>
+            
+                <label>Name <input name="name"></label>
+            
+                <p>Can do</p>
+                <div id="can-do-boxes"></div>
+            
+                <label>Quantity <input name="quantity" type="number"></label>
+            
+                <label>Capacity per batch <input name="capacityAmount" type="number"></label>
+                <select id="equipment-unit" name="capacityUnit"></select>
+            
+                <label>Loads
+                  <select name="loads">
+                    <option>When full</option>
+                    <option>One by one</option>
+                  </select>
+                </label>
+            
+                <label>Switch time (min) <input name="switchTime" type="number" placeholder="None"></label>
+                <label>Warm up (min) <input name="warmUpTime" type="number" placeholder="None"></label>
+            
+                <label>Turn on
+                  <select name="turnOn">
+                    <option>At shift start</option>
+                    <option>When first needed</option>
+                  </select>
+                </label>
+            
+                <button type="button" id="cancel-equipment">Cancel</button>
+                <button type="submit">Save</button>
+              </form>
+            </dialog>
          </section>
          <section id="steps-tab" hidden>
             <table class="list">
@@ -88,6 +124,7 @@
                </thead>
                <tbody id="recipe-row"></tbody>
             </table>
+            
          </section> 
    </main>
    <script src="config.js"></script>

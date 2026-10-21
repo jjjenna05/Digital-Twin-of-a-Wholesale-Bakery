@@ -130,3 +130,7 @@ table.list td {
 table.list td:first-child{
    font-weight: 600;
 }
+#equipment-dialog label {
+   display: block;
+   margin-bottom: 10px;
+}
