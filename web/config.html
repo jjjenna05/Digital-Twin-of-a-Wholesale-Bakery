@@ -26,7 +26,7 @@
          <button type="button" data-tab="recipe-tab" >Recipe</button>
          <button type="button" data-tab="preferences-tab" >Preferences</button>
       </div>     
-         <section id="equipment-tab">
+         <section id="equipment-tab" hidden>
             <table class="list">
                <thead>
                   <tr>
@@ -55,6 +55,7 @@
                 <label>Quantity <input name="quantity" type="number"></label>
             
                 <label>Capacity per batch <input name="capacityAmount" type="number"></label>
+                <! -- fillUnitChoices() creates the dropdown -->
                 <select id="equipment-unit" name="capacityUnit"></select>
             
                 <label>Loads
@@ -79,7 +80,7 @@
               </form>
             </dialog>
          </section>
-         <section id="steps-tab" hidden>
+         <section id="steps-tab">
             <table class="list">
                <thead>
                   <tr>

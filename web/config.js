@@ -4,7 +4,7 @@ const rolesListBody = document.getElementById("roles-row");
 const recipesListBody = document.getElementById("recipe-row");
 const stepsListBody = document.getElementById("steps-row");
 let config = null;
-// helper function to fill the amount correctly, if user dont type, return None
+// helper function to fill the amount correctly. if user dont type, return None
 function showAmount(value) {
     if (value.amount === null) {
       return "None";
@@ -70,7 +70,7 @@ function showRecipes(recipesList) {
       stepNames.push(recipesList[i].steps[j].step);
     }
     createCell(row, recipesList[i].name);
-    createCell(row, stepNames.join("> "));
+    createCell(row, stepNames.join(" > "));
     //no data yet
     createCell(row, "None");
     recipesListBody.appendChild(row);
@@ -120,9 +120,11 @@ function fillCanDoBoxes() {
   box.replaceChildren();
   for (let i = 0; i < config.steps.length; i++) {
     const kind = config.steps[i].kind;
+    //only Machine and Hands-on machine has can-do step
     if (kind!== "Machine" && kind !== "Hands-on machine") {
       continue;
     }
+    //make this format: <div><label><input type="checkbox" name="canDo" value="configstepdata">configstepdata</label></div>
     const label = document.createElement("label");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -135,26 +137,31 @@ function fillCanDoBoxes() {
 }
 
 function fillUnitChoices() {
-  const select = document.getElementById("equipment-unit");
+ const select = document.getElementById("equipment-unit");
   select.replaceChildren();
-
+  //array to colect all units fron config
   const units = [];
+  //get units from config.units
   for (let i = 0; i < config.units.length; i++){
     addUnit(units, config.units[i].unit);
     addUnit(units, config.units[i].of);
   }
-  for (let i = 0; i < config.equipment.length; i++) {
+  //get units from config.equipment.capacity unit
+  for (let i = 0; i < config.equipment.length; i++){
     addUnit(units, config.equipment[i].capacity.unit);
   }
+  //create dropdown
   for (let i = 0; i < units.length; i++) {
-    const option = document.createElement("option");
-    option.textContent = units[i];
-    select.appendChild(option);
+    const dropdownOption = document.createElement("option");
+    dropdownOption.value = units[i];
+    dropdownOption.textContent = units[i];
+    select.appendChild(dropdownOption);
   }
 }
-//add only if it isnt there yet
 function addUnit(units, name) {
+  //add only if it isnt there yet
   if (!units.includes(name)) {
+    //add to end of list
     units.push(name);
   }
 }
