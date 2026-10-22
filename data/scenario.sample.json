@@ -1,0 +1,69 @@
+{
+  "name": "Tonight",
+  "startClock": "22:00",
+  "orders": [
+    {
+      "item": "Glazed Donuts",
+       "recipe": "Glazed Donuts",
+       "quantity": 200,
+       "unit": "Pieces",
+       "deadline": "05:00",
+       "notBefore": ""
+    },
+    {
+      "item": "Conchas",
+      "recipe": "Conchas",
+      "quantity":12,
+      "unit": "Dozens",
+      "deadline": "03:00",
+      "notBefore": ""
+    }
+  ],
+  "staff": [
+    {
+      "role": "Baker",
+      "count": 1,
+      "shiftStart": "22:00",
+      "shiftEnd": "06:00"
+    },
+    {
+      "role": "Packer",
+      "count": 1,
+      "shiftStart": "02:00",
+      "shiftEnd": "06:00"
+    },
+    {
+      "role": "Decorator",
+      "count": 1,
+      "shiftStart": "02:00",
+      "shiftEnd": "06:00"
+    }
+  ],
+  "equipment": [
+    {
+      "name": "Oven A",
+      "count": 1
+    },
+    {
+      "name": "Oven B",
+      "count": 1
+    },
+    {
+      "name": "Mixer A",
+      "count": 1
+    },
+    {
+      "name": "Proofer A",
+      "count": 1
+    },
+    {
+      "name": "Fryer",
+      "count": 1
+    },
+    {
+      "name": "Sheeter",
+      "count": 1
+    }
+    
+  ]
+}
