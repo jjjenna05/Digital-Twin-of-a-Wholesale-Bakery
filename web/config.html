@@ -50,12 +50,13 @@
                 <label>Name <input name="name"></label>
             
                 <p>Can do</p>
+                <!-- fillCanDoBoxes() creates  checkboxes -->
                 <div id="can-do-boxes"></div>
             
                 <label>Quantity <input name="quantity" type="number"></label>
             
                 <label>Capacity per batch <input name="capacityAmount" type="number"></label>
-                <! -- fillUnitChoices() creates the dropdown -->
+                <!-- fillUnitChoices() creates the dropdown -->
                 <select id="equipment-unit" name="capacityUnit"></select>
             
                 <label>Loads
@@ -65,8 +66,18 @@
                   </select>
                 </label>
             
-                <label>Switch time (min) <input name="switchTime" type="number" placeholder="None"></label>
-                <label>Warm up (min) <input name="warmUpTime" type="number" placeholder="None"></label>
+                <label>Switch time <input name="switchTime" type="number" placeholder="None">
+                <select name="switchTimeUnit">
+                    <option>hr</option>
+                    <option selected>min</option>
+                    <option>sec</option>
+                </select></label>
+                <label>Warm up <input name="warmUpTime" type="number" placeholder="None">
+                <select name="warmUpTimeUnit" >
+                    <option>hr</option>
+                    <option selected>min</option>
+                    <option>sec</option>
+                </select></label>
             
                 <label>Turn on
                   <select name="turnOn">

@@ -19,6 +19,7 @@ function createCell(row, text) {
   row.appendChild(cell);
 }
 function showEquipment(equipmentList) {
+  bodyList.replaceChildren();
   //fill all equipments with its data from config data
   for (let i = 0; i < equipmentList.length; i++) {
     const row = document.createElement("tr");
@@ -171,11 +172,62 @@ const addButton = document.getElementById("add-equipment");
 const cancelButton = document.getElementById("cancel-equipment");
 
 addButton.addEventListener("click", function () {
+  equipmentForm.reset();
   fillCanDoBoxes();
   fillUnitChoices();
   equipmentDialog.showModal();
 });
 
 cancelButton.addEventListener("click", function () {
+  equipmentDialog.close();
+});
+//helper function to convert user input to valid number
+function convertUserInput(text) {
+  if (text === "") {
+    return null;
+  }
+    return Number(text);
+  
+}
+//save new equipment
+const equipmentForm = document.getElementById("equipment-form");
+equipmentForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+ const fields = equipmentForm.elements;
+ const userSelectedBoxes = equipmentForm.querySelectorAll('input[name="canDo"]:checked');
+  const canDo = [];
+  //get only userselected checkboxes
+  for (let i = 0; i < userSelectedBoxes.length; i++) {
+    canDo.push(userSelectedBoxes[i].value);
+  }
+  //if user didnt fill in quantity, default is 1
+  let quantity = 1;
+  if (fields.quantity.value !== "") {
+    quantity = convertUserInput(fields.quantity.value);
+  }
+  //fill new equipment data
+  const newEquipment = {
+    name: fields.name.value,
+    canDo: canDo,
+    quantity: quantity,
+    capacity: {
+      amount: convertUserInput(fields.capacityAmount.value),
+      unit: fields.capacityUnit.value,
+    },
+    loads: fields.loads.value,
+    switchTime: {
+      amount: convertUserInput(fields.switchTime.value),
+      unit: fields.switchTimeUnit.value,
+    },
+    warmUpTime: {
+      amount: convertUserInput(fields.warmUpTime.value),
+      unit: fields.warmUpTimeUnit.value,
+    },
+    turnOn: fields.turnOn.value,
+  };
+  //push data to equipment list
+  config.equipment.push(newEquipment);
+  //display updated equipment list
+  showEquipment(config.equipment);
   equipmentDialog.close();
 });
