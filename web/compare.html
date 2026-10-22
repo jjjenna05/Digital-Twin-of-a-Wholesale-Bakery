@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Scenarios</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="compare.css">
+</head>
+<body>
+    <!--Naviagation Bar-->
+    <nav class="nav">
+        <span class="brand">Bakery</span>
+        <div class="links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="config.html">Config</a>
+            <a href="orders.html">Orders</a>
+            <a href="compare.html" class="active">Compare</a>
+        </div>
+    </nav>
+
+    <main class="comparison-main">
+        <div class="header-section">
+            <a href="dashboard.html" class="back">&lt; Back to Dashboard</a>
+            <h1>Scenario Comparison: Ordering Adjustments</h1>
+            <p class="subtitle">Change the scenarios of the run.</p>
+        </div>
+        <!--Control Panel to Adjust Scenario Parameters-->
+        <section class="control-panel card">
+            <h2>Adjustment Parameters</h2>
+            <form id="scenario-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="scenario-select">Select Scenario to Modify</label>
+                        <select id="scenario-select" class="form-control">
+                            <option value="scenario-a">Scenario A</option>
+                            <option value="scenario-b">Scenario B</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="order-multiplier">Order Demand</label>
+                        <input type="number" id="order-multiplier" class="form-control" min="50" value="100" max="250">
+                    </div>
+                    <div class="form-group">
+                        <label for="priority-handling">Priority Rule:</label>
+                        <select id="priority-handling" class="form-control">
+                            <option value="fifo">FIFO(First-In, First-Out)</option>
+                            <option value="deadline">Earliest Deadline First</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="run-comparison-btn btn-dark">Run Comparison</button>
+                </div>
+            </form>
+        </section>
+        <!--Side by Side Comparison Results Grid-->
+        <section class="result-section">
+            <h2>Run Outcomes and Comparison</h2>
+            <div class="comparison-grid">
+                <!--Original Run Column-->
+                <div class="result-card original">
+                    <h3>Baseline</h3>
+                    <ul class="metrics-list">
+                        <li><span>Total Processed Orders:</span><strong>1,200<span class="delta positive">+12.5%</span></strong></li>
+                        <li><span>Average Load Time:</span><strong>3.9 hrs<span class="delta positive">-13.3%</span></strong></li>
+                        <li><span>Fulfilment Rate:</span><strong>97.8%<span class="delta positive">+2.8%</span></strong></li>
+                        <li><span>Bottleneck Stage:</span><strong>Shaping Station</strong></li>
+
+                    </ul>
+                </div>
+            </div>
+            <!--DTWB-100: Order table(Item, Quantity, Deadline)-->
+            <section class="card table-section">
+                <h2>Scenario Order List</h2>
+                <p class="subtitle">Review the item quantities and deadlines configured for this scenario run.</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Deadline</th>
+                        </tr>
+                        </thead>
+                    <tbody id="scenario-orders-body">
+                        <!--Sample Rows(Can be later populated dynamically via scenario.js)-->
+                        <tr>
+                            <td>Item 1</td>
+                            <td>150</td>
+                            <td>6:00 AM</td>
+                        </tr>
+                        <tr>
+                            <td>Item 2</td>
+                            <td>200</td>
+                            <td>8:00 AM</td>
+                        </tr>
+                        <tr>
+                            <td>Item 3</td>
+                            <td>250</td>
+                            <td>10:00 AM</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </section>
+    </main>
+    <script src="scenario.js"></script>
+</body>
+</html>
