@@ -26,6 +26,7 @@ function showEquipment(equipmentList) {
     const editButton = document.createElement("button");
     const deleteButton = document.createElement("button");
     editButton.type = "button";
+    editButton.className = "row-edit";
     editButton.textContent = "Edit";
     //fill all cells each equipment row
     createCell(row, equipmentList[i].name);
@@ -42,6 +43,7 @@ function showEquipment(equipmentList) {
       openEditDialog(i);
     });
     deleteButton.type = "button";
+    deleteButton.className = "row-delete";
     deleteButton.textContent = "Delete";
     deleteButton.addEventListener("click", function() {
       openDeleteDialog(i);
@@ -148,6 +150,8 @@ function fillCanDoBoxes() {
     checkbox.type = "checkbox";
     checkbox.name = "canDo";
     checkbox.value = config.steps[i].name;
+    //update canDo everytime its ticked or untick
+    checkbox.addEventListener("change", showCanDoSummary);
     label.appendChild(checkbox);
     label.append(" " + config.steps[i].name);
     box.appendChild(label);
@@ -211,6 +215,8 @@ addButton.addEventListener("click", function () {
   clearErrors();
   fillCanDoBoxes();
   fillUnitChoices();
+  showCanDoSummary();
+  canDoDropdown.open = false;
   equipmentDialog.showModal();
 });
 
@@ -263,6 +269,9 @@ function openEditDialog(index) {
       boxes[i].checked = true;
     }
   }
+  //update canDo summary
+  showCanDoSummary();
+  canDoDropdown.open = false;
   equipmentDialog.showModal();
 }
 //save new equipment
@@ -365,3 +374,21 @@ confirmDeleteButton.addEventListener("click", function () {
   deleteDialog.close();
 });
 
+//can do dropdown
+const canDoDropdown = document.getElementById("can-do-dropdown");
+const canDoSummary = document.getElementById("can-do-summary");
+//show the checked item as user check items
+function showCanDoSummary() {
+  const checkedName = [];
+  const checkedItems = canDoDropdown.querySelectorAll("input[name='canDo']:checked");
+  for (let i = 0; i < checkedItems.length; i++){
+    checkedName.push(checkedItems[i].value);
+  }
+  canDoSummary.textContent = checkedName.join(", ");
+}
+//close list when user click anywhere outside
+equipmentDialog.addEventListener("click", function(event) {
+  if (canDoDropdown.contains(event.target) === false) {
+    canDoDropdown.open = false;
+  }
+});

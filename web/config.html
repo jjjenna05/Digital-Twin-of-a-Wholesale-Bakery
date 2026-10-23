@@ -43,7 +43,10 @@
                </thead>
                <tbody id="equipment-row"></tbody>
             </table>
-            <button type="button" id="add-equipment">+ Add Equipment</button>
+            <div class="table-footer">
+                <div class="footer-line"></div>
+                <button type="button" id="add-equipment" class="add-button">+ Add More</button>
+            </div>
             <dialog id="equipment-dialog" class="dialog">
               <form id="equipment-form">
                 <h2 id="equipment-dialog-header">Add Equipment</h2>
@@ -52,57 +55,92 @@
                     <p class="error" id="name-error"></p>
                 </div>
                
-            
-                <p>Can do</p>
-           
-                <!-- fillCanDoBoxes() creates  checkboxes -->
-                <div id="can-do-boxes"></div>
-                <p class="error" id="can-do-error"></p>
-                <label>Quantity <input name="quantity" type="number"></label>
-                <p class="error" id="quantity-error"></p>
-                <label>Capacity<input name="capacityAmount" type="number"></label>
-                <p class="error" id="capacity-amount-error"></p>
-                <!-- fillUnitChoices() creates the dropdown -->
-                <select id="equipment-unit" name="capacityUnit"></select>
-            
-                <label>Loads
-                  <select name="loads">
-                    <option>When full</option>
-                    <option>One by one</option>
-                  </select>
-                </label>
-            
-                <label>Switch time <input name="switchTime" type="number" placeholder="None">
-                <select name="switchTimeUnit">
-                    <option>hr</option>
-                    <option selected>min</option>
-                    <option>sec</option>
-                </select></label>
-                <label>Switched by <input name="switchedBy" type="number" placeholder="None"></label>
-                <p class="error" id="switched-by-error"></p>
-                <label>Warm up <input name="warmUpTime" type="number" placeholder="None">
-                <select name="warmUpTimeUnit" >
-                    <option>hr</option>
-                    <option selected>min</option>
-                    <option>sec</option>
-                </select></label>
-            
-                <label>Turn on
-                  <select name="turnOn">
-                    <option>At shift start</option>
-                    <option>When first needed</option>
-                  </select>
-                </label>
-            
-                <button type="button" id="cancel-equipment">Cancel</button>
-                <button type="submit">Save</button>
+                <fieldset class="choices">
+                    <legend>Can do</legend>
+                    <details class="dropdown" id="can-do-dropdown">
+                        <summary id="can-do-summary"></summary>
+                        <!-- fillCanDoBoxes() creates  checkboxes -->
+                        <div id="can-do-boxes"></div>
+                    </details>
+                    <p class="error" id="can-do-error"></p>
+                </fieldset>
+                <div class="row">
+                    <div class="field">
+                     <label>Quantity <input name="quantity" type="number"></label>
+                     <p class="error" id="quantity-error"></p>
+                    </div>
+                <div class="field">
+                    <label>Capacity
+                        <span class="pair">
+                            <input name="capacityAmount" type="number">
+                                <!-- fillUnitChoices() creates the dropdown -->
+                            <select id="equipment-unit" name="capacityUnit"></select>
+                        </span>
+                    </label>
+                    <p class="error" id="capacity-amount-error"></p>
+                </div>
+                </div>
+                <div class="row">
+                    <div class="field">
+                        <label>Loads
+                          <select name="loads">
+                            <option>When full</option>
+                            <option>One by one</option>
+                          </select>
+                        </label>
+                    </div>
+                    <div class="field">
+                        <label>Switch time 
+                            <span class="pair">
+                                <input name="switchTime" type="number" placeholder="None">
+                                <select name="switchTimeUnit" class="time-unit">
+                                    <option>hr</option>
+                                    <option selected>min</option>
+                                    <option>sec</option>
+                                </select>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="field">
+                        <label>Switched by <input name="switchedBy" type="number" placeholder="None"></label>
+                        <p class="error" id="switched-by-error"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="field">
+                        <label>Warm up
+                            <span class="pair">
+                                <input name="warmUpTime" type="number" placeholder="None">
+                                <select name="warmUpTimeUnit" class="time-unit">
+                                    <option>hr</option>
+                                    <option selected>min</option>
+                                    <option>sec</option>
+                                </select>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="field">
+                        <label>Turn on
+                            <select name="turnOn">
+                                <option>At shift start</option>
+                                <option>When first needed</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="dialog-buttons">
+                    <button type="button" id="cancel-equipment" class="secondary">Cancel</button>
+                    <button type="submit" class="primary">Save</button>
+                </div>
               </form>
             </dialog>
-            <dialog id="delete-dialog">
-                <h2 id="delete-dialog-header"></h2>
-                <p>This will remove it from the setup!</p>
-                <button type="button" id="cancel-delete">Cancel</button>
-                <button type="button" id="confirm-delete">Delete</button>
+              <dialog id="delete-dialog" class="dialog">
+                  <h2 id="delete-dialog-header"></h2>
+                  <p>This will remove it from the setup!</p>
+                  <div class="dialog-buttons">
+                      <button type="button" id="cancel-delete" class="secondary">Cancel</button>
+                      <button type="button" id="confirm-delete" class="delete">Delete</button>
+                  </div>
             </dialog>
          </section>
          <section id="steps-tab">
