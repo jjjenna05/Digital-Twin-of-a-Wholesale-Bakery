@@ -170,9 +170,21 @@ function addUnit(units, name) {
 const equipmentDialog = document.getElementById("equipment-dialog");
 const addButton = document.getElementById("add-equipment");
 const cancelButton = document.getElementById("cancel-equipment");
+const nameError = document.getElementById("name-error");
+const canDoError = document.getElementById("can-do-error");
+const quantityError = document.getElementById("quantity-error");
+const capacityAmountError = document.getElementById("capacity-amount-error");
+
+function clearErrors() {
+  nameError.textContent = "";
+  canDoError.textContent = "";
+  quantityError.textContent = "";
+  capacityAmountError.textContent = "";
+}
 
 addButton.addEventListener("click", function () {
   equipmentForm.reset();
+  clearErrors();
   fillCanDoBoxes();
   fillUnitChoices();
   equipmentDialog.showModal();
@@ -193,12 +205,36 @@ function convertUserInput(text) {
 const equipmentForm = document.getElementById("equipment-form");
 equipmentForm.addEventListener("submit", function (event) {
   event.preventDefault();
+//remove last error message
+  clearErrors();
  const fields = equipmentForm.elements;
  const userSelectedBoxes = equipmentForm.querySelectorAll('input[name="canDo"]:checked');
   const canDo = [];
   //get only userselected checkboxes
   for (let i = 0; i < userSelectedBoxes.length; i++) {
     canDo.push(userSelectedBoxes[i].value);
+  }
+  //error handle
+  let hasError = false;
+  if (fields.name.value.trim() === "") {
+    nameError.textContent = "Name something";
+    hasError = true;
+  }
+  if(userSelectedBoxes.length === 0) {
+    canDoError.textContent = "Select at least one option";
+    hasError = true;
+  }
+  if(fields.capacityAmount.value === "") {
+    capacityAmountError.textContent = "This field can't be blank";
+    hasError = true;
+  }
+  if (fields.quantity.value !== "" && Number(fields.quantity.value) < 1) {
+    quantityError.textContent = "Quantity must be at least 1";
+    hasError = true;
+  }
+  //if there is error, return 
+  if (hasError) {
+    return;
   }
   //if user didnt fill in quantity, default is 1
   let quantity = 1;
@@ -207,7 +243,7 @@ equipmentForm.addEventListener("submit", function (event) {
   }
   //fill new equipment data
   const newEquipment = {
-    name: fields.name.value,
+    name: fields.name.value.trim(),
     canDo: canDo,
     quantity: quantity,
     capacity: {
@@ -231,3 +267,7 @@ equipmentForm.addEventListener("submit", function (event) {
   showEquipment(config.equipment);
   equipmentDialog.close();
 });
+
+
+
+

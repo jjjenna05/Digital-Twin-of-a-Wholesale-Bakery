@@ -48,14 +48,17 @@
                 <h2>Add Equipment</h2>
             
                 <label>Name <input name="name"></label>
+                <p class="error" id="name-error"></p>
             
                 <p>Can do</p>
+           
                 <!-- fillCanDoBoxes() creates  checkboxes -->
                 <div id="can-do-boxes"></div>
-            
+                <p class="error" id="can-do-error"></p>
                 <label>Quantity <input name="quantity" type="number"></label>
-            
+                <p class="error" id="quantity-error"></p>
                 <label>Capacity per batch <input name="capacityAmount" type="number"></label>
+                <p class="error" id="capacity-amount-error"></p>
                 <!-- fillUnitChoices() creates the dropdown -->
                 <select id="equipment-unit" name="capacityUnit"></select>
             
