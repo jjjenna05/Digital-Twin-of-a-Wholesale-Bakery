@@ -23,6 +23,10 @@ function showEquipment(equipmentList) {
   //fill all equipments with its data from config data
   for (let i = 0; i < equipmentList.length; i++) {
     const row = document.createElement("tr");
+    const editButton = document.createElement("button");
+    const deleteButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.textContent = "Edit";
     //fill all cells each equipment row
     createCell(row, equipmentList[i].name);
     createCell(row, equipmentList[i].canDo.join(", ")); 
@@ -32,6 +36,19 @@ function showEquipment(equipmentList) {
     createCell(row, showAmount(equipmentList[i].switchTime));
     createCell(row, showAmount(equipmentList[i].warmUpTime));
     createCell(row, equipmentList[i].turnOn);
+    //last cell is for buttons
+    const buttonCell = document.createElement("td");
+    editButton.addEventListener("click", function() {
+      openEditDialog(i);
+    });
+    deleteButton.type = "button";
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", function() {
+      openDeleteDialog(i);
+    });
+    buttonCell.appendChild(editButton);
+    buttonCell.appendChild(deleteButton);
+    row.appendChild(buttonCell);
     //add finished row to the table
     bodyList.appendChild(row);
   }
@@ -174,7 +191,10 @@ const nameError = document.getElementById("name-error");
 const canDoError = document.getElementById("can-do-error");
 const quantityError = document.getElementById("quantity-error");
 const capacityAmountError = document.getElementById("capacity-amount-error");
+const dialogHeader = document.getElementById("equipment-dialog-header");
 
+let editIndex = null;
+//helper function to clear errors for every new dialog open
 function clearErrors() {
   nameError.textContent = "";
   canDoError.textContent = "";
@@ -183,6 +203,8 @@ function clearErrors() {
 }
 
 addButton.addEventListener("click", function () {
+  editIndex = null;
+  dialogHeader.textContent = "Add Equipment";
   equipmentForm.reset();
   clearErrors();
   fillCanDoBoxes();
@@ -200,6 +222,45 @@ function convertUserInput(text) {
   }
     return Number(text);
   
+}
+//helper function to bring null back to ""
+function amountToText(amount) {
+  if (amount === null) {
+    return "";
+  }
+  return amount;
+}
+//edit dialog
+function openEditDialog(index) {
+  dialogHeader.textContent = "Edit Equipment";
+  //edit index to existing equipment
+  editIndex = index;
+  equipmentForm.reset();
+  clearErrors();
+  fillCanDoBoxes();
+  fillUnitChoices();
+  //point to the equipment that user click the edit button
+  const equipment = config.equipment[index];
+  const fields = equipmentForm.elements;
+  //fill current equipment's data
+  fields.name.value = equipment.name;
+  fields.quantity.value = equipment.quantity;
+  fields.capacityAmount.value = amountToText(equipment.capacity.amount);
+  fields.capacityUnit.value = equipment.capacity.unit;
+  fields.loads.value = equipment.loads;
+  fields.switchTime.value = amountToText(equipment.switchTime.amount);
+  fields.switchTimeUnit.value = equipment.switchTime.unit;
+  fields.warmUpTime.value = amountToText(equipment.warmUpTime.amount);
+  fields.warmUpTimeUnit.value = equipment.warmUpTime.unit;
+  fields.turnOn.value = equipment.turnOn;
+  //check the exsiting checkbox and show
+  const boxes = equipmentForm.querySelectorAll('input[name="canDo"]');
+  for (let i = 0; i < boxes.length; i++) {
+    if (equipment.canDo.includes(boxes[i].value)) {
+      boxes[i].checked = true;
+    }
+  }
+  equipmentDialog.showModal();
 }
 //save new equipment
 const equipmentForm = document.getElementById("equipment-form");
@@ -262,12 +323,37 @@ equipmentForm.addEventListener("submit", function (event) {
     turnOn: fields.turnOn.value,
   };
   //push data to equipment list
-  config.equipment.push(newEquipment);
+  if (editIndex === null) {
+    //add new equipment
+    config.equipment.push(newEquipment);
+  } else {
+    //replace existing equipment with new data
+    config.equipment[editIndex] = newEquipment;
+  }
   //display updated equipment list
   showEquipment(config.equipment);
   equipmentDialog.close();
 });
 
-
-
+//delete dislog
+const deleteDialog = document.getElementById("delete-dialog");
+const deleteHeader = document.getElementById("delete-dialog-header");
+const cancelDeleteButton = document.getElementById("cancel-delete");
+const confirmDeleteButton = document.getElementById("confirm-delete");
+let deleteIndex = null;
+function openDeleteDialog(index) {
+  deleteIndex = index;
+  deleteHeader.textContent = `Delete ${config.equipment[index].name}`;
+  deleteDialog.showModal();
+}
+cancelDeleteButton.addEventListener("click", function() {
+  deleteDialog.close();
+});
+confirmDeleteButton.addEventListener("click", function () {
+  //delete relevant equipment data
+  config.equipment.splice(deleteIndex, 1);
+  //show list with updated data
+  showEquipment(config.equipment);
+  deleteDialog.close();
+});
 

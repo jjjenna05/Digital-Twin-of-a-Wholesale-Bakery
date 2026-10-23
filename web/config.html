@@ -37,7 +37,8 @@
                      <th>Loads</th>
                      <th>Switch time</th>
                      <th>Warm up</th>
-                     <th>Turn on</th>              
+                     <th>Turn on</th>           
+                     <th></th>
                   </tr>
                </thead>
                <tbody id="equipment-row"></tbody>
@@ -45,7 +46,7 @@
             <button type="button" id="add-equipment">+ Add Equipment</button>
             <dialog id="equipment-dialog">
               <form id="equipment-form">
-                <h2>Add Equipment</h2>
+                <h2 id="equipment-dialog-header">Add Equipment</h2>
             
                 <label>Name <input name="name"></label>
                 <p class="error" id="name-error"></p>
@@ -92,6 +93,12 @@
                 <button type="button" id="cancel-equipment">Cancel</button>
                 <button type="submit">Save</button>
               </form>
+            </dialog>
+            <dialog id="delete-dialog">
+                <h2 id="delete-dialog-header"></h2>
+                <p>This will remove it from the setup!</p>
+                <button type="button" id="cancel-delete">Cancel</button>
+                <button type="button" id="confirm-delete">Delete</button>
             </dialog>
          </section>
          <section id="steps-tab">
