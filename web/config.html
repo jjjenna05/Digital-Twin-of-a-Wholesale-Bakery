@@ -44,12 +44,14 @@
                <tbody id="equipment-row"></tbody>
             </table>
             <button type="button" id="add-equipment">+ Add Equipment</button>
-            <dialog id="equipment-dialog">
+            <dialog id="equipment-dialog" class="dialog">
               <form id="equipment-form">
                 <h2 id="equipment-dialog-header">Add Equipment</h2>
-            
-                <label>Name <input name="name"></label>
-                <p class="error" id="name-error"></p>
+                <div class="field">
+                    <label>Name <input name="name"></label>
+                    <p class="error" id="name-error"></p>
+                </div>
+               
             
                 <p>Can do</p>
            
@@ -58,7 +60,7 @@
                 <p class="error" id="can-do-error"></p>
                 <label>Quantity <input name="quantity" type="number"></label>
                 <p class="error" id="quantity-error"></p>
-                <label>Capacity per batch <input name="capacityAmount" type="number"></label>
+                <label>Capacity<input name="capacityAmount" type="number"></label>
                 <p class="error" id="capacity-amount-error"></p>
                 <!-- fillUnitChoices() creates the dropdown -->
                 <select id="equipment-unit" name="capacityUnit"></select>
@@ -76,6 +78,8 @@
                     <option selected>min</option>
                     <option>sec</option>
                 </select></label>
+                <label>Switched by <input name="switchedBy" type="number" placeholder="None"></label>
+                <p class="error" id="switched-by-error"></p>
                 <label>Warm up <input name="warmUpTime" type="number" placeholder="None">
                 <select name="warmUpTimeUnit" >
                     <option>hr</option>

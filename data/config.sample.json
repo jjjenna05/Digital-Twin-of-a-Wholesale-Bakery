@@ -54,6 +54,7 @@
       },
       "loads": "When full",
       "switchTime": { "amount": 5, "unit": "min" },
+      "switchedBy": null,
       "warmUpTime": { "amount": 20, "unit": "min" },
       "turnOn": "At shift start"
     },
@@ -66,6 +67,7 @@
       },
       "loads": "When full",
       "switchTime": { "amount": 5, "unit": "min" },
+      "switchedBy": null,
       "warmUpTime": { "amount": 20, "unit": "min" },
       "turnOn": "At shift start"
     },
@@ -78,6 +80,7 @@
       },
       "loads": "When full",
       "switchTime": { "amount": 10, "unit": "min" },
+      "switchedBy": 1,
       "warmUpTime": { "amount": null, "unit": "min" },
       "turnOn": "At shift start"
     },
@@ -90,6 +93,7 @@
       },
       "loads": "When full",
       "switchTime": { "amount": 0, "unit": "min" },
+      "switchedBy": null,
       "warmUpTime": { "amount": 15, "unit": "min" },
       "turnOn": "At shift start"
     },
@@ -102,6 +106,7 @@
       },
       "loads": "When full",
       "switchTime": { "amount": 0, "unit": "min" },
+      "switchedBy": null,
       "warmUpTime": { "amount": 10, "unit": "min" },
       "turnOn": "When first needed"
     },
@@ -114,6 +119,7 @@
         },
       "loads": "When full",
       "switchTime": { "amount": 0, "unit": "min" },
+      "switchedBy": null,
       "warmUpTime": { "amount": null, "unit": "min" },
       "turnOn": "At shift start"
     }

@@ -192,6 +192,7 @@ const canDoError = document.getElementById("can-do-error");
 const quantityError = document.getElementById("quantity-error");
 const capacityAmountError = document.getElementById("capacity-amount-error");
 const dialogHeader = document.getElementById("equipment-dialog-header");
+const switchedByError = document.getElementById("switched-by-error");
 
 let editIndex = null;
 //helper function to clear errors for every new dialog open
@@ -200,6 +201,7 @@ function clearErrors() {
   canDoError.textContent = "";
   quantityError.textContent = "";
   capacityAmountError.textContent = "";
+  switchedByError.textContent = "";
 }
 
 addButton.addEventListener("click", function () {
@@ -250,6 +252,7 @@ function openEditDialog(index) {
   fields.loads.value = equipment.loads;
   fields.switchTime.value = amountToText(equipment.switchTime.amount);
   fields.switchTimeUnit.value = equipment.switchTime.unit;
+  fields.switchedBy.value = amountToText(equipment.switchedBy);
   fields.warmUpTime.value = amountToText(equipment.warmUpTime.amount);
   fields.warmUpTimeUnit.value = equipment.warmUpTime.unit;
   fields.turnOn.value = equipment.turnOn;
@@ -293,6 +296,10 @@ equipmentForm.addEventListener("submit", function (event) {
     quantityError.textContent = "Quantity must be at least 1";
     hasError = true;
   }
+  if(fields.switchedBy.value !== "" && Number(fields.switchedBy.value) < 0) {
+    switchedByError.textContent = "must be 0 or more";
+    hasError = true;
+  }
   //if there is error, return 
   if (hasError) {
     return;
@@ -316,6 +323,7 @@ equipmentForm.addEventListener("submit", function (event) {
       amount: convertUserInput(fields.switchTime.value),
       unit: fields.switchTimeUnit.value,
     },
+    switchedBy: convertUserInput(fields.switchedBy.value),
     warmUpTime: {
       amount: convertUserInput(fields.warmUpTime.value),
       unit: fields.warmUpTimeUnit.value,
