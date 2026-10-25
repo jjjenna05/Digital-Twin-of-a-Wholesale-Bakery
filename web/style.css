@@ -150,6 +150,7 @@ table.list td:first-child{
     border-radius: 6px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     font-size: 14px;
+    overflow: visible;
 }
 .dialog::backdrop {
    background: rgba(0, 0, 0, 0.4);
@@ -225,7 +226,7 @@ table.list td:first-child{
    list-style: none;
    cursor: pointer;
 }
-#can-do-boxes {
+.dropdown-list {
    position: absolute;
    top: 46px;
    left: 0;
@@ -236,7 +237,7 @@ table.list td:first-child{
    border: 1px solid var(--border);
    border-radius: 6px;
 }
-#can-do-boxes label {
+.dropdown-list label {
    display: flex;
    align-items: center;
    gap: 8px;

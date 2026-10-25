@@ -60,7 +60,7 @@
                     <details class="dropdown" id="can-do-dropdown">
                         <summary id="can-do-summary"></summary>
                         <!-- fillCanDoBoxes() creates  checkboxes -->
-                        <div id="can-do-boxes"></div>
+                        <div id="can-do-boxes" class="dropdown-list"></div>
                     </details>
                     <p class="error" id="can-do-error"></p>
                 </fieldset>
@@ -166,16 +166,52 @@
                <tbody id="units-row"></tbody>
             </table>
          </section>
+         <!--roles tab-->
          <section id="roles-tab" hidden>
             <table class="list">
                <thead>
                   <tr>
                      <th>Role</th>
                      <th>Can do</th>
+                     <!-- for edit/delete button  -->
+                     <th></th>
                   </tr>
                </thead>
                <tbody id="roles-row"></tbody>
             </table>
+            <div class="table-footer">
+                <div class="footer-line"></div>
+                <button type="button" id="add-roles" class="add-button">+ Add More</button>
+            </div>
+            <dialog id="roles-dialog" class="dialog">
+               <form id="roles-form">
+                   <h2 id="roles-dialog-header">Add Role</h2>
+                   <div class="field">
+                       <label>Role <input name="name"></label>
+                       <p class="error" id="roles-name-error"></p>
+                   </div>
+                   <fieldset class="choices">
+                       <legend>Can do</legend>
+                       <details id="roles-can-do-dropdown" class="dropdown">
+                           <summary id="roles-can-do-summary"></summary>
+                           <div id="roles-can-do-boxes" class="dropdown-list"></div>
+                       </details>
+                       <p class="error" id="roles-can-do-error"></p>
+                   </fieldset>
+                   <div class="dialog-buttons">
+                       <button type="button" id="cancel-roles" class="secondary">Cancel</button>
+                       <button type="submit" class="primary">Save</button>
+                   </div>
+               </form>
+            </dialog>
+            <dialog id="delete-roles-dialog" class="dialog">
+                <h2 id="delete-roles-dialog-header"></h2>
+                <p>This will remove it from the setup!</p>
+                <div class="dialog-buttons">
+                    <button type="button" id="cancel-roles-delete" class="secondary">Cancel</button>
+                    <button type="button" id="confirm-roles-delete" class="delete">Delete</button>
+                </div>
+          </dialog>
          </section>
          <section id="recipe-tab" hidden>
             <table class="list">
@@ -191,6 +227,6 @@
             
          </section> 
    </main>
-   <script src="config.js"></script>
+   <script type="module" src="config.js"></script>
 </body>
 </html>
