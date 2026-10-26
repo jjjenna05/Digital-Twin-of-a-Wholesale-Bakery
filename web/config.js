@@ -1,8 +1,8 @@
 import { startEquipmentTab } from "./config-equipment.js";
 import { startRolesTab } from "./config-roles.js";
 import { startUnitsTab } from "./config-units.js";
+import { startStepsTab } from "./config-steps.js";
 const recipesListBody = document.getElementById("recipe-row");
-const stepsListBody = document.getElementById("steps-row");
 // helper function to fill the amount correctly. if user dont type, return None
 export function showAmount(value) {
     if (value.amount === null) {
@@ -31,17 +31,6 @@ export function amountToText(amount) {
   }
   return amount;
 }
-
-function showSteps(stepsList) {
-  for (let i = 0; i < stepsList.length; i++) {
-    const row = document.createElement("tr");
-    createCell(row, stepsList[i].name);
-    createCell(row, stepsList[i].kind);
-    stepsListBody.appendChild(row);
-  }
-}
-
-
 function showRecipes(recipesList) {
   for (let i = 0; i < recipesList.length; i++) {
     const row = document.createElement("tr");
@@ -64,7 +53,7 @@ async function loadConfig() {
   const configData = await response.json();
   //send data to config-equipment.js and call function
   startEquipmentTab(configData);
-  showSteps(configData.steps);
+  startStepsTab(configData);
   startUnitsTab(configData);
   startRolesTab(configData);
   showRecipes(configData.recipes);

@@ -149,10 +149,67 @@
                   <tr>
                      <th>Step Name</th>
                      <th>Kind</th>
+                     <th></th>
                   </tr>
                </thead>
                <tbody id="steps-row"></tbody>
             </table>
+            <div class="table-footer">
+               <div class="footer-line"></div>
+               <button type="button" id="add-steps" class="add-button">+ Add More</button>
+            </div>
+            <dialog id="steps-dialog" class="dialog">
+               <form id="steps-form">
+                   <h2 id="steps-dialog-header">Add Step</h2>
+                   <div class="field">
+                       <label>Step name <input name="name"></label>
+                       <p class="error" id="steps-name-error"></p>
+                       <p class="hint" id="steps-name-hint"></p>
+                   </div>
+                   <div class="field">
+                       <label>Kind
+                           <select name="kind">
+                               <!-- These four options are hardcoded by design -->
+                               <option value=""></option>
+                               <option>Machine</option>
+                               <option>Hands-on machine</option>
+                               <option>By hand</option>
+                               <option>Wait</option>
+                           </select>
+                       </label>
+                       <p class="error" id="steps-kind-error"></p>
+                       <p class="hint" id="steps-kind-hint"></p>
+                   </div>
+                   <!-- only for By hand and Hands-on machine, config-steps.js shows it -->
+                   <div class="field" id="steps-can-stop-field" hidden>
+                       <label>Can stop for a load?
+                           <select name="canStop">
+                               <option>No</option>
+                               <option>Yes</option>
+                           </select>
+                       </label>
+                   </div>
+                   <div class="dialog-buttons">
+                       <button type="button" id="cancel-steps" class="secondary">Cancel</button>
+                       <button type="submit" class="primary">Save</button>
+                   </div>
+               </form>
+            </dialog>
+            <dialog id="delete-steps-dialog" class="dialog">
+              <h2 id="delete-steps-dialog-header"></h2>
+              <p>This will remove it from the setup!</p>
+              <div class="dialog-buttons">
+                  <button type="button" id="cancel-steps-delete" class="secondary">Cancel</button>
+                  <button type="button" id="confirm-steps-delete" class="delete">Delete</button>
+              </div>
+            </dialog>
+            <dialog id="steps-in-use-dialog" class="dialog">
+              <h2 id="steps-in-use-header"></h2>
+              <p id="steps-in-use-text"></p>
+              <div class="dialog-buttons">
+                  <button type="button" id="close-steps-in-use" class="primary">OK</button>
+              </div>
+          </dialog>
          </section>
          <section id="units-tab" hidden>
             <table class="list">

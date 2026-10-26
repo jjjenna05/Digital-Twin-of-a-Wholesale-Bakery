@@ -21,28 +21,28 @@
   ],
   "steps": [
     {
-      "name": "Mix", "kind": "Machine"
+      "name": "Mix", "kind": "Machine", "canStop": null
     },
     {
-      "name": "Laminate", "kind": "Hands-on machine"
+      "name": "Laminate", "kind": "Hands-on machine", "canStop": false
     },
     {
-      "name": "Proof", "kind": "Machine"
+      "name": "Proof", "kind": "Machine", "canStop": null
     },
     {
-      "name": "Bake", "kind": "Machine"
+      "name": "Bake", "kind": "Machine", "canStop": null
     },
     {
-      "name": "Fry", "kind": "Machine"
+      "name": "Fry", "kind": "Machine", "canStop": null
     },
     {
-      "name": "Cool", "kind": "Wait"
+      "name": "Cool", "kind": "Wait", "canStop": null
     },
     {
-      "name": "Finish", "kind": "By hand"
+      "name": "Finish", "kind": "By hand", "canStop": true
     },
     {
-      "name": "Pack", "kind": "By hand"
+      "name": "Pack", "kind": "By hand", "canStop": true
     }
   ],
   "roles": [
