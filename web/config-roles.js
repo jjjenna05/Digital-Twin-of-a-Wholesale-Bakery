@@ -23,7 +23,7 @@ function showRoles(rolesList) {
     //fill cells
     createCell(row, rolesList[i].name);
     createCell(row, rolesList[i].canDo.join(", "));
-    //for buttons
+    //for edit/delete buttons
     const buttonCell = document.createElement("td");
     editButton.addEventListener("click", function (){
       openEditDialog(i);
@@ -144,7 +144,7 @@ form.addEventListener("submit", function (event) {
     name: fields.name.value.trim(),
     canDo: canDo,
   };
-  //push data to cando table if not edit
+  //push data to table if not edit
   if(editIndex === null) {
     config.roles.push(newRole);
   } else {

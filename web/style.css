@@ -11,6 +11,7 @@
    --dark: #333333;
    --border: #bdbdbd;
    --error: #d32f2f;
+   --hint: #6b6b6b;
 }
 body{
    margin: 0;
@@ -254,6 +255,15 @@ table.list td:first-child{
 .error:empty {
    display: none;
 }
+.hint {
+   margin: 6px 0 0;
+   color: var(--hint);
+   font-size: 12px;
+}
+.hint:empty {
+   display: none;
+}
+
 /* buttons */
 .dialog-buttons {
    display: flex;

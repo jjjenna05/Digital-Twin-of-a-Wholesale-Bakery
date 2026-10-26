@@ -75,30 +75,13 @@ function fillCanDoBoxes() {
 function fillUnitChoices() {
  const select = document.getElementById("equipment-unit");
   select.replaceChildren();
-  //array to colect all units fron config
-  const units = [];
-  //get units from config.units
-  for (let i = 0; i < config.units.length; i++){
-    addUnit(units, config.units[i].unit);
-    addUnit(units, config.units[i].of);
-  }
-  //get units from config.equipment.capacity unit
-  for (let i = 0; i < config.equipment.length; i++){
-    addUnit(units, config.equipment[i].capacity.unit);
-  }
-  //create dropdown
-  for (let i = 0; i < units.length; i++) {
+
+  //create dropdown for all units in config
+  for (let i = 0; i < config.units.length; i++) {
     const dropdownOption = document.createElement("option");
-    dropdownOption.value = units[i];
-    dropdownOption.textContent = units[i];
+    dropdownOption.value = config.units[i].unit;
+    dropdownOption.textContent = config.units[i].unit;
     select.appendChild(dropdownOption);
-  }
-}
-function addUnit(units, name) {
-  //add only if it isnt there yet
-  if (!units.includes(name)) {
-    //add to end of list
-    units.push(name);
   }
 }
 

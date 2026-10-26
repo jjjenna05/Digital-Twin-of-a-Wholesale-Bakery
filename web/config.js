@@ -1,6 +1,6 @@
 import { startEquipmentTab } from "./config-equipment.js";
 import { startRolesTab } from "./config-roles.js";
-const unitsListBody = document.getElementById("units-row");
+import { startUnitsTab } from "./config-units.js";
 const recipesListBody = document.getElementById("recipe-row");
 const stepsListBody = document.getElementById("steps-row");
 // helper function to fill the amount correctly. if user dont type, return None
@@ -40,16 +40,7 @@ function showSteps(stepsList) {
     stepsListBody.appendChild(row);
   }
 }
-function showUnits(unitsList) {
-  for (let i = 0; i < unitsList.length; i++) {
-    const row = document.createElement("tr");
-    createCell(row, unitsList[i].unit);
-    createCell(row, `${unitsList[i].equals} ${unitsList[i].of}`);
-    //no data yet
-    createCell(row, "No limit");
-    unitsListBody.appendChild(row);
-  }
-}
+
 
 function showRecipes(recipesList) {
   for (let i = 0; i < recipesList.length; i++) {
@@ -74,7 +65,7 @@ async function loadConfig() {
   //send data to config-equipment.js and call function
   startEquipmentTab(configData);
   showSteps(configData.steps);
-  showUnits(configData.units);
+  startUnitsTab(configData);
   startRolesTab(configData);
   showRecipes(configData.recipes);
 }

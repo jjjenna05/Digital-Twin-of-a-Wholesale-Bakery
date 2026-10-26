@@ -1,10 +1,22 @@
 {
   "units": [
     {
-      "unit": "Dozens", "equals": 12, "of": "Pieces"
+      "unit": "Dozens", "equals": 12, "of": "Pieces", "owned": null
     },
     {
-      "unit": "Racks", "equals": 6, "of": "Trays"
+      "unit": "Racks", "equals": 6, "of": "Trays", "owned": 8
+    },
+    {
+      "unit": "Trays", "equals": null, "of": "", "owned": 60
+    },
+    {
+      "unit": "Pounds", "equals": null, "of": "", "owned": null
+    },
+    {
+      "unit": "Gallons", "equals": null, "of": "", "owned": null
+    },
+    {
+      "unit": "Pieces", "equals": null, "of": "", "owned": null
     }
   ],
   "steps": [
