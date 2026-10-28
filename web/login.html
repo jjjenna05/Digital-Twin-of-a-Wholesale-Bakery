@@ -17,25 +17,15 @@
          <form>
             <label>
                User ID
-               <input type="text" name="userID" autocomplete="username" required>
+               <input type="text" name="userID" autocomplete="username" required
+               inputmode="numeric" pattern="[0-9]{8}" maxlength="8"
+               title="Enter your 8 digit user ID">
             </label>
             <button type="submit">Log in</button>
+            <p id="loginError" role="alert" style="color:#b00020"></p>
          </form>
       </div>
    </main>
-   <script>
-   document.querySelector("main.login form").addEventListener("submit", function (e) {
-      e.preventDefault(); //stops the page reload
-
-      const userID = this.elements.userID.value.trim();
-      if (!userID) {
-         this.elements.userID.value = "";
-         this.elements.userID.reportValidity();
-         return;
-      }
-      //to do later: check for correct userID
-      window.location.href = "dashboard.html";
-   });
-   </script>
+   <script src="login.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,6 @@
+{
+  "users": [
+    { "userID": "12312333", "name": "Crazy Bakery" },
+    { "userID": "10000001", "name": "dev-team" }
+  ]
+}
