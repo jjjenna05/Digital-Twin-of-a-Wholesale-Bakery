@@ -54,6 +54,38 @@
     color: #666666;
 }
 
+.navUser {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--dark);
+}
+
+.navUser button {
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--dark);
+    background-color: white;
+    border: 1px solid #dddddd;
+    border-radius: 999px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.navUser button:hover {
+    background-color: #f2f2f2;
+}
+
+.navUser button:focus-visible {
+    outline: 2px solid #777777;
+    outline-offset: 2px;
+}
+
 @media (max-width: 720px) {
     .dashboard {
         padding: 24px;

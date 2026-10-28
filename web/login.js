@@ -40,6 +40,5 @@ form.addEventListener("submit", async function (e) {
       return;
    }
 
-   sessionStorage.setItem("user", JSON.stringify(data.user));
    window.location.href = "dashboard.html";
 });
