@@ -2,7 +2,8 @@ import { startEquipmentTab } from "./config-equipment.js";
 import { startRolesTab } from "./config-roles.js";
 import { startUnitsTab } from "./config-units.js";
 import { startStepsTab } from "./config-steps.js";
-const recipesListBody = document.getElementById("recipe-row");
+import { startRecipesTab } from "./config-recipes.js";
+
 // helper function to fill the amount correctly. if user dont type, return None
 export function showAmount(value) {
     if (value.amount === null) {
@@ -31,22 +32,6 @@ export function amountToText(amount) {
   }
   return amount;
 }
-function showRecipes(recipesList) {
-  for (let i = 0; i < recipesList.length; i++) {
-    const row = document.createElement("tr");
-    //display each recipe steps in correct format
-    const stepNames = [];
-    for (let j = 0; j < recipesList[i].steps.length; j++) {
-      stepNames.push(recipesList[i].steps[j].step);
-    }
-    createCell(row, recipesList[i].name);
-    createCell(row, stepNames.join(" > "));
-    //no data yet
-    createCell(row, "None");
-    recipesListBody.appendChild(row);
-  }
-}
-
 //load data from config.sample.json
 async function loadConfig() {
   const response = await fetch("../data/config.sample.json");
@@ -56,7 +41,7 @@ async function loadConfig() {
   startStepsTab(configData);
   startUnitsTab(configData);
   startRolesTab(configData);
-  showRecipes(configData.recipes);
+  startRecipesTab(configData);
 }
 loadConfig();
 

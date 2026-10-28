@@ -333,3 +333,166 @@ table.list td:first-child{
    margin-left: 12px;
    color: var(--error);
 }
+.recipes-dialog {
+   width: 1170px;
+   max-width: calc(100vw - 32px);
+   overflow: auto;
+}
+.recipe-section {
+   margin-bottom: 16px;
+}
+.step-rows {
+   width: 100%;
+   border-collapse: collapse;
+   table-layout: fixed;
+}
+.step-rows th {
+   padding: 0px 4px 6px;
+   font-size: 13px;
+   font-weight: 600;
+   text-align: left;
+}
+.step-rows th:nth-child(1) {
+   width: 130px;
+}
+.step-rows th:nth-child(2),
+.step-rows th:nth-child(3), 
+.step-rows th:nth-child(5){
+   width: 120px;
+}
+
+.step-rows th:nth-child(7),
+.step-rows th:nth-child(8) {
+   width: 140px;
+}
+.step-rows th:nth-child(4) {
+   width: 90px;
+}
+.step-rows th:nth-child(6) {
+   width: 112px;
+}
+.step-rows th:nth-child(9) {
+   width: 72px;
+
+}
+.step-rows td {
+   padding: 0 4px 8px;
+}
+.step-rows input,
+.step-rows select {
+   box-sizing: border-box;
+   width: 100%;
+   height: 40px;
+   padding: 0 6px;
+   border: 1px solid var(--border);
+   border-radius: 6px;
+   font-family: inherit;
+   font-size: 13px;
+}
+/* same arrow  */
+.step-rows select {
+   appearance: none;
+   padding-right: 28px;
+   background: white url("arrow-down.svg") no-repeat right 10px center;
+}
+.add-step {
+   height: 36px;
+   padding: 0 14px;
+   border: 0;
+   border-radius: 8px;
+   background: var(--grey-button);
+   color: var(--dark);
+   font-family: inherit;
+   font-size: 14px;
+   font-weight: 600;
+   cursor: pointer;
+}
+.field.inline label {
+   flex-direction: row;
+   align-items: center;
+   gap: 12px;
+}
+.field.inline select {
+   width: 240px;
+}
+.cell-pair {
+   display: flex;
+   gap: 4px;
+}
+.cell-pair input {
+   flex: 1;
+   min-width: 0;
+}
+.cell-pair select {
+   width: 52px;
+   flex-shrink: 0;
+   padding: 0 16px 0 6px;
+   background-position: right 5px center;
+}
+.row-remove, .row-add-machine {
+   border: 0;
+   background: none;
+   font-size: 18px;
+   cursor: pointer;
+}
+.machine-row td:first-child {
+   padding-left: 20px;
+}
+.step-rows td:last-child {
+   text-align: right;
+}
+.capacity-unit {
+   width: 112px;
+}
+.capacity-amount {
+   width: 72px;
+}
+.capacity-of {
+   width: 168px;
+}
+.made-from-row,
+.capacity-row {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   margin-bottom: 8px;
+}
+.made-from-row input,
+.made-from-row select,
+.capacity-row input,
+.capacity-row select {
+   box-sizing: border-box;
+   height: 40px;
+   padding: 0 8px;
+   border: 1px solid var(--border);
+   border-radius: 6px;
+   font-family: inherit;
+   font-size: 13px;
+}
+/* same arrow */
+.made-from-row select,
+.capacity-row select {
+   appearance: none;
+   padding-right: 28px;
+   background: white url("arrow-down.svg") no-repeat right 10px center;
+}
+.made-from-item {
+   width: 168px;
+}
+.made-from-amount {
+   width: 72px;
+}
+.made-from-unit,
+.made-from-step {
+   width: 112px;
+}
+.made-from-step:has(option[value=""]:checked) {
+   color: var(--hint);
+}
+.made-from-step option {
+   color: black;
+}
+input.error-box,
+select.error-box {
+   border-color: var(--error);
+}

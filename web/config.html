@@ -326,11 +326,81 @@
                      <th>Item Name</th>
                      <th>Steps</th>
                      <th>Made from</th>
+                     <th></th>
                   </tr>
                </thead>
                <tbody id="recipe-row"></tbody>
             </table>
-            
+            <div class="table-footer">
+                <div class="footer-line"></div>
+                <button type="button" class="add-button" id="add-recipes">+ Add More</button>
+            </div>
+            <dialog id="recipes-dialog" class="dialog recipes-dialog">
+               <form id="recipes-form">
+                   <h2 id="recipes-dialog-header">Add Recipe</h2>
+                   <div class="field">
+                       <label>Item name <input name="name"></label>
+                       <p class="error" id="recipes-name-error"></p>
+                   </div>
+                   <fieldset class="choices">
+                       <legend>Made from</legend>
+                       <!-- config-recipes.js adds one row per item this is made from -->
+                       <div id="recipes-made-from-rows"></div>
+                       <button type="button" id="recipes-add-made-from" class="add-step">Add more</button>
+                       <p class="error" id="recipes-made-from-error"></p>
+                   </fieldset>
+                   <div class="recipe-section">
+                       <table class="step-rows">
+                           <thead>
+                               <tr>
+                                   <th>Steps</th>
+                                   <th>Machine Time</th>
+                                   <th>Staff Time</th>
+                                   <th>Workers</th>
+                                   <th>Wait Time</th>
+                                   <!--for per load or  unit-->
+                                   <th></th>
+                                   <th>Max Wait</th>
+                                   <th>Inside</th>
+                                   <!--for row buttons-->
+                                   <th></th>
+                               </tr>
+                           </thead>
+                           <!-- configrecipes.js adds one row per step -->
+                           <tbody id="recipes-step-rows"></tbody>
+                       </table>
+                       <button type="button" id="recipes-add-step" class="add-step">Add more steps</button>
+                       <p class="error" id="recipes-steps-error"></p>
+                   </div>
+                   <fieldset class="choices">
+                       <legend>Capacity</legend>
+                       <!-- config-recipes.js adds one row per capacity -->
+                       <div id="recipes-capacity-rows"></div>
+                       <button type="button" id="recipes-add-capacity" class="add-step">Add more</button>
+                       <p class="error" id="recipes-capacity-error"></p>
+                   </fieldset>
+                   <div class="field inline">
+                       <label>Last batch
+                           <select name="lastBatch">
+                               <option>Only what's needed</option>
+                               <option>Full batch</option>
+                           </select>
+                       </label>
+                   </div>
+                   <div class="field inline">
+                       <label>After a scrap
+                           <select name="afterScrap">
+                               <option>Do not make a new batch</option>
+                               <option>Make a new batch</option>
+                           </select>
+                       </label>
+                   </div>
+                   <div class="dialog-buttons">
+                       <button type="button" id="cancel-recipes" class="secondary">Cancel</button>
+                       <button type="submit" class="primary">Save</button>
+                   </div>
+               </form>
+            </dialog>
          </section> 
    </main>
    <script type="module" src="config.js"></script>

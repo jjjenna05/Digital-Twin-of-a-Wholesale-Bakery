@@ -206,9 +206,31 @@ function countUsedUnits(unitName) {
       units++;
     }
   }
+  //recipe has unit in three differnet places so check all three
   for (let i = 0; i < config.recipes.length; i++){
-    if(config.recipes[i].batchSize.unit === unitName) {
-      recipes++;
+  const recipe = config.recipes[i];
+    let usesUnit = false;
+    //check in capacity
+  for (let j = 0; j < recipe.capacity.length; j++) {
+    if (recipe.capacity[j].unit === unitName || recipe.capacity[j].of === unitName) {
+      usesUnit = true;
+    }
+  }
+    //check in madeFrom
+  for (let j = 0; j < recipe.madeFrom.length; j++) {
+    if (recipe.madeFrom[j].unit === unitName) {
+      usesUnit = true;
+    }
+  }
+    //check in steps
+  for (let j = 0; j < recipe.steps.length; j++) {
+    if (recipe.steps[j].per === unitName) {
+      usesUnit = true;
+    }
+  }
+    //count only once
+  if (usesUnit) {
+    recipes++;
     }
   }
   //return count number in one object
