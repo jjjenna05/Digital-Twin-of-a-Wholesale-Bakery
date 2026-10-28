@@ -3,6 +3,8 @@ import { startRolesTab } from "./config-roles.js";
 import { startUnitsTab } from "./config-units.js";
 import { startStepsTab } from "./config-steps.js";
 import { startRecipesTab } from "./config-recipes.js";
+import { startPreferencesTab } from "./config-preferences.js";
+
 
 // helper function to fill the amount correctly. if user dont type, return None
 export function showAmount(value) {
@@ -42,6 +44,7 @@ async function loadConfig() {
   startUnitsTab(configData);
   startRolesTab(configData);
   startRecipesTab(configData);
+  startPreferencesTab(configData);
 }
 loadConfig();
 

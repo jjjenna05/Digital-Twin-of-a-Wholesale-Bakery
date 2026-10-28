@@ -17,7 +17,12 @@
    </nav>
 
    <main class="config">
-      <h1>Config</h1>
+    <h1>
+       <select id="config-pick" class="config-pick" aria-label="Saved configurations">
+           <!-- shown until the first save, config-preferences.js adds the saved names -->
+           <option value="" disabled selected>Config</option>
+       </select>
+    </h1>
       <div class="configTabs">
          <button type="button" class="active" data-tab="steps-tab">Steps</button>
          <button type="button" data-tab="units-tab">Units</button>
@@ -402,6 +407,22 @@
                </form>
             </dialog>
          </section> 
+         <section id="preferences-tab" hidden>
+            <button type="button" id="save-config" class="primary save-config">Save current configuration</button>
+            <dialog id="save-config-dialog" class="dialog">
+               <form id="save-config-form">
+                   <h2>Save configuration</h2>
+                   <div class="field">
+                       <label>Name <input name="name"></label>
+                       <p class="error" id="save-config-error"></p>
+                   </div>
+                   <div class="dialog-buttons">
+                       <button type="button" id="cancel-save-config" class="secondary">Cancel</button>
+                       <button type="submit" class="primary">Save</button>
+                   </div>
+               </form>
+            </dialog>
+         </section>
    </main>
    <script type="module" src="config.js"></script>
 </body>
