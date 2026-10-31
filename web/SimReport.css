@@ -16,24 +16,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.navBar {
-  margin: 0 4px;
-}
-
-.brand {
-  color: #000;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.navLinks {
-  align-items: center;
-}
-
-.navLinks a {
-  white-space: nowrap;
-}
-
 main {
   max-width: 1600px;
   margin: 0 auto;
@@ -220,6 +202,12 @@ h1 {
   font-weight: 700;
 }
 
+.breakdownNote {
+  margin: -12px 0 18px;
+  font-size: 13px;
+  color: #6f6f6f;
+}
+
 .breakdownRow {
   display: flex;
   align-items: center;
@@ -274,7 +262,6 @@ h1 {
   background: var(--orange);
 }
 
-.onBreak,
 .idle {
   background: var(--idle);
 }
@@ -413,5 +400,18 @@ h1 {
 
   .actions button {
     width: 100%;
+  }
+}
+
+@media print {
+  .navBar,
+  .pdfButton,
+  .actions {
+    display: none;
+  }
+
+  main {
+    max-width: none;
+    padding: 0;
   }
 }
