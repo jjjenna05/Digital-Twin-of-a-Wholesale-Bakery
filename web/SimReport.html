@@ -4,241 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simulation Report | Bakery</title>
-  <style>
-    @font-face {
-      font-family: "Inter";
-      src: url("fonts/InterVariable.woff2") format("woff2");
-      font-weight: 100 900;
-      font-display: swap;
-    }
-
-    :root {
-      --nav: #e5e5e5;
-      --dark: #333333;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: "Inter", Arial, sans-serif;
-      color: #000;
-      background: #fff;
-    }
-
-    .navBar {
-      height: 64px;
-      margin: 0 4px;
-      padding: 0 80px;
-      background: var(--nav);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 18px;
-    }
-
-    .brand {
-      color: #000;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .navLinks {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .navLinks a {
-      color: var(--dark);
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .navLinks a.active {
-      font-weight: 700;
-    }
-
-    main {
-      padding: 24px 80px 0;
-    }
-
-    .backLink {
-      display: inline-block;
-      margin: 0 0 34px;
-      color: #000;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 32px;
-      line-height: 1.2;
-      font-weight: 700;
-    }
-
-
-    .equipmentAnalysis {
-      margin: 24px 7px 0;
-      border: 1px solid #bdbdbd;
-      padding: 0 16px 16px;
-    }
-
-    .equipmentAnalysis h2 {
-      margin: 0 -16px 4px;
-      padding: 10px 16px 8px;
-      background: #f2f2f2;
-      font-size: 20px;
-      line-height: 1.2;
-      font-weight: 700;
-    }
-
-    table.equipmentTable {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-      text-align: center;
-    }
-
-    .equipmentTable th,
-    .equipmentTable td {
-      border: 1px solid #bdbdbd;
-      height: 34px;
-      padding: 6px 12px;
-      font-weight: 400;
-    }
-
-    .equipmentTable th {
-      background: #f2f2f2;
-    }
-
-
-    .analysisPanel {
-      margin: 24px 7px 0;
-      border: 1px solid #bdbdbd;
-      padding: 0 16px 16px;
-    }
-
-    .analysisPanel h2 {
-      margin: 0 -16px 4px;
-      padding: 10px 16px 8px;
-      background: #f2f2f2;
-      font-size: 20px;
-      line-height: 1.2;
-      font-weight: 700;
-    }
-
-    .productionCards {
-      display: grid;
-      grid-template-columns: 1fr 1.08fr 0.78fr;
-      gap: 12px;
-    }
-
-    .productionCard {
-      border: 1px solid #bdbdbd;
-      padding: 16px 12px;
-      min-height: 164px;
-      font-size: 14px;
-    }
-
-    .productionCard h3 {
-      margin: 0 0 8px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .productionCard ul {
-      margin: 0;
-      padding-left: 16px;
-      line-height: 1.6;
-    }
-
-    table.employeeTable {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .employeeTable th,
-    .employeeTable td {
-      border: 1px solid #bdbdbd;
-      height: 34px;
-      padding: 6px 12px;
-      font-weight: 400;
-    }
-
-    .employeeTable th {
-      background: #f2f2f2;
-    }
-
-    @media (max-width: 760px) {
-      .analysisPanel {
-        margin: 24px 0 0;
-        padding: 0 8px 8px;
-        overflow-x: auto;
-      }
-
-      .analysisPanel h2 {
-        margin: 0 -8px 4px;
-        padding: 10px 8px 8px;
-      }
-
-      .productionCards {
-        min-width: 540px;
-      }
-
-      table.employeeTable {
-        min-width: 560px;
-      }
-    }
-
-    @media (max-width: 760px) {
-      .equipmentAnalysis {
-        margin: 24px 0 0;
-        padding: 0 8px 8px;
-        overflow-x: auto;
-      }
-
-      .equipmentAnalysis h2 {
-        margin: 0 -8px 4px;
-        padding: 10px 8px 8px;
-      }
-
-      .equipmentTable {
-        min-width: 560px;
-      }
-    }
-
-    @media (max-width: 760px) {
-      .navBar {
-        height: auto;
-        min-height: 64px;
-        padding: 16px 20px;
-        align-items: flex-start;
-        gap: 16px;
-        flex-direction: column;
-      }
-
-      .navLinks {
-        flex-wrap: wrap;
-        gap: 12px 18px;
-        font-size: 16px;
-      }
-
-      main {
-        padding: 24px 20px 0;
-      }
-
-      h1 {
-        font-size: 28px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="SimReport.css" />
 </head>
 <body>
   <header class="navBar">
@@ -253,86 +19,312 @@
   </header>
 
   <main>
-    <a class="backLink" href="#">‹ Back</a>
-    <h1>Simulation Report</h1>
+    <div class="pageHeader">
+      <h1>Results</h1>
+      <button class="pdfButton" type="button">Download PDF</button>
+    </div>
 
-    <section class="equipmentAnalysis" aria-labelledby="equipment-analysis-title">
-      <h2 id="equipment-analysis-title">Equipment Analysis</h2>
-      <table class="equipmentTable">
+    <div class="tableWrap">
+      <table class="resultsTable">
         <thead>
           <tr>
-            <th scope="col">Equipment</th>
-            <th scope="col">Usage</th>
-            <th scope="col">Active Time</th>
-            <th scope="col">Inactive Time</th>
+            <th scope="col" class="col-item">Item</th>
+            <th scope="col" class="col-quantity">Quantity</th>
+            <th scope="col" class="col-due">Due</th>
+            <th scope="col" class="col-ready">Ready</th>
+            <th scope="col" class="col-status">Status</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>Mixer</td><td>x</td><td>x</td><td>x</td></tr>
-          <tr><td>Oven</td><td>x</td><td>x</td><td>x</td></tr>
-          <tr><td>XXXX</td><td>x</td><td>x</td><td>x</td></tr>
-          <tr><td>XXXX</td><td>x</td><td>x</td><td>x</td></tr>
+          <tr>
+            <td>Glazed Donuts</td>
+            <td>200 Pieces</td>
+            <td>02:00</td>
+            <td>02:31</td>
+            <td><span class="status late">Late 31 min</span></td>
+          </tr>
+          <tr>
+            <td>Chocolate Donuts</td>
+            <td>100 Pieces</td>
+            <td>03:00</td>
+            <td>02:36</td>
+            <td><span class="status">On time</span></td>
+          </tr>
+          <tr>
+            <td>Conchas</td>
+            <td>12 Dozens (144 pieces)</td>
+            <td>03:00</td>
+            <td>02:45</td>
+            <td><span class="status">On time</span></td>
+          </tr>
+          <tr>
+            <td>Croissants</td>
+            <td>300 Pieces</td>
+            <td>04:00</td>
+            <td>03:14</td>
+            <td><span class="status">On time</span></td>
+          </tr>
         </tbody>
       </table>
+    </div>
+
+    <section class="lateSection" aria-labelledby="late-title">
+      <h2 id="late-title">Find out why Glazed Donuts was 31 min late</h2>
+      <p class="sectionNote">Every wait of 3 minutes or more listed below in order</p>
+
+      <ol class="timeline">
+        <li>
+          <span class="stamp">At <strong>22:17</strong></span>
+          <p class="event">
+            Glazed Donuts batch 1 was waiting for a Free Proofer A for 75 min.
+            <span class="detail">Because proofer A was not free. It was busy with croissants job until 23:32.</span>
+          </p>
+        </li>
+        <li>
+          <span class="stamp">At <strong>00:14</strong></span>
+          <p class="event">
+            Glazed Donuts batch 1 was waiting for Fryer A to warm up for 10 min.
+            <span class="detail">It takes 10 minutes to warm up the fryer when first needed.</span>
+          </p>
+        </li>
+        <li>
+          <span class="stamp">At <strong>00:54</strong></span>
+          <p class="event">
+            Glazed Donuts batch 1 was waiting for a Decorator for 66 min.
+            <span class="detail">Decorator was not on schedule until 02:00.</span>
+          </p>
+        </li>
+        <li>
+          <span class="stamp">At <strong>02:09</strong></span>
+          <p class="event">
+            Glazed Donuts batch 1 was waiting for a Packer for 13 min.
+            <span class="detail">Packer was packing Croissants batch 1 until 02:22.</span>
+          </p>
+        </li>
+        <li>
+          <span class="stamp">At <strong>02:31</strong></span>
+          <p class="event">
+            Glazed Donuts were ready but 31 min late and the 02:00 deadline was not met.
+          </p>
+        </li>
+      </ol>
     </section>
 
+    <section class="breakdowns" aria-label="Staff and equipment breakdown">
+      <div class="breakdown">
+        <h2>Staff working breakdown</h2>
 
-    <section class="analysisPanel" aria-labelledby="production-time-title">
-      <h2 id="production-time-title">Production Time Analysis</h2>
-      <div class="productionCards">
-        <div class="productionCard">
-          <h3>Step:</h3>
-          <ul>
-            <li>Baking</li>
-            <li>Mixing</li>
-            <li>xxxxxx</li>
-            <li>xxxxxx</li>
-            <li>xxxxxx</li>
-          </ul>
+        <div class="breakdownRow">
+          <span class="rowLabel">Baker 1</span>
+          <div class="bar" role="img" aria-label="58 min working, 3 h 42 min waiting, on break">
+            <span class="working" style="width:34%"></span>
+            <span class="waiting" style="width:44%"></span>
+            <span class="onBreak" style="width:22%"></span>
+          </div>
+          <span class="rowValue">58 min working, 3 h 42 min waiting</span>
         </div>
-        <div class="productionCard">
-          <h3>Total Time:</h3>
-          <ul>
-            <li>xxHxxM</li>
-            <li>xxHxxM</li>
-            <li>xxHxxM</li>
-            <li>xxHxxM</li>
-            <li>xxHxxM</li>
-          </ul>
+
+        <div class="breakdownRow">
+          <span class="rowLabel">Baker 2</span>
+          <div class="bar" role="img" aria-label="24 min working, 4 h 20 min waiting, on break">
+            <span class="working" style="width:18%"></span>
+            <span class="waiting" style="width:54%"></span>
+            <span class="onBreak" style="width:28%"></span>
+          </div>
+          <span class="rowValue">24 min working, 4 h 20 min waiting</span>
         </div>
-        <div class="productionCard">
-          <h3>Total %</h3>
-          <ul>
-            <li>x%</li>
-            <li>x%</li>
-            <li>x%</li>
-            <li>x%</li>
-            <li>x%</li>
-          </ul>
+
+        <div class="breakdownRow">
+          <span class="rowLabel">Packer 1</span>
+          <div class="bar" role="img" aria-label="49 min working, 25 min waiting, on break">
+            <span class="working" style="width:6%"></span>
+            <span class="waiting" style="width:78%"></span>
+            <span class="onBreak" style="width:16%"></span>
+          </div>
+          <span class="rowValue">49 min working, 25 min waiting</span>
+        </div>
+
+        <div class="breakdownRow">
+          <span class="rowLabel">Decorator 1</span>
+          <div class="bar" role="img" aria-label="19 min working, 55 min waiting, on break">
+            <span class="working" style="width:37%"></span>
+            <span class="waiting" style="width:61%"></span>
+            <span class="onBreak" style="width:2%"></span>
+          </div>
+          <span class="rowValue">19 min working, 55 min waiting</span>
+        </div>
+
+        <div class="legend">
+          <span><i class="working"></i>working</span>
+          <span><i class="waiting"></i>waiting for work</span>
+          <span><i class="onBreak"></i>on break</span>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <h2>Equipment Usage breakdown</h2>
+
+        <div class="breakdownRow equipmentRow">
+          <span class="rowLabel">Oven A</span>
+          <div class="bar" role="img" aria-label="1 h in use, waiting for worker, switching, idle">
+            <span class="inUse" style="width:6%"></span>
+            <span class="waitingForWorker" style="width:4%"></span>
+            <span class="switching" style="width:4%"></span>
+            <span class="idle" style="width:86%"></span>
+          </div>
+          <span class="rowValue">1 h in use</span>
+        </div>
+
+        <div class="breakdownRow equipmentRow">
+          <span class="rowLabel">Oven B</span>
+          <div class="bar" role="img" aria-label="48 min in use, waiting for worker, idle">
+            <span class="inUse" style="width:8%"></span>
+            <span class="waitingForWorker" style="width:2%"></span>
+            <span class="idle" style="width:90%"></span>
+          </div>
+          <span class="rowValue">48 min in use</span>
+        </div>
+
+        <div class="breakdownRow equipmentRow">
+          <span class="rowLabel">Mixer A</span>
+          <div class="bar" role="img" aria-label="51 min in use, waiting for worker, switching, idle">
+            <span class="inUse" style="width:20%"></span>
+            <span class="waitingForWorker" style="width:8%"></span>
+            <span class="switching" style="width:8%"></span>
+            <span class="idle" style="width:64%"></span>
+          </div>
+          <span class="rowValue">51 min in use</span>
+        </div>
+
+        <div class="breakdownRow equipmentRow">
+          <span class="rowLabel">Proofer A</span>
+          <div class="bar" role="img" aria-label="4 h 16 min in use, waiting for worker, warming up, idle">
+            <span class="inUse" style="width:40%"></span>
+            <span class="waitingForWorker" style="width:30%"></span>
+            <span class="warming" style="width:6%"></span>
+            <span class="idle" style="width:24%"></span>
+          </div>
+          <span class="rowValue">4 h 16 min in use</span>
+        </div>
+
+        <div class="breakdownRow equipmentRow">
+          <span class="rowLabel">Fryer</span>
+          <div class="bar" role="img" aria-label="32 min in use, waiting for worker, idle">
+            <span class="inUse" style="width:20%"></span>
+            <span class="waitingForWorker" style="width:4%"></span>
+            <span class="idle" style="width:76%"></span>
+          </div>
+          <span class="rowValue">32 min in use</span>
+        </div>
+
+        <div class="breakdownRow equipmentRow">
+          <span class="rowLabel">Sheeter</span>
+          <div class="bar" role="img" aria-label="20 min in use, waiting for worker, idle">
+            <span class="inUse" style="width:14%"></span>
+            <span class="waitingForWorker" style="width:5%"></span>
+            <span class="idle" style="width:81%"></span>
+          </div>
+          <span class="rowValue">20 min in use</span>
+        </div>
+
+        <div class="legend">
+          <span><i class="inUse"></i>in use</span>
+          <span><i class="waitingForWorker"></i>waiting for worker</span>
+          <span><i class="switching"></i>switching</span>
+          <span><i class="warming"></i>warming up</span>
+          <span><i class="idle"></i>idle</span>
         </div>
       </div>
     </section>
 
-    <section class="analysisPanel" aria-labelledby="employee-analysis-title">
-      <h2 id="employee-analysis-title">Employee Analysis</h2>
-      <table class="employeeTable">
-        <thead>
-          <tr>
-            <th scope="col">Employee Name</th>
-            <th scope="col">Active Time</th>
-            <th scope="col">Wait Time</th>
-            <th scope="col">Total Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Dena</td><td>x</td><td>x</td><td>x</td></tr>
-          <tr><td>Jacky</td><td>x</td><td>x</td><td>x</td></tr>
-          <tr><td>Jenna</td><td>x</td><td>x</td><td>x</td></tr>
-          <tr><td>Johnny</td><td>x</td><td>x</td><td>x</td></tr>
-        </tbody>
-      </table>
+    <section class="stepsSection" aria-labelledby="steps-title">
+      <h2 id="steps-title">Time per step</h2>
+      <div class="tableWrap">
+        <table class="stepsTable">
+          <thead>
+            <tr>
+              <th scope="col">Product</th>
+              <th scope="col">Mix</th>
+              <th scope="col">Laminate</th>
+              <th scope="col">Proof</th>
+              <th scope="col">Bake</th>
+              <th scope="col">Fry</th>
+              <th scope="col">Finish</th>
+              <th scope="col">Pack</th>
+              <th scope="col">Cool</th>
+              <th scope="col">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Donut mix</td>
+              <td>17 min</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>17 min</td>
+            </tr>
+            <tr>
+              <td>Croissants</td>
+              <td>17 min</td>
+              <td>20 min</td>
+              <td>124 min</td>
+              <td>60 min</td>
+              <td></td>
+              <td>26 min</td>
+              <td></td>
+              <td></td>
+              <td>4 h 7 min</td>
+            </tr>
+            <tr>
+              <td>Conchas</td>
+              <td>17 min</td>
+              <td></td>
+              <td>47 min</td>
+              <td>48 min</td>
+              <td></td>
+              <td></td>
+              <td>9 min</td>
+              <td></td>
+              <td>2 h 1 min</td>
+            </tr>
+            <tr>
+              <td>Glazed Donuts</td>
+              <td></td>
+              <td></td>
+              <td>42 min</td>
+              <td></td>
+              <td>20 min</td>
+              <td>9 min</td>
+              <td>9 min</td>
+              <td>10 min</td>
+              <td>1 h 30 min</td>
+            </tr>
+            <tr>
+              <td>Chocolate Donuts</td>
+              <td></td>
+              <td></td>
+              <td>42 min</td>
+              <td></td>
+              <td>12 min</td>
+              <td>10 min</td>
+              <td>5 min</td>
+              <td>10 min</td>
+              <td>1 h 19 min</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
+    <div class="actions">
+      <button class="secondaryButton" type="button">New simulation</button>
+      <button class="primaryButton" type="button">Compare this with another run</button>
+    </div>
   </main>
 </body>
 </html>
