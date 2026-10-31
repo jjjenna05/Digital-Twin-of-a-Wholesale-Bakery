@@ -4,24 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simulation Report | Bakery</title>
+  <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="SimReport.css" />
 </head>
 <body>
   <header class="navBar">
-    <a class="brand" href="#">Bakery</a>
+    <span class="navTitle">Bakery</span>
     <nav class="navLinks" aria-label="Main navigation">
-      <a href="#">Dashboard</a>
-      <a href="#">Config</a>
-      <a href="#">Orders</a>
-      <a href="#">Compare</a>
-      <a href="#" class="active" aria-current="page">Simulation</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="config.html">Config</a>
+      <a href="order-entry.html">Orders</a>
+      <a href="compare.html">Compare</a>
+      <a href="SimReport.html" class="active" aria-current="page">Simulation</a>
     </nav>
   </header>
 
   <main>
     <div class="pageHeader">
       <h1>Results</h1>
-      <button class="pdfButton" type="button">Download PDF</button>
+      <button class="pdfButton" id="downloadPdf" type="button">Download PDF</button>
     </div>
 
     <div class="tableWrap">
@@ -116,40 +117,36 @@
 
         <div class="breakdownRow">
           <span class="rowLabel">Baker 1</span>
-          <div class="bar" role="img" aria-label="58 min working, 3 h 42 min waiting, on break">
-            <span class="working" style="width:34%"></span>
-            <span class="waiting" style="width:44%"></span>
-            <span class="onBreak" style="width:22%"></span>
+          <div class="bar" role="img" aria-label="58 min working, 3 h 42 min waiting">
+            <span class="working" data-minutes="58"></span>
+            <span class="waiting" data-minutes="222"></span>
           </div>
           <span class="rowValue">58 min working, 3 h 42 min waiting</span>
         </div>
 
         <div class="breakdownRow">
           <span class="rowLabel">Baker 2</span>
-          <div class="bar" role="img" aria-label="24 min working, 4 h 20 min waiting, on break">
-            <span class="working" style="width:18%"></span>
-            <span class="waiting" style="width:54%"></span>
-            <span class="onBreak" style="width:28%"></span>
+          <div class="bar" role="img" aria-label="24 min working, 4 h 20 min waiting">
+            <span class="working" data-minutes="24"></span>
+            <span class="waiting" data-minutes="260"></span>
           </div>
           <span class="rowValue">24 min working, 4 h 20 min waiting</span>
         </div>
 
         <div class="breakdownRow">
           <span class="rowLabel">Packer 1</span>
-          <div class="bar" role="img" aria-label="49 min working, 25 min waiting, on break">
-            <span class="working" style="width:6%"></span>
-            <span class="waiting" style="width:78%"></span>
-            <span class="onBreak" style="width:16%"></span>
+          <div class="bar" role="img" aria-label="49 min working, 25 min waiting">
+            <span class="working" data-minutes="49"></span>
+            <span class="waiting" data-minutes="25"></span>
           </div>
           <span class="rowValue">49 min working, 25 min waiting</span>
         </div>
 
         <div class="breakdownRow">
           <span class="rowLabel">Decorator 1</span>
-          <div class="bar" role="img" aria-label="19 min working, 55 min waiting, on break">
-            <span class="working" style="width:37%"></span>
-            <span class="waiting" style="width:61%"></span>
-            <span class="onBreak" style="width:2%"></span>
+          <div class="bar" role="img" aria-label="19 min working, 55 min waiting">
+            <span class="working" data-minutes="19"></span>
+            <span class="waiting" data-minutes="55"></span>
           </div>
           <span class="rowValue">19 min working, 55 min waiting</span>
         </div>
@@ -157,20 +154,20 @@
         <div class="legend">
           <span><i class="working"></i>working</span>
           <span><i class="waiting"></i>waiting for work</span>
-          <span><i class="onBreak"></i>on break</span>
         </div>
       </div>
 
       <div class="breakdown">
         <h2>Equipment Usage breakdown</h2>
+        <p class="breakdownNote">Share of the 6 h production run</p>
 
         <div class="breakdownRow equipmentRow">
           <span class="rowLabel">Oven A</span>
           <div class="bar" role="img" aria-label="1 h in use, waiting for worker, switching, idle">
-            <span class="inUse" style="width:6%"></span>
-            <span class="waitingForWorker" style="width:4%"></span>
-            <span class="switching" style="width:4%"></span>
-            <span class="idle" style="width:86%"></span>
+            <span class="inUse" data-minutes="60"></span>
+            <span class="waitingForWorker" data-minutes="20"></span>
+            <span class="switching" data-minutes="10"></span>
+            <span class="idle" data-minutes="270"></span>
           </div>
           <span class="rowValue">1 h in use</span>
         </div>
@@ -178,9 +175,9 @@
         <div class="breakdownRow equipmentRow">
           <span class="rowLabel">Oven B</span>
           <div class="bar" role="img" aria-label="48 min in use, waiting for worker, idle">
-            <span class="inUse" style="width:8%"></span>
-            <span class="waitingForWorker" style="width:2%"></span>
-            <span class="idle" style="width:90%"></span>
+            <span class="inUse" data-minutes="48"></span>
+            <span class="waitingForWorker" data-minutes="12"></span>
+            <span class="idle" data-minutes="300"></span>
           </div>
           <span class="rowValue">48 min in use</span>
         </div>
@@ -188,10 +185,10 @@
         <div class="breakdownRow equipmentRow">
           <span class="rowLabel">Mixer A</span>
           <div class="bar" role="img" aria-label="51 min in use, waiting for worker, switching, idle">
-            <span class="inUse" style="width:20%"></span>
-            <span class="waitingForWorker" style="width:8%"></span>
-            <span class="switching" style="width:8%"></span>
-            <span class="idle" style="width:64%"></span>
+            <span class="inUse" data-minutes="51"></span>
+            <span class="waitingForWorker" data-minutes="20"></span>
+            <span class="switching" data-minutes="10"></span>
+            <span class="idle" data-minutes="279"></span>
           </div>
           <span class="rowValue">51 min in use</span>
         </div>
@@ -199,10 +196,10 @@
         <div class="breakdownRow equipmentRow">
           <span class="rowLabel">Proofer A</span>
           <div class="bar" role="img" aria-label="4 h 16 min in use, waiting for worker, warming up, idle">
-            <span class="inUse" style="width:40%"></span>
-            <span class="waitingForWorker" style="width:30%"></span>
-            <span class="warming" style="width:6%"></span>
-            <span class="idle" style="width:24%"></span>
+            <span class="inUse" data-minutes="256"></span>
+            <span class="waitingForWorker" data-minutes="25"></span>
+            <span class="warming" data-minutes="15"></span>
+            <span class="idle" data-minutes="64"></span>
           </div>
           <span class="rowValue">4 h 16 min in use</span>
         </div>
@@ -210,9 +207,9 @@
         <div class="breakdownRow equipmentRow">
           <span class="rowLabel">Fryer</span>
           <div class="bar" role="img" aria-label="32 min in use, waiting for worker, idle">
-            <span class="inUse" style="width:20%"></span>
-            <span class="waitingForWorker" style="width:4%"></span>
-            <span class="idle" style="width:76%"></span>
+            <span class="inUse" data-minutes="32"></span>
+            <span class="waitingForWorker" data-minutes="10"></span>
+            <span class="idle" data-minutes="318"></span>
           </div>
           <span class="rowValue">32 min in use</span>
         </div>
@@ -220,9 +217,9 @@
         <div class="breakdownRow equipmentRow">
           <span class="rowLabel">Sheeter</span>
           <div class="bar" role="img" aria-label="20 min in use, waiting for worker, idle">
-            <span class="inUse" style="width:14%"></span>
-            <span class="waitingForWorker" style="width:5%"></span>
-            <span class="idle" style="width:81%"></span>
+            <span class="inUse" data-minutes="20"></span>
+            <span class="waitingForWorker" data-minutes="15"></span>
+            <span class="idle" data-minutes="325"></span>
           </div>
           <span class="rowValue">20 min in use</span>
         </div>
@@ -322,9 +319,11 @@
     </section>
 
     <div class="actions">
-      <button class="secondaryButton" type="button">New simulation</button>
-      <button class="primaryButton" type="button">Compare this with another run</button>
+      <button class="secondaryButton" id="newSimulation" type="button">New simulation</button>
+      <button class="primaryButton" id="compareRun" type="button">Compare this with another run</button>
     </div>
   </main>
+
+  <script src="SimReport.js"></script>
 </body>
 </html>
