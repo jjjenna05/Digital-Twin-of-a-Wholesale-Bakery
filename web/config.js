@@ -1,30 +1,70 @@
-const bodyList = document.getElementById("equipment-row");
-// helper function to fill the amount correctly, if user dont type, return None
-function showAmount(value) {
+import { startEquipmentTab } from "./config-equipment.js";
+import { startRolesTab } from "./config-roles.js";
+import { startUnitsTab } from "./config-units.js";
+import { startStepsTab } from "./config-steps.js";
+import { startRecipesTab } from "./config-recipes.js";
+import { startPreferencesTab } from "./config-preferences.js";
+
+
+// helper function to fill the amount correctly. if user dont type, return None
+export function showAmount(value) {
     if (value.amount === null) {
       return "None";
     }
   return `${value.amount} ${value.unit}`;
 }
-//helper function to create and fill the cell from data.js
-function createCell(row, text) {
+//helper function to create and fill the cell from config data
+export function createCell(row, text) {
   const cell = document.createElement("td");
   //use textContent instead of innerHTML since user is filling the data
   cell.textContent = text;
   row.appendChild(cell);
 }
-//fill all equipments with its data from data.js
-for (let i = 0; i < equipment.length; i++) {
-  const row = document.createElement("tr");
-  //fill all cells each equipment row
-  createCell(row, equipment[i].equipmentName);
-  createCell(row, equipment[i].canDo.join(", ")); 
-  createCell(row, equipment[i].quantity);
-  createCell(row, showAmount(equipment[i].capacity));
-  createCell(row, equipment[i].loads);
-  createCell(row, showAmount(equipment[i].switchTime));
-  createCell(row, showAmount(equipment[i].warmUpTime));
-  createCell(row, equipment[i].turnOn);
-  //add finished row to the table
-  bodyList.appendChild(row);
+//helper function to convert user input to valid number
+export function convertUserInput(text) {
+  if (text === "") {
+    return null;
+  }
+    return Number(text);
+}
+//helper function to bring null back to ""
+export function amountToText(amount) {
+  if (amount === null) {
+    return "";
+  }
+  return amount;
+}
+//load data from config.sample.json
+async function loadConfig() {
+  const response = await fetch("../data/config.sample.json");
+  const configData = await response.json();
+  //send data to config-equipment.js and call function
+  startEquipmentTab(configData);
+  startStepsTab(configData);
+  startUnitsTab(configData);
+  startRolesTab(configData);
+  startRecipesTab(configData);
+  startPreferencesTab(configData);
+}
+loadConfig();
+
+const tabButtons = document.querySelectorAll(".configTabs button");
+const tabSections = document.querySelectorAll("main.config section");
+
+//show relevant tab as the user click
+function showTab(sectionID, userClickButton) {
+  for (let i =0; i < tabSections.length; i++){
+    tabSections[i].hidden = true;
+  }
+  document.getElementById(sectionID).hidden = false;
+
+  for(let i = 0; i < tabButtons.length; i++) {
+    tabButtons[i].classList.remove("active");
+  }
+  userClickButton.classList.add("active");
+}
+for(let i = 0; i <tabButtons.length; i++) {
+  tabButtons[i].addEventListener("click", function () {
+    showTab(tabButtons[i].dataset.tab, tabButtons[i]);
+  });
 }

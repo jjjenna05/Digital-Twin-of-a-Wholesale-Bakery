@@ -17,33 +17,413 @@
    </nav>
 
    <main class="config">
-      <h1>Config</h1>
+    <h1>
+       <select id="config-pick" class="config-pick" aria-label="Saved configurations">
+           <!-- shown until the first save, config-preferences.js adds the saved names -->
+           <option value="" disabled selected>Config</option>
+       </select>
+    </h1>
       <div class="configTabs">
-         <button type="button"> Steps</button>
-         <button type="button"> Units</button>
-         <button type="button"> Roles</button>
-         <button type="button" class="active"> Equipment</button>
-         <button type="button"> Recipe</button>
-         <button type="button"> Preferences</button>
-      </div>
-
-      <table class="list">
-         <thead>
-            <tr>
-               <th>Name</th>
-               <th>Can do</th>
-               <th>Quantity</th>
-               <th>Capacity per batch</th>
-               <th>Loads</th>
-               <th>Switch time</th>
-               <th>Warm up</th>
-               <th>Turn on</th>              
-            </tr>
-         </thead>
-         <tbody id="equipment-row"></tbody>
-      </table>
+         <button type="button" class="active" data-tab="steps-tab">Steps</button>
+         <button type="button" data-tab="units-tab">Units</button>
+         <button type="button" data-tab="roles-tab">Roles</button>
+         <button type="button" data-tab="equipment-tab">Equipment</button>
+         <button type="button" data-tab="recipe-tab" >Recipe</button>
+         <button type="button" data-tab="preferences-tab" >Preferences</button>
+      </div>     
+         <section id="equipment-tab" hidden>
+            <table class="list">
+               <thead>
+                  <tr>
+                     <th>Name</th>
+                     <th>Can do</th>
+                     <th>Quantity</th>
+                     <th>Capacity per batch</th>
+                     <th>Loads</th>
+                     <th>Switch time</th>
+                     <th>Warm up</th>
+                     <th>Turn on</th>           
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody id="equipment-row"></tbody>
+            </table>
+            <div class="table-footer">
+                <div class="footer-line"></div>
+                <button type="button" id="add-equipment" class="add-button">+ Add More</button>
+            </div>
+            <dialog id="equipment-dialog" class="dialog">
+              <form id="equipment-form">
+                <h2 id="equipment-dialog-header">Add Equipment</h2>
+                <div class="field">
+                    <label>Name <input name="name"></label>
+                    <p class="error" id="name-error"></p>
+                </div>
+               
+                <fieldset class="choices">
+                    <legend>Can do</legend>
+                    <details class="dropdown" id="can-do-dropdown">
+                        <summary id="can-do-summary"></summary>
+                        <!-- fillCanDoBoxes() creates  checkboxes -->
+                        <div id="can-do-boxes" class="dropdown-list"></div>
+                    </details>
+                    <p class="error" id="can-do-error"></p>
+                </fieldset>
+                <div class="row">
+                    <div class="field">
+                     <label>Quantity <input name="quantity" type="number"></label>
+                     <p class="error" id="quantity-error"></p>
+                    </div>
+                <div class="field">
+                    <label>Capacity
+                        <span class="pair">
+                            <input name="capacityAmount" type="number">
+                                <!-- fillUnitChoices() creates the dropdown -->
+                            <select id="equipment-unit" name="capacityUnit"></select>
+                        </span>
+                    </label>
+                    <p class="error" id="capacity-amount-error"></p>
+                </div>
+                </div>
+                <div class="row">
+                    <div class="field">
+                        <label>Loads
+                          <select name="loads">
+                            <option>When full</option>
+                            <option>One by one</option>
+                          </select>
+                        </label>
+                    </div>
+                    <div class="field">
+                        <label>Switch time 
+                            <span class="pair">
+                                <input name="switchTime" type="number" placeholder="None">
+                                <select name="switchTimeUnit" class="time-unit">
+                                    <option>hr</option>
+                                    <option selected>min</option>
+                                    <option>sec</option>
+                                </select>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="field">
+                        <label>Switched by <input name="switchedBy" type="number" placeholder="None"></label>
+                        <p class="error" id="switched-by-error"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="field">
+                        <label>Warm up
+                            <span class="pair">
+                                <input name="warmUpTime" type="number" placeholder="None">
+                                <select name="warmUpTimeUnit" class="time-unit">
+                                    <option>hr</option>
+                                    <option selected>min</option>
+                                    <option>sec</option>
+                                </select>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="field">
+                        <label>Turn on
+                            <select name="turnOn">
+                                <option>At shift start</option>
+                                <option>When first needed</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="dialog-buttons">
+                    <button type="button" id="cancel-equipment" class="secondary">Cancel</button>
+                    <button type="submit" class="primary">Save</button>
+                </div>
+              </form>
+            </dialog>
+              <dialog id="delete-dialog" class="dialog">
+                  <h2 id="delete-dialog-header"></h2>
+                  <p>This will remove it from the setup!</p>
+                  <div class="dialog-buttons">
+                      <button type="button" id="cancel-delete" class="secondary">Cancel</button>
+                      <button type="button" id="confirm-delete" class="delete">Delete</button>
+                  </div>
+            </dialog>
+         </section>
+         <section id="steps-tab">
+            <table class="list">
+               <thead>
+                  <tr>
+                     <th>Step Name</th>
+                     <th>Kind</th>
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody id="steps-row"></tbody>
+            </table>
+            <div class="table-footer">
+               <div class="footer-line"></div>
+               <button type="button" id="add-steps" class="add-button">+ Add More</button>
+            </div>
+            <dialog id="steps-dialog" class="dialog">
+               <form id="steps-form">
+                   <h2 id="steps-dialog-header">Add Step</h2>
+                   <div class="field">
+                       <label>Step name <input name="name"></label>
+                       <p class="error" id="steps-name-error"></p>
+                       <p class="hint" id="steps-name-hint"></p>
+                   </div>
+                   <div class="field">
+                       <label>Kind
+                           <select name="kind">
+                               <!-- These four options are hardcoded by design -->
+                               <option value=""></option>
+                               <option>Machine</option>
+                               <option>Hands-on machine</option>
+                               <option>By hand</option>
+                               <option>Wait</option>
+                           </select>
+                       </label>
+                       <p class="error" id="steps-kind-error"></p>
+                       <p class="hint" id="steps-kind-hint"></p>
+                   </div>
+                   <!-- only for By hand and Hands-on machine, config-steps.js shows it -->
+                   <div class="field" id="steps-can-stop-field" hidden>
+                       <label>Can stop for a load?
+                           <select name="canStop">
+                               <option>No</option>
+                               <option>Yes</option>
+                           </select>
+                       </label>
+                   </div>
+                   <div class="dialog-buttons">
+                       <button type="button" id="cancel-steps" class="secondary">Cancel</button>
+                       <button type="submit" class="primary">Save</button>
+                   </div>
+               </form>
+            </dialog>
+            <dialog id="delete-steps-dialog" class="dialog">
+              <h2 id="delete-steps-dialog-header"></h2>
+              <p>This will remove it from the setup!</p>
+              <div class="dialog-buttons">
+                  <button type="button" id="cancel-steps-delete" class="secondary">Cancel</button>
+                  <button type="button" id="confirm-steps-delete" class="delete">Delete</button>
+              </div>
+            </dialog>
+            <dialog id="steps-in-use-dialog" class="dialog">
+              <h2 id="steps-in-use-header"></h2>
+              <p id="steps-in-use-text"></p>
+              <div class="dialog-buttons">
+                  <button type="button" id="close-steps-in-use" class="primary">OK</button>
+              </div>
+          </dialog>
+         </section>
+         <section id="units-tab" hidden>
+            <table class="list">
+               <thead>
+                  <tr>
+                     <th>Unit</th>
+                     <th>Equals</th>
+                     <th>Owned</th>
+                     <!-- for edit/delete button   -->
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody id="units-row"></tbody>
+            </table>
+            <div class="table-footer">
+                <div class="footer-line"></div>
+                <button type="button" id="add-units" class="add-button">+ Add More</button>
+            </div>
+            <dialog id="units-dialog" class="dialog">
+               <form id="units-form">
+                   <h2 id="units-dialog-header">Add Unit</h2>
+                   <div class="field">
+                       <label>Unit <input name="unit"></label>
+                       <p class="error" id="units-name-error"></p>
+                       <p class="hint" id="units-name-hint"></p>
+                   </div>
+                   <div class="field">
+                       <label>Equals (Optional)
+                           <span class="pair">
+                               <input name="equals" type="number" step="any" placeholder="Not applicable">
+                               <!-- config-units.js fills this dropdown -->
+                               <select id="units-equalOf" name="equalOf"></select>
+                           </span>
+                       </label>
+                       <p class="error" id="units-equals-error"></p>
+                   </div>
+                   <div class="field">
+                       <label>Owned (Optional)<input name="owned" type="number" placeholder="No Limit"></label>
+                       <p class="error" id="units-owned-error"></p>
+                   </div>
+                   <div class="dialog-buttons">
+                       <button type="button" id="cancel-units" class="secondary">Cancel</button>
+                       <button type="submit" class="primary">Save</button>
+                   </div>
+               </form>
+            </dialog>
+            <dialog id="delete-units-dialog" class="dialog">
+                <h2 id="delete-units-dialog-header"></h2>
+                <p>This will remove it from the setup!</p>
+                <div class="dialog-buttons">
+                    <button type="button" id="cancel-units-delete" class="secondary">Cancel</button>
+                    <button type="button" id="confirm-units-delete" class="delete">Delete</button>
+                </div>
+            </dialog>
+            <dialog id="units-in-use-dialog" class="dialog">
+                <h2 id="units-in-use-header"></h2>
+                <p id="units-in-use-text"></p>
+                <div class="dialog-buttons">
+                    <button type="button" id="close-units-in-use" class="primary">OK</button>
+                </div>
+            </dialog>
+         </section>
+         <!--roles tab-->
+         <section id="roles-tab" hidden>
+            <table class="list">
+               <thead>
+                  <tr>
+                     <th>Role</th>
+                     <th>Can do</th>
+                     <!-- for edit/delete button  -->
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody id="roles-row"></tbody>
+            </table>
+            <div class="table-footer">
+                <div class="footer-line"></div>
+                <button type="button" id="add-roles" class="add-button">+ Add More</button>
+            </div>
+            <dialog id="roles-dialog" class="dialog">
+               <form id="roles-form">
+                   <h2 id="roles-dialog-header">Add Role</h2>
+                   <div class="field">
+                       <label>Role <input name="name"></label>
+                       <p class="error" id="roles-name-error"></p>
+                   </div>
+                   <fieldset class="choices">
+                       <legend>Can do</legend>
+                       <details id="roles-can-do-dropdown" class="dropdown">
+                           <summary id="roles-can-do-summary"></summary>
+                           <div id="roles-can-do-boxes" class="dropdown-list"></div>
+                       </details>
+                       <p class="error" id="roles-can-do-error"></p>
+                   </fieldset>
+                   <div class="dialog-buttons">
+                       <button type="button" id="cancel-roles" class="secondary">Cancel</button>
+                       <button type="submit" class="primary">Save</button>
+                   </div>
+               </form>
+            </dialog>
+            <dialog id="delete-roles-dialog" class="dialog">
+                <h2 id="delete-roles-dialog-header"></h2>
+                <p>This will remove it from the setup!</p>
+                <div class="dialog-buttons">
+                    <button type="button" id="cancel-roles-delete" class="secondary">Cancel</button>
+                    <button type="button" id="confirm-roles-delete" class="delete">Delete</button>
+                </div>
+          </dialog>
+         </section>
+         <section id="recipe-tab" hidden>
+            <table class="list">
+               <thead>
+                  <tr>
+                     <th>Item Name</th>
+                     <th>Steps</th>
+                     <th>Made from</th>
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody id="recipe-row"></tbody>
+            </table>
+            <div class="table-footer">
+                <div class="footer-line"></div>
+                <button type="button" class="add-button" id="add-recipes">+ Add More</button>
+            </div>
+            <dialog id="recipes-dialog" class="dialog recipes-dialog">
+               <form id="recipes-form">
+                   <h2 id="recipes-dialog-header">Add Recipe</h2>
+                   <div class="field">
+                       <label>Item name <input name="name"></label>
+                       <p class="error" id="recipes-name-error"></p>
+                   </div>
+                   <fieldset class="choices">
+                       <legend>Made from</legend>
+                       <!-- config-recipes.js adds one row per item this is made from -->
+                       <div id="recipes-made-from-rows"></div>
+                       <button type="button" id="recipes-add-made-from" class="add-step">Add more</button>
+                       <p class="error" id="recipes-made-from-error"></p>
+                   </fieldset>
+                   <div class="recipe-section">
+                       <table class="step-rows">
+                           <thead>
+                               <tr>
+                                   <th>Steps</th>
+                                   <th>Machine Time</th>
+                                   <th>Staff Time</th>
+                                   <th>Workers</th>
+                                   <th>Wait Time</th>
+                                   <!--for per load or  unit-->
+                                   <th></th>
+                                   <th>Max Wait</th>
+                                   <th>Inside</th>
+                                   <!--for row buttons-->
+                                   <th></th>
+                               </tr>
+                           </thead>
+                           <!-- configrecipes.js adds one row per step -->
+                           <tbody id="recipes-step-rows"></tbody>
+                       </table>
+                       <button type="button" id="recipes-add-step" class="add-step">Add more steps</button>
+                       <p class="error" id="recipes-steps-error"></p>
+                   </div>
+                   <fieldset class="choices">
+                       <legend>Capacity</legend>
+                       <!-- config-recipes.js adds one row per capacity -->
+                       <div id="recipes-capacity-rows"></div>
+                       <button type="button" id="recipes-add-capacity" class="add-step">Add more</button>
+                       <p class="error" id="recipes-capacity-error"></p>
+                   </fieldset>
+                   <div class="field inline">
+                       <label>Last batch
+                           <select name="lastBatch">
+                               <option>Only what's needed</option>
+                               <option>Full batch</option>
+                           </select>
+                       </label>
+                   </div>
+                   <div class="field inline">
+                       <label>After a scrap
+                           <select name="afterScrap">
+                               <option>Do not make a new batch</option>
+                               <option>Make a new batch</option>
+                           </select>
+                       </label>
+                   </div>
+                   <div class="dialog-buttons">
+                       <button type="button" id="cancel-recipes" class="secondary">Cancel</button>
+                       <button type="submit" class="primary">Save</button>
+                   </div>
+               </form>
+            </dialog>
+         </section> 
+         <section id="preferences-tab" hidden>
+            <button type="button" id="save-config" class="primary save-config">Save current configuration</button>
+            <dialog id="save-config-dialog" class="dialog">
+               <form id="save-config-form">
+                   <h2>Save configuration</h2>
+                   <div class="field">
+                       <label>Name <input name="name"></label>
+                       <p class="error" id="save-config-error"></p>
+                   </div>
+                   <div class="dialog-buttons">
+                       <button type="button" id="cancel-save-config" class="secondary">Cancel</button>
+                       <button type="submit" class="primary">Save</button>
+                   </div>
+               </form>
+            </dialog>
+         </section>
    </main>
-   <script src="data.js"></script>
-   <script src="config.js"></script>
+   <script type="module" src="config.js"></script>
 </body>
 </html>

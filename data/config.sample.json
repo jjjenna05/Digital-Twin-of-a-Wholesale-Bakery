@@ -1,36 +1,48 @@
 {
   "units": [
     {
-      "unit": "Dozens", "equals": 12, "of": "Pieces"
+      "unit": "Dozens", "equals": 12, "of": "Pieces", "owned": null
     },
     {
-      "unit": "Racks", "equals": 6, "of": "Trays"
+      "unit": "Racks", "equals": 6, "of": "Trays", "owned": 8
+    },
+    {
+      "unit": "Trays", "equals": null, "of": "", "owned": 60
+    },
+    {
+      "unit": "Pounds", "equals": null, "of": "", "owned": null
+    },
+    {
+      "unit": "Gallons", "equals": null, "of": "", "owned": null
+    },
+    {
+      "unit": "Pieces", "equals": null, "of": "", "owned": null
     }
   ],
   "steps": [
     {
-      "name": "Mix", "kind": "Machine"
+      "name": "Mix", "kind": "Machine", "canStop": null
     },
     {
-      "name": "Laminate", "kind": "Hands-on machine"
+      "name": "Laminate", "kind": "Hands-on machine", "canStop": false
     },
     {
-      "name": "Proof", "kind": "Machine"
+      "name": "Proof", "kind": "Machine", "canStop": null
     },
     {
-      "name": "Bake", "kind": "Machine"
+      "name": "Bake", "kind": "Machine", "canStop": null
     },
     {
-      "name": "Fry", "kind": "Machine"
+      "name": "Fry", "kind": "Machine", "canStop": null
     },
     {
-      "name": "Cool", "kind": "Wait"
+      "name": "Cool", "kind": "Wait", "canStop": null
     },
     {
-      "name": "Finish", "kind": "By hand"
+      "name": "Finish", "kind": "By hand", "canStop": true
     },
     {
-      "name": "Pack", "kind": "By hand"
+      "name": "Pack", "kind": "By hand", "canStop": true
     }
   ],
   "roles": [
@@ -54,6 +66,7 @@
       },
       "loads": "When full",
       "switchTime": { "amount": 5, "unit": "min" },
+      "switchedBy": null,
       "warmUpTime": { "amount": 20, "unit": "min" },
       "turnOn": "At shift start"
     },
@@ -66,6 +79,7 @@
       },
       "loads": "When full",
       "switchTime": { "amount": 5, "unit": "min" },
+      "switchedBy": null,
       "warmUpTime": { "amount": 20, "unit": "min" },
       "turnOn": "At shift start"
     },
@@ -78,6 +92,7 @@
       },
       "loads": "When full",
       "switchTime": { "amount": 10, "unit": "min" },
+      "switchedBy": 1,
       "warmUpTime": { "amount": null, "unit": "min" },
       "turnOn": "At shift start"
     },
@@ -90,6 +105,7 @@
       },
       "loads": "When full",
       "switchTime": { "amount": 0, "unit": "min" },
+      "switchedBy": null,
       "warmUpTime": { "amount": 15, "unit": "min" },
       "turnOn": "At shift start"
     },
@@ -102,6 +118,7 @@
       },
       "loads": "When full",
       "switchTime": { "amount": 0, "unit": "min" },
+      "switchedBy": null,
       "warmUpTime": { "amount": 10, "unit": "min" },
       "turnOn": "When first needed"
     },
@@ -114,6 +131,7 @@
         },
       "loads": "When full",
       "switchTime": { "amount": 0, "unit": "min" },
+      "switchedBy": null,
       "warmUpTime": { "amount": null, "unit": "min" },
       "turnOn": "At shift start"
     }
@@ -121,105 +139,191 @@
   "recipes": [
     {
       "name": "Glazed Donuts",
-      "batchSize": { "amount": 120, "unit": "Pieces" },
+      "madeFrom": [],
       "steps": [
-        { 
+        {
           "step": "Mix",
           "machineTime": 15,
           "staffTime": 2,
-          "workers": 1
+          "workers": 1,
+          "upTo": null,
+          "per": "load",
+          "maxWait": null,
+          "inside": null,
+          "machines": []
         },
         {
           "step": "Proof",
           "machineTime": 40,
           "staffTime": 2,
-          "workers": 1
+          "workers": 1,
+          "upTo": null,
+          "per": "load",
+          "maxWait": null,
+          "inside": null,
+          "machines": []
         },
         {
           "step": "Fry",
           "machineTime": 20,
           "staffTime": 4,
-          "workers": 1
+          "workers": 1,
+          "upTo": null,
+          "per": "load",
+          "maxWait": null,
+          "inside": null,
+          "machines": []
         },
         {
           "step": "Cool",
-          "waitTime": 10
+          "waitTime": 10,
+          "per": "load",
+          "maxWait": null
         },
         {
           "step": "Finish",
           "staffTime": 20,
-          "workers": 1
+          "workers": 1,
+          "upTo": null,
+          "per": "load",
+          "maxWait": null
         },
         {
           "step": "Pack",
           "staffTime": 10,
-          "workers": 1
+          "workers": 1,
+          "upTo": null,
+          "per": "load"
         }
-      ]
+      ],
+      "capacity": [
+        { "unit": "Batches", "equals": 120, "of": "Pieces" },
+        { "unit": "Trays", "equals": 12, "of": "Pieces" },
+        { "unit": "Pounds", "equals": 6.5, "of": "Pieces" }
+      ],
+      "lastBatch": "Only what's needed",
+      "afterScrap": "Do not make a new batch"
     },
     {
       "name": "Conchas",
-      "batchSize": { "amount": 144, "unit": "Pieces" },
+      "madeFrom": [],
       "steps": [
         {
           "step": "Mix",
           "machineTime": 15,
           "staffTime": 2,
-          "workers": 1
+          "workers": 1,
+          "upTo": null,
+          "per": "load",
+          "maxWait": null,
+          "inside": null,
+          "machines": []
         },
         {
           "step": "Proof",
           "machineTime": 45,
           "staffTime": 2,
-          "workers": 1
+          "workers": 1,
+          "upTo": null,
+          "per": "load",
+          "maxWait": null,
+          "inside": null,
+          "machines": []
         },
         {
           "step": "Bake",
           "machineTime": 18,
           "staffTime": 2,
-          "workers": 1
+          "workers": 1,
+          "upTo": null,
+          "per": "load",
+          "maxWait": null,
+          "inside": null,
+          "machines": []
         },
         {
           "step": "Pack",
           "staffTime": 10,
-          "workers": 1
+          "workers": 1,
+          "upTo": null,
+          "per": "load"
         }
-      ]
+      ],
+      "capacity": [
+        { "unit": "Batches", "equals": 144, "of": "Pieces" },
+        { "unit": "Trays", "equals": 12, "of": "Pieces" },
+        { "unit": "Pounds", "equals": 6.5, "of": "Pieces" }
+      ],
+      "lastBatch": "Only what's needed",
+      "afterScrap": "Do not make a new batch"
     },
     {
       "name": "Croissants",
-      "batchSize": { "amount": 96, "unit": "Pieces" },
+      "madeFrom": [],
       "steps": [
         {
-          "step": "Mix",
+          "step": "Mix", 
           "machineTime": 15,
           "staffTime": 2,
-          "workers": 1
-        },
+          "workers": 1,
+          "upTo": null,
+          "per": "load",
+          "maxWait": null,
+          "inside": null,
+          "machines": []},
         {
           "step": "Laminate",
           "machineTime": 20,
-         
-          "workers": 2
-        },
+          "workers": 2,
+          "per": "load",
+          "maxWait": null,
+          "machines": []},
         {
           "step": "Proof",
           "machineTime": 60,
           "staffTime": 2,
-          "workers": 1
-        },
+          "workers": 1,
+          "upTo": null,
+          "per": "load",
+          "maxWait": 30,
+          "inside": null,
+          "machines": []},
         {
           "step": "Bake",
           "machineTime": 18,
           "staffTime": 2,
-          "workers": 1
-        },
+          "workers": 1,
+          "upTo": null,
+          "per": "load",
+          "maxWait": null,
+          "inside": null,
+          "machines": [{"machine": "Oven B", "machineTime": 22}]},
         {
           "step": "Pack",
           "staffTime": 10,
-          "workers": 1
+          "workers": 1,
+          "upTo": null,
+          "per": "load"}
+      ],
+      "capacity": [
+        {
+          "unit": "Batches",
+          "equals": 96,
+          "of": "Pieces"
+        },
+        {
+          "unit": "Trays",
+          "equals": 12,
+          "of": "Pieces"
+        },
+        {
+          "unit": "Pounds",
+          "equals": 6.5,
+          "of": "Pieces"
         }
-      ]
+      ],
+      "lastBatch": "Only what's needed",
+      "afterScrap": "Do not make a new batch"
     }
   ]
 }
