@@ -1,0 +1,32 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, Arial, sans-serif; color: #111; background: #fff; }
+
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 64px; background: #e5e5e5; }
+.nav .links a { margin-left: 20px; color: #111; text-decoration: none; }
+.nav .links a.active { font-weight: 700; }
+
+main { padding: 24px 64px; }
+.back { font-size: 13px; color: #111; text-decoration: none; }
+h1 { margin: 8px 0 48px; font-size: 32px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+thead th { text-align: left; font-weight: 400; background: #f2f2f2; padding: 14px 24px; }
+tbody td { padding: 16px 24px; }
+td.item { font-weight: 700; }
+.row-actions { text-align: right; }
+.row-actions a { color: #111; text-decoration: none; margin-left: 24px; }
+.row-actions a.delete { color: #d33; }
+
+.actions { display: flex; justify-content: space-between; margin-top: 160px; }
+button { font: inherit; font-size: 14px; padding: 12px 40px; border: none; border-radius: 6px; cursor: pointer; }
+.btn-light { background: #d9d9d9; color: #111; font-weight: 600; }
+.btn-dark { background: #555; color: #fff; }
+
+.overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); display: flex; align-items: center; justify-content: center; }
+.hidden { display: none; }
+.dialog { background: #fff; padding: 24px; border-radius: 10px; width: 420px; display: flex; flex-direction: column; gap: 12px; }
+.dialog h2 { margin: 0 0 4px; font-size: 18px; }
+.dialog label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; }
+.dialog input { font: inherit; font-weight: 400; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+.dialog-actions button { padding: 10px 20px; }
