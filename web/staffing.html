@@ -1,0 +1,82 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staffing</title>
+  <link rel="stylesheet" href="input-orders.css">
+</head>
+<body>
+  <nav class="nav">
+    <span class="brand">Bakery</span>
+    <div class="links">
+      <a href="#">Dashboard</a>
+      <a href="config.html">Config</a>
+      <a href="order-entry.html" class="active">Orders</a>
+      <a href="#">Compare</a>
+    </div>
+  </nav>
+
+  <main>
+    <a href="order-entry.html" class="back">&lt; Back to orders</a>
+    <h1>Staffing</h1>
+    <p class="step">Step 2 of 3: Staffing</p>
+
+    <!-- DTWB-62: staffing table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Count</th>
+          <th>Shift</th>
+          <th>Breaks</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p id="empty" class="empty hidden">No staff yet. Click Add staff to start.</p>
+    <p id="next-error" class="error hidden">Add at least one staff entry before continuing.</p>
+
+    <div class="actions">
+      <button id="add-btn" class="btn-light">Add staff</button>
+      <button id="next-btn" class="btn-dark">Next</button>
+    </div>
+  </main>
+
+  <!-- Add / Edit staff pop-up -->
+  <div id="form-dialog" class="overlay hidden">
+    <form id="entry-form" class="dialog" novalidate>
+      <h2 id="form-title">Add staff</h2>
+      <label>Role<input name="role" placeholder="e.g. Baker"></label>
+      <label>Count<input name="count" type="number" min="1"></label>
+      <div class="row">
+        <label>Shift start<input name="start" type="time" value="22:00"></label>
+        <label>Shift end<input name="end" type="time" value="06:00"></label>
+      </div>
+      <label>Breaks (minutes)<input name="breaks" type="number" min="0" value="30"></label>
+      <p id="form-error" class="error hidden"></p>
+      <div class="dialog-actions">
+        <button type="button" class="btn-light" data-close>Cancel</button>
+        <button type="submit" id="form-submit" class="btn-dark">Add</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Delete confirm pop-up -->
+  <div id="delete-dialog" class="overlay hidden">
+    <div class="dialog">
+      <h2 id="delete-title">Delete staff entry?</h2>
+      <p>This will remove it from tonight's staffing.</p>
+      <div class="dialog-actions">
+        <button type="button" class="btn-light" data-close>Cancel</button>
+        <button type="button" id="delete-confirm" class="btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="staffing.js"></script>
+</body>
+</html>

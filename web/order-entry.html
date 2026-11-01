@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders</title>
+  <link rel="stylesheet" href="input-orders.css">
+</head>
+<body>
+  <nav class="nav">
+    <span class="brand">Bakery</span>
+    <div class="links">
+      <a href="#">Dashboard</a>
+      <a href="config.html">Config</a>
+      <a href="order-entry.html" class="active">Orders</a>
+      <a href="#">Compare</a>
+    </div>
+  </nav>
+
+  <main>
+    <a href="#" class="back">&lt; Back</a>
+    <h1>Orders</h1>
+    <p class="step">Step 1 of 3: Orders</p>
+
+    <!-- DTWB-137: order entry table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Quantity</th>
+          <th>Recipe</th>
+          <th>Deadline</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p id="empty" class="empty hidden">No orders yet. Click Add order to start.</p>
+    <p id="next-error" class="error hidden">Add at least one order before continuing.</p>
+
+    <div class="actions">
+      <button id="add-btn" class="btn-light">Add order</button>
+      <button id="next-btn" class="btn-dark">Next</button>
+    </div>
+  </main>
+
+  <!-- Add / Edit order pop-up -->
+  <div id="form-dialog" class="overlay hidden">
+    <form id="entry-form" class="dialog" novalidate>
+      <h2 id="form-title">Add order</h2>
+      <label>Item<input name="item"></label>
+      <label>Quantity<input name="quantity" type="number" min="1"></label>
+      <label>Recipe<input name="recipe"></label>
+      <label>Deadline<input name="deadline" type="time" value="05:00"></label>
+      <p id="form-error" class="error hidden"></p>
+      <div class="dialog-actions">
+        <button type="button" class="btn-light" data-close>Cancel</button>
+        <button type="submit" id="form-submit" class="btn-dark">Add</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Delete confirm pop-up -->
+  <div id="delete-dialog" class="overlay hidden">
+    <div class="dialog">
+      <h2 id="delete-title">Delete order?</h2>
+      <p>This will remove it from tonight's orders.</p>
+      <div class="dialog-actions">
+        <button type="button" class="btn-light" data-close>Cancel</button>
+        <button type="button" id="delete-confirm" class="btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="order-entry.js"></script>
+</body>
+</html>

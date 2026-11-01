@@ -1,0 +1,43 @@
+
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, Arial, sans-serif; color: #111; background: #fff; }
+
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 64px; background: #e5e5e5; }
+.nav .links a { margin-left: 20px; color: #111; text-decoration: none; }
+.nav .links a.active { font-weight: 700; }
+
+main { padding: 24px 64px; }
+.back { font-size: 13px; color: #111; text-decoration: none; }
+h1 { margin: 8px 0 4px; font-size: 32px; }
+.step { margin: 0 0 40px; font-size: 13px; color: #666; }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+thead th { text-align: left; font-weight: 400; background: #f2f2f2; padding: 14px 24px; }
+tbody td { padding: 16px 24px; }
+td.item { font-weight: 700; }
+.row-actions { text-align: right; white-space: nowrap; }
+
+button { font: inherit; font-size: 14px; padding: 12px 40px; border: none; border-radius: 6px; cursor: pointer; }
+button.link { background: none; padding: 0; margin-left: 24px; color: #111; }
+button.link.delete { color: #d33; }
+.btn-light { background: #d9d9d9; color: #111; font-weight: 600; }
+.btn-dark { background: #555; color: #fff; }
+.btn-danger { background: #fde8e8; color: #c62828; font-weight: 600; }
+
+.actions { display: flex; justify-content: space-between; margin-top: 120px; }
+.empty { color: #666; font-size: 14px; padding: 16px 24px; }
+.error { color: #d33; font-size: 12px; margin: 0; }
+main .error { padding: 0 24px; }
+
+.overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); display: flex; align-items: center; justify-content: center; }
+.hidden { display: none !important; }
+.dialog { background: #fff; padding: 24px; border-radius: 10px; width: 420px; display: flex; flex-direction: column; gap: 12px; }
+.dialog h2 { margin: 0 0 4px; font-size: 18px; }
+.dialog p { margin: 0; font-size: 13px; }
+.dialog label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; flex: 1; }
+.dialog .row { display: flex; gap: 12px; }
+.dialog input { font: inherit; font-weight: 400; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+.dialog input.invalid { border-color: #d33; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+.dialog-actions button { padding: 10px 20px; }
