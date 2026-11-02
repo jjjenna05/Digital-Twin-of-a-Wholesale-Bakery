@@ -6,6 +6,7 @@
   <title>Simulation Report | Bakery</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="SimReport.css" />
+  <script src="nav.js" defer></script>
 </head>
 <body>
   <header class="navBar">
@@ -13,10 +14,12 @@
     <nav class="navLinks" aria-label="Main navigation">
       <a href="dashboard.html">Dashboard</a>
       <a href="config.html">Config</a>
-      <a href="order-entry.html">Orders</a>
       <a href="compare.html">Compare</a>
-      <a href="SimReport.html" class="active" aria-current="page">Simulation</a>
     </nav>
+    <div class="navUser">
+       <span id="userName"></span>
+       <button id="logoutBtn" type="button">Log out</button>
+    </div>
   </header>
 
   <main>

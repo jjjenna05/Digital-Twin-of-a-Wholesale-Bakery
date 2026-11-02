@@ -34,9 +34,14 @@ export function amountToText(amount) {
   }
   return amount;
 }
-//load data from config.sample.json
+//get config data from flask
 async function loadConfig() {
-  const response = await fetch("../data/config.sample.json");
+  const response = await fetch("/api/config");
+  //if flask return error, go back to login page
+  if (response.ok === false) {
+    window.location.href = "login.html";
+    return;
+  }
   const configData = await response.json();
   //send data to config-equipment.js and call function
   startEquipmentTab(configData);

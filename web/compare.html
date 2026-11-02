@@ -6,16 +6,21 @@
     <title>Compare Scenarios</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="compare.css">
+    <script src="nav.js" defer></script>
 </head>
 <body>
-    <header class="nav">
-        <span>Bakery</span>
-        <ul>
-            <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="config.html">Config</a></li>
-            <li><a href="compare.html" class="active">Compare</a></li>
-        </ul>
-    </header>
+    <nav class="navBar">
+        <span class="navTitle">Bakery</span>
+        <div class="navLinks">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="config.html">Config</a>
+            <a href="compare.html" class="active">Compare</a>
+        </div>
+        <div class="navUser">
+           <span id="userName"></span>
+           <button id="logoutBtn" type="button">Log out</button>
+        </div>
+    </nav>
 
     <main>
         <h1>Compare Scenarios</h1>
