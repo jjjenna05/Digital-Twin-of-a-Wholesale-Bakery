@@ -42,17 +42,19 @@ def serve_protected(filename):
     response.headers["Cache-Control"] = "no-store"
     return response
 
-@app.route("/dashboard.html")
-def dashboard_page():
-    return serve_protected("dashboard.html")
+#every pages needs login except for the login page
+@app.route("/<page>.html")
+def show_page(page):
+    if page == "login":
+        return send_from_directory(STATIC_DIR, "login.html")
+    return serve_protected(page + ".html")
 
-@app.route("/config.html")
-def config_page():
-    return serve_protected("config.html")
-
+#go to dashboard if logged in, otherwise login page
 @app.route("/")
 def home():
-    return jsonify({"message": "Running!"})
+    if "user_id" not in session:
+        return redirect("/login.html")
+    return redirect("/dashboard.html")
 
 @app.route("/api/login", methods=["POST"])
 def login():
@@ -87,3 +89,9 @@ def me():
         session.clear()
         abort(401, description="You must be logged in.")
     return jsonify({"user": {"userID": str(user["userID"]), "name": user["name"]}})
+
+#send config data to onfig page
+@app.route("/api/config")
+@login_required
+def get_config():
+    return send_from_directory(DATA_DIR, "config.sample.json")

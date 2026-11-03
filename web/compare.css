@@ -11,33 +11,6 @@ body {
     min-height: 100vh;
     position: relative;
 }
-
-/* --- Header / Navigation --- */
-.nav {
-    height: 64px;
-    background: #e5e5e5;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 209px 0 80px;
-    font-size: 18px;
-}
-
-    .nav ul {
-        list-style: none;
-        display: flex;
-        gap: 17px;
-    }
-
-    .nav a {
-        color: #000;
-        text-decoration: none;
-    }
-
-        .nav a.active {
-            font-weight: 700;
-        }
-
  /*--- Main Layout & Tabs --- */
 main {
     padding: 33px 80px 120px 73px;

@@ -3,10 +3,6 @@
 * { box-sizing: border-box; }
 body { margin: 0; font-family: Inter, Arial, sans-serif; color: #111; background: #fff; }
 
-.nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 64px; background: #e5e5e5; }
-.nav .links a { margin-left: 20px; color: #111; text-decoration: none; }
-.nav .links a.active { font-weight: 700; }
-
 main { padding: 24px 64px; }
 .back { font-size: 13px; color: #111; text-decoration: none; }
 h1 { margin: 8px 0 4px; font-size: 32px; }
