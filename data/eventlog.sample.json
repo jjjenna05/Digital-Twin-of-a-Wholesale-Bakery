@@ -1,7 +1,33 @@
 {
-  "scenario": "Conchas",
   "startClock": "22:00",
   "rows": [
+    { 
+      "who": "Oven A", 
+      "type": "machine", 
+      "kind": "warmup", 
+      "batch": "", 
+      "step": "", 
+      "start": 0, 
+      "end": 20
+    },
+    { 
+      "who": "Oven B", 
+      "type": "machine", 
+      "kind": "warmup", 
+      "batch": "", 
+      "step": "", 
+      "start": 0, 
+      "end": 20
+    },
+    { 
+      "who": "Proofer A", 
+      "type": "machine", 
+      "kind": "warmup", 
+      "batch": "", 
+      "step": "", 
+      "start": 0, 
+      "end": 15
+    },
     { 
       "who": "Baker 1", 
       "type": "worker", 
@@ -162,7 +188,6 @@
     "orders": [
       {
         "item": "Conchas",
-        "recipe": "Conchas",
         "quantity": 12,
         "unit": "Dozens",
         "deadline": "03:00",
@@ -171,6 +196,117 @@
         "ready": 250,
         "status": "On time",
         "lateBy": 0
+      }
+    ],
+    "staff": [
+      {
+        "who": "Baker 1",
+        "working": 6,
+        "waiting": 244,
+        "onBreak": 0
+      },
+      {
+        "who": "Packer 1",
+        "working": 10,
+        "waiting": 0,
+        "onBreak": 0
+      },
+      {
+        "who": "Decorator 1",
+        "working": 0,
+        "waiting": 10,
+        "onBreak": 0
+      }
+    ],
+    "equipment": [
+      {
+        "name": "Mixer A",
+        "inUse": 17,
+        "waitingForWorker": 0,
+        "switching": 0,
+        "warmingUp": 0,
+        "unavailable": 0,
+        "idle": 233
+      },
+      {
+        "name": "Proofer A",
+        "inUse": 47,
+        "waitingForWorker": 0,
+        "switching": 0,
+        "warmingUp": 15,
+        "unavailable": 0,
+        "idle": 188
+      },
+      {
+        "name": "Oven A",
+        "inUse": 20,
+        "waitingForWorker": 0,
+        "switching": 0,
+        "warmingUp": 20,
+        "unavailable": 0,
+        "idle": 210
+      },
+      {
+        "name": "Oven B",
+        "inUse": 0,
+        "waitingForWorker": 0,
+        "switching": 0,
+        "warmingUp": 20,
+        "unavailable": 0,
+        "idle": 230
+      },
+      {
+        "name": "Fryer",
+        "inUse": 0,
+        "waitingForWorker": 0,
+        "switching": 0,
+        "warmingUp": 0,
+        "unavailable": 0,
+        "idle": 250
+      },
+      {
+        "name": "Sheeter",
+        "inUse": 0,
+        "waitingForWorker": 0,
+        "switching": 0,
+        "warmingUp": 0,
+        "unavailable": 0,
+        "idle": 250
+      }
+    ],
+    "timePerStep": [
+      {
+        "item": "Conchas",
+        "steps": [
+          {
+            "step": "Mix",
+            "minutes": 17
+          },
+          {
+            "step": "Proof",
+            "minutes": 47
+          },
+          {
+            "step": "Bake",
+            "minutes": 20
+          },
+          {
+            "step": "Pack",
+            "minutes": 10
+          }
+        ],
+        "total": 94
+      }
+    ],
+    "waits": [
+      {
+        "item": "Conchas",
+        "batch": "Conchas 1",
+        "step": "Pack",
+        "start": 84,
+        "minutes": 156,
+        "for": "Packer",
+        "because": "Packer 1 is not on shift until 02:00."
       }
     ]
   }
