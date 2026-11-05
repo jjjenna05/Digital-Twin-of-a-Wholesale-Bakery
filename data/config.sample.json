@@ -1,4 +1,6 @@
 {
+  "name": "Weeknight",
+  "description": "",
   "units": [
     {
       "unit": "Dozens", "equals": 12, "of": "Pieces", "owned": null

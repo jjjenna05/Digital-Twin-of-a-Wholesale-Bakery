@@ -4,7 +4,6 @@
   "orders": [
     {
       "item": "Glazed Donuts",
-       "recipe": "Glazed Donuts",
        "quantity": 200,
        "unit": "Pieces",
        "deadline": "05:00",
@@ -12,7 +11,6 @@
     },
     {
       "item": "Conchas",
-      "recipe": "Conchas",
       "quantity":12,
       "unit": "Dozens",
       "deadline": "03:00",
@@ -24,46 +22,77 @@
       "role": "Baker",
       "count": 1,
       "shiftStart": "22:00",
-      "shiftEnd": "06:00"
+      "shiftEnd": "06:00",
+      "breaks": [
+        {
+          "minutes": 30,
+          "at": "02:00"
+        }
+      ],
+      "afterShift": "Goes home"
     },
     {
       "role": "Packer",
       "count": 1,
       "shiftStart": "02:00",
-      "shiftEnd": "06:00"
+      "shiftEnd": "06:00",
+      "breaks": [],
+      "afterShift": "Goes home"
     },
     {
       "role": "Decorator",
       "count": 1,
       "shiftStart": "02:00",
-      "shiftEnd": "06:00"
+      "shiftEnd": "06:00",
+      "breaks": [],
+      "afterShift": "Goes home"
     }
   ],
   "equipment": [
     {
       "name": "Oven A",
-      "count": 1
+      "count": 1,
+      "from": "",
+      "to": ""
     },
     {
       "name": "Oven B",
-      "count": 1
+      "count": 1,
+      "from": "",
+      "to": ""
     },
     {
       "name": "Mixer A",
-      "count": 1
+      "count": 1,
+      "from": "",
+      "to": ""
     },
     {
       "name": "Proofer A",
-      "count": 1
+      "count": 1,
+      "from": "",
+      "to": ""
     },
     {
       "name": "Fryer",
-      "count": 1
+      "count": 1,
+      "from": "",
+      "to": ""
     },
     {
       "name": "Sheeter",
-      "count": 1
+      "count": 1,
+      "from": "",
+      "to": ""
     }
     
+  ],
+  "stock": [
+    {
+      "item": "Glazed Donuts",
+      "amount": 1,
+      "unit": "Batches",
+      "alreadyPast": "Mix"
+    }
   ]
 }
