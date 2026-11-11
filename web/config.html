@@ -34,7 +34,7 @@
          <button type="button" data-tab="roles-tab">Roles</button>
          <button type="button" data-tab="equipment-tab">Equipment</button>
          <button type="button" data-tab="recipe-tab" >Recipe</button>
-         <button type="button" data-tab="preferences-tab" >Preferences</button>
+         <button type="button" data-tab="preferences-tab" >Saved Configurations</button>
       </div>     
          <section id="equipment-tab" hidden>
             <table class="list">
@@ -414,18 +414,41 @@
          </section> 
          <section id="preferences-tab" hidden>
             <button type="button" id="save-config" class="primary save-config">Save current configuration</button>
+            <p class="error" id="save-config-button-error"></p>
+            <table class="list">
+               <thead>
+                  <tr>
+                     <th>Name</th>
+                     <th>Description</th>
+                     <!-- for edit/delete button  -->
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody id="preferences-row"></tbody>
+            </table>
             <dialog id="save-config-dialog" class="dialog">
                <form id="save-config-form">
-                   <h2>Save configuration</h2>
+                   <h2 id="save-config-dialog-header">Save configuration</h2>
                    <div class="field">
-                       <label>Name <input name="name"></label>
+                       <label>Name <input name="name" maxlength="20"></label>
                        <p class="error" id="save-config-error"></p>
+                   </div>
+                   <div class="field">
+                       <label>Description (Optional) <textarea name="description" maxlength="250"></textarea></label>
                    </div>
                    <div class="dialog-buttons">
                        <button type="button" id="cancel-save-config" class="secondary">Cancel</button>
                        <button type="submit" class="primary">Save</button>
                    </div>
                </form>
+            </dialog>
+            <dialog id="delete-config-dialog" class="dialog">
+                <h2 id="delete-config-dialog-header"></h2>
+                <p>This will remove the saved configuration!</p>
+                <div class="dialog-buttons">
+                    <button type="button" id="cancel-config-delete" class="secondary">Cancel</button>
+                    <button type="button" id="confirm-config-delete" class="delete">Delete</button>
+                </div>
             </dialog>
          </section>
    </main>
