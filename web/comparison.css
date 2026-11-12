@@ -79,7 +79,16 @@ b.bad { font-weight: 700; }
 .btn.dark { background: #4a4a4a; color: #fff; }
 .btn:hover { filter: brightness(0.95); }
 
+main.comparison, main.comparison * {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@page { margin: 12mm; }
+
 @media print {
   .navBar, .pdfButton, .actions { display: none; }
-  main.comparison { padding: 0; }
+  main.comparison { padding: 0; max-width: none; }
+  .comparison h2 { break-after: avoid; margin-top: 32px; }
+  .comparison tr, .barRow, .legend { break-inside: avoid; }
 }
