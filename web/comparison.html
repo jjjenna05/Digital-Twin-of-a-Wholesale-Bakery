@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Comparison | Bakery</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="comparison.css">
+  <script src="nav.js" defer></script>
+</head>
+<body>
+  <nav class="navBar">
+    <span class="navTitle">Bakery</span>
+    <div class="navLinks">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="config.html">Config</a>
+      <a href="compare.html" class="active">Compare</a>
+    </div>
+    <div class="navUser">
+      <span id="userName"></span>
+      <button id="logoutBtn" type="button">Log out</button>
+    </div>
+  </nav>
+
+  <main class="comparison">
+    <div class="pageHeader">
+      <h1>Comparison</h1>
+      <button class="pdfButton" id="downloadPdf" type="button" onclick="window.print()">Download PDF</button>
+    </div>
+
+    <table class="summary">
+      <thead>
+        <tr><th></th><th>Scenario A</th><th>Scenario B</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Change</td><td></td><td>Added 1 Decorator</td></tr>
+        <tr><td>All order ready</td><td>03:14</td><td>03:14</td></tr>
+        <tr><td>Orders on time</td><td>3 of 4</td><td>3 of 4</td></tr>
+        <tr><td>Late</td><td class="bad">31 min late for Glazed Donuts</td><td class="bad">9 min late for Glazed Donuts</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Orders</h2>
+    <table class="orders">
+      <thead>
+        <tr><th>Item</th><th>Quantity</th><th>Due</th><th>Ready in A</th><th>Ready in B</th><th>Difference</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="item">Glazed Donuts</td><td>200 Pieces</td><td>02:00</td><td>02:31 <b class="bad">Late 31 min</b></td><td>02:09 <b class="bad">Late 9 min</b></td><td class="good">B is 22 min earlier</td></tr>
+        <tr><td class="item">Chocolate Donuts</td><td>100 Pieces</td><td>03:00</td><td>02:36 On time</td><td>02:14 On time</td><td class="good">B is 22 min earlier</td></tr>
+        <tr><td class="item">Conchas</td><td>12 Dozens (144 pieces)</td><td>03:00</td><td>02:45 On time</td><td>02:45 On time</td><td class="same">same</td></tr>
+        <tr><td class="item">Croissants</td><td>300 Pieces</td><td>04:00</td><td>03:14 On time</td><td>03:14 On time</td><td class="same">same</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="spaced">Finds out where Glazed Donuts got faster</h2>
+    <p class="hint">Every wait of 3 minutes or more listed below</p>
+    <table class="waits">
+      <thead>
+        <tr><th>Wait</th><th>Scenario A</th><th>Scenario B</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Waiting for a free Proofer A</td><td>for 75 min at 22:17</td><td>for 75 min at 22:17</td></tr>
+        <tr><td>Waiting for Fryer to warm up</td><td>for 10 min at 00:14</td><td>for 10 min at 00:14</td></tr>
+        <tr><td>Waiting for a Decorator</td><td>for 66 min at 00:54</td><td class="good">0 min</td></tr>
+        <tr><td>Waiting for a Packer</td><td>for 13 min at 02:09</td><td class="bad">for 57 min at 01:03</td></tr>
+        <tr><td class="item">Ready</td><td>02:31, 31 min late</td><td>02:09, 9 min late</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="spaced">Staff working breakdown</h2>
+    <div class="bars">
+        <div class="barRow">
+          <span class="barName">Baker 1</span>
+          <span class="barScenario">A</span>
+          <div class="bar" role="img" aria-label="Baker 1, scenario A: 58 min working, 3 h 46 min waiting"><span class="seg work" style="width:18.033%"></span><span class="seg wait" style="width:72.131%"></span><span class="seg off" style="width:9.836%"></span></div>
+          <span class="barLabel">58 min working, 3 h 46 min waiting</span>
+        </div>
+        <div class="barRow">
+          <span class="barName"></span>
+          <span class="barScenario">B</span>
+          <div class="bar" role="img" aria-label="Baker 1, scenario B: 58 min working, 3 h 46 min waiting"><span class="seg work" style="width:18.033%"></span><span class="seg wait" style="width:72.131%"></span><span class="seg off" style="width:9.836%"></span></div>
+          <span class="barLabel">58 min working, 3 h 46 min waiting</span>
+        </div>
+        <div class="barRow">
+          <span class="barName">Baker 2</span>
+          <span class="barScenario">A</span>
+          <div class="bar" role="img" aria-label="Baker 2, scenario A: 24 min working, 4 h 20 min waiting"><span class="seg work" style="width:7.992%"></span><span class="seg wait" style="width:82.008%"></span><span class="seg off" style="width:10.000%"></span></div>
+          <span class="barLabel">24 min working, 4 h 20 min waiting</span>
+        </div>
+        <div class="barRow">
+          <span class="barName"></span>
+          <span class="barScenario">B</span>
+          <div class="bar" role="img" aria-label="Baker 2, scenario B: 24 min working, 4 h 20 min waiting"><span class="seg work" style="width:7.992%"></span><span class="seg wait" style="width:82.008%"></span><span class="seg off" style="width:10.000%"></span></div>
+          <span class="barLabel">24 min working, 4 h 20 min waiting</span>
+        </div>
+        <div class="barRow">
+          <span class="barName">Packer 1</span>
+          <span class="barScenario">A</span>
+          <div class="bar" role="img" aria-label="Packer 1, scenario A: 49 min working, 25 min waiting"><span class="seg work" style="width:65.984%"></span><span class="seg wait" style="width:34.016%"></span></div>
+          <span class="barLabel">49 min working, 25 min waiting</span>
+        </div>
+        <div class="barRow">
+          <span class="barName"></span>
+          <span class="barScenario">B</span>
+          <div class="bar" role="img" aria-label="Packer 1, scenario B: 49 min working, 25 min waiting"><span class="seg work" style="width:65.984%"></span><span class="seg wait" style="width:34.016%"></span></div>
+          <span class="barLabel">49 min working, 25 min waiting</span>
+        </div>
+        <div class="barRow">
+          <span class="barName">Decorator 1</span>
+          <span class="barScenario">A</span>
+          <div class="bar" role="img" aria-label="Decorator 1, scenario A: 19 min working, 55 min waiting"><span class="seg work" style="width:25.984%"></span><span class="seg wait" style="width:74.016%"></span></div>
+          <span class="barLabel">19 min working, 55 min waiting</span>
+        </div>
+        <div class="barRow">
+          <span class="barName"></span>
+          <span class="barScenario">B</span>
+          <div class="bar" role="img" aria-label="Decorator 1, scenario B: 0 min working, 1 h 14 min waiting"><span class="seg wait" style="width:100.000%"></span></div>
+          <span class="barLabel">0 min working, 1 h 14 min waiting</span>
+        </div>
+        <div class="barRow">
+          <span class="barName">Decorator 2</span>
+          <span class="barScenario">B</span>
+          <div class="bar" role="img" aria-label="Decorator 2, scenario B: 19 min working, 4 h 55 min waiting"><span class="seg work" style="width:6.002%"></span><span class="seg wait" style="width:93.998%"></span></div>
+          <span class="barLabel">19 min working, 4 h 55 min waiting</span>
+        </div>
+    </div>
+    <ul class="legend">
+      <li><span class="swatch work"></span>working</li>
+      <li><span class="swatch wait"></span>waiting for work</li>
+      <li><span class="swatch off"></span>on break</li>
+    </ul>
+
+    <h2 class="spaced">Equipment Usage breakdown</h2>
+    <div class="bars">
+        <div class="barRow">
+          <span class="barName">Oven A</span>
+          <span class="barScenario">A</span>
+          <div class="bar" role="img" aria-label="Oven A, scenario A: 1 h in use"><span class="seg work" style="width:19.016%"></span><span class="seg switch" style="width:2.992%"></span><span class="seg warm" style="width:5.738%"></span><span class="seg idle" style="width:72.254%"></span></div>
+          <span class="barLabel">1 h in use</span>
+        </div>
+        <div class="barRow">
+          <span class="barName"></span>
+          <span class="barScenario">B</span>
+          <div class="bar" role="img" aria-label="Oven A, scenario B: 1 h in use"><span class="seg work" style="width:19.016%"></span><span class="seg switch" style="width:2.992%"></span><span class="seg warm" style="width:5.738%"></span><span class="seg idle" style="width:72.254%"></span></div>
+          <span class="barLabel">1 h in use</span>
+        </div>
+        <div class="barRow">
+          <span class="barName">Oven B</span>
+          <span class="barScenario">A</span>
+          <div class="bar" role="img" aria-label="Oven B, scenario A: 48 min in use"><span class="seg work" style="width:15.000%"></span><span class="seg switch" style="width:2.008%"></span><span class="seg warm" style="width:5.738%"></span><span class="seg idle" style="width:77.254%"></span></div>
+          <span class="barLabel">48 min in use</span>
+        </div>
+        <div class="barRow">
+          <span class="barName"></span>
+          <span class="barScenario">B</span>
+          <div class="bar" role="img" aria-label="Oven B, scenario B: 48 min in use"><span class="seg work" style="width:15.000%"></span><span class="seg switch" style="width:2.008%"></span><span class="seg warm" style="width:5.738%"></span><span class="seg idle" style="width:77.254%"></span></div>
+          <span class="barLabel">48 min in use</span>
+        </div>
+        <div class="barRow">
+          <span class="barName">Mixer A</span>
+          <span class="barScenario">A</span>
+          <div class="bar" role="img" aria-label="Mixer A, scenario A: 51 min in use"><span class="seg work" style="width:15.984%"></span><span class="seg switch" style="width:5.984%"></span><span class="seg idle" style="width:78.033%"></span></div>
+          <span class="barLabel">51 min in use</span>
+        </div>
+        <div class="barRow">
+          <span class="barName"></span>
+          <span class="barScenario">B</span>
+          <div class="bar" role="img" aria-label="Mixer A, scenario B: 51 min in use"><span class="seg work" style="width:15.984%"></span><span class="seg switch" style="width:5.984%"></span><span class="seg idle" style="width:78.033%"></span></div>
+          <span class="barLabel">51 min in use</span>
+        </div>
+        <div class="barRow">
+          <span class="barName">Proofer A</span>
+          <span class="barScenario">A</span>
+          <div class="bar" role="img" aria-label="Proofer A, scenario A: 4 h 15 min in use"><span class="seg work" style="width:80.984%"></span><span class="seg wait" style="width:5.000%"></span><span class="seg warm" style="width:5.000%"></span><span class="seg idle" style="width:9.016%"></span></div>
+          <span class="barLabel">4 h 15 min in use</span>
+        </div>
+        <div class="barRow">
+          <span class="barName"></span>
+          <span class="barScenario">B</span>
+          <div class="bar" role="img" aria-label="Proofer A, scenario B: 4 h 15 min in use"><span class="seg work" style="width:80.984%"></span><span class="seg wait" style="width:5.000%"></span><span class="seg warm" style="width:5.000%"></span><span class="seg idle" style="width:9.016%"></span></div>
+          <span class="barLabel">4 h 15 min in use</span>
+        </div>
+        <div class="barRow">
+          <span class="barName">Fryer</span>
+          <span class="barScenario">A</span>
+          <div class="bar" role="img" aria-label="Fryer, scenario A: 32 min in use"><span class="seg work" style="width:10.000%"></span><span class="seg warm" style="width:2.992%"></span><span class="seg idle" style="width:87.008%"></span></div>
+          <span class="barLabel">32 min in use</span>
+        </div>
+        <div class="barRow">
+          <span class="barName"></span>
+          <span class="barScenario">B</span>
+          <div class="bar" role="img" aria-label="Fryer, scenario B: 32 min in use"><span class="seg work" style="width:10.000%"></span><span class="seg warm" style="width:2.992%"></span><span class="seg idle" style="width:87.008%"></span></div>
+          <span class="barLabel">32 min in use</span>
+        </div>
+        <div class="barRow">
+          <span class="barName">Sheeter</span>
+          <span class="barScenario">A</span>
+          <div class="bar" role="img" aria-label="Sheeter, scenario A: 20 min in use"><span class="seg work" style="width:5.984%"></span><span class="seg idle" style="width:94.016%"></span></div>
+          <span class="barLabel">20 min in use</span>
+        </div>
+        <div class="barRow">
+          <span class="barName"></span>
+          <span class="barScenario">B</span>
+          <div class="bar" role="img" aria-label="Sheeter, scenario B: 20 min in use"><span class="seg work" style="width:5.984%"></span><span class="seg idle" style="width:94.016%"></span></div>
+          <span class="barLabel">20 min in use</span>
+        </div>
+    </div>
+    <ul class="legend">
+      <li><span class="swatch work"></span>in use</li>
+      <li><span class="swatch wait"></span>waiting for worker</li>
+      <li><span class="swatch switch"></span>switching</li>
+      <li><span class="swatch warm"></span>warming up</li>
+      <li><span class="swatch idle"></span>idle</li>
+    </ul>
+
+    <div class="actions">
+      <a href="compare.html" class="btn light">New comparison</a>
+      <a href="compare.html" class="btn dark">Change Scenario B</a>
+    </div>
+  </main>
+</body>
+</html>
