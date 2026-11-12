@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Run simulation | Bakery</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="run.css">
+    <script src="nav.js" defer></script>
+    <script src="run.js" defer></script>
+</head>
+<body>
+    <nav class="navBar">
+        <span class="navTitle">Bakery</span>
+        <div class="navLinks">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="config.html">Config</a>
+            <a href="compare.html">Compare</a>
+        </div>
+        <div class="navUser">
+            <span id="userName"></span>
+            <button id="logoutBtn" type="button">Log out</button>
+        </div>
+    </nav>
+
+    <main class="runPage">
+        <a href="dashboard.html" class="back">&larr; Back to dashboard</a>
+        <h1>Run simulation</h1>
+
+        <form id="runForm" class="runForm" novalidate>
+            <div class="field">
+                <label>
+                    Name
+                    <input type="text" id="runName" autocomplete="off">
+                </label>
+                <p class="hint">Leave empty to use the name shown in grey.</p>
+            </div>
+
+            <div class="field">
+                <label>
+                    Orders
+                    <select id="ordersPick"></select>
+                </label>
+                <p class="hint">The orders, staff, equipment and stock saved under one name.</p>
+            </div>
+
+            <div class="field">
+                <label>
+                    Configuration
+                    <select id="configPick"></select>
+                </label>
+            </div>
+
+            <div class="runButtons">
+                <a href="dashboard.html" class="runCancel secondary">Cancel</a>
+                <button type="submit" class="primary">Run simulation</button>
+            </div>
+        </form>
+    </main>
+
+    <!-- loading screen, shown while the simulation runs -->
+    <div id="loadingScreen" class="loadingScreen" hidden>
+        <div class="loadingBox" role="status" aria-live="polite">
+            <div class="spinner" aria-hidden="true"></div>
+            <p class="loadingText">Running simulation...</p>
+            <p class="loadingName" id="loadingName"></p>
+            <button type="button" id="cancelRun" class="secondary">Cancel</button>
+        </div>
+    </div>
+</body>
+</html>
