@@ -6,6 +6,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, abort, session, redirect, send_from_directory
 from backend.errors import register_error_handlers
+from engine.engine import run_night, ConfigError
 
 load_dotenv()
 
@@ -95,3 +96,51 @@ def me():
 @login_required
 def get_config():
     return send_from_directory(DATA_DIR, "config.sample.json")
+
+
+#run the simulation and return the event log and summary
+@app.route("/api/simulate", methods=["POST"])
+@login_required
+def simulate():
+    data = request.get_json(silent=True)
+
+    if not isinstance(data, dict):
+        abort(400, description="JSON data is required.")
+
+    config = data.get("config")
+    scenario = data.get("scenario")
+
+    if not isinstance(config, dict):
+        abort(400, description="Bakery configuration is required.")
+
+    if not isinstance(scenario, dict):
+        abort(400, description="Scenario is required.")
+
+    #check required configuration fields
+    for field in ["units", "steps", "roles", "equipment", "recipes"]:
+        if field not in config:
+            abort(400, description="Missing configuration field: " + field)
+        if not isinstance(config[field], list):
+            abort(400, description="Configuration field must be a list: " + field)
+
+    #check required scenario fields
+    for field in ["name", "startClock", "orders", "staff", "equipment"]:
+        if field not in scenario:
+            abort(400, description="Missing scenario field: " + field)
+
+    #check scenario field types
+    for field in ["orders", "staff", "equipment"]:
+        if not isinstance(scenario[field], list):
+            abort(400, description="Scenario field must be a list: " + field)
+
+    for field in ["name", "startClock"]:
+        if not isinstance(scenario[field], str):
+            abort(400, description="Scenario field must be a string: " + field)
+
+    #run the simulation using the engine
+    try:
+        result = run_night(config, scenario, include_summary=True)
+    except ConfigError as error:
+        abort(400, description=str(error))
+
+    return jsonify(result)
