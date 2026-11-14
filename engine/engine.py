@@ -147,6 +147,18 @@ def split_loads(pieces, capacity):
 
     return loads
 
+#split a batch into individual units for one by one machines
+def get_one_by_one_loads(config, recipe, equipment, pieces):
+    unit = equipment["capacity"]["unit"]
+
+    #find how many pieces fit in one unit
+    unit_pieces = pieces_per_unit(config, recipe, unit)
+
+    if unit_pieces <= 0:
+        raise ConfigError(unit + " must have a positive conversion.")
+
+    #each load is one unit instead of the whole machine capacity
+    return split_loads(pieces, unit_pieces)
 
 #turn each order into batches, for example 200 Glazed Donuts is 120 + 80, 2 batches
 def make_batches(config, orders):
@@ -250,12 +262,28 @@ def make_machines(config, scenario):
             if count > 1:
                 #format Oven A 1 and Oven A 2
                 name = name + " " + str(j + 1)
+
+            #make individual spaces for one by one machines
+            slots = []
+            if equipment[i]["loads"] == "One by one":
+                amount = equipment[i]["capacity"]["amount"]
+                if (
+                    not isinstance(amount, (int, float))
+                    or isinstance(amount, bool)
+                    or amount <= 0
+                    or amount % 1 != 0
+                ):
+                    raise ConfigError(name + " must have a positive whole number capacity.")
+                for k in range(int(amount)):
+                    slot_name = name + " slot " + str(k + 1)
+                    slots.append(sim.Resource(slot_name))
             machines.append({
                 "name": name,
                 "canDo": equipment[i]["canDo"],
                 "capacity": equipment[i]["capacity"],
                 "loads": equipment[i]["loads"],
-                #a resource is something only one batch can use at a time
+                "slots": slots,
+                #a resource for the entire machine
                 "resource": sim.Resource(name)
             })
     #return entire machine dict list
@@ -324,35 +352,44 @@ class Batch(sim.Component):
         self.rows = rows
         self.machines = machines
         self.workers = workers
-    #wait for a free machine that can do this step and give back the one the batch get
+    #wait for a free machine or machine space that can do this step
     def get_machine(self, step_name):
-        #every machine tonight that Can do lists this step, must be in Equipment list order
         can_use = []
         resources = []
         for i in range(len(self.machines)):
-            #if machine can do this step, add to list
-            if step_name in self.machines[i]["canDo"]:
-                can_use.append(self.machines[i])
-                #add machine object to resource list for sim
-                resources.append(self.machines[i]["resource"])
+            machine = self.machines[i]
+            if step_name in machine["canDo"]:
+                #one by one machines have individual spaces
+                if machine["loads"] == "One by one":
+                    for j in range(len(machine["slots"])):
+                        resource = machine["slots"][j]
+                        can_use.append([machine, resource])
+                        resources.append(resource)
+                else:
+                    #when full machines use the entire machine
+                    resource = machine["resource"]
+                    can_use.append([machine, resource])
+                    resources.append(resource)
         #stop engine if no machine tonight can do this step
         if len(can_use) == 0:
             raise ConfigError("No machine tonight can do " + step_name + ".")
-        #read sim clock and get current time
         start = self.env.now()
-        #batch pause n request waits until one of the machines is free. when more than one is free it takes the first one in the list
-        self.request(*resources, oneof=True, request_priority=self.batch["priority"])
-        #the batch have waited so write a waiting row from start until now
+        self.request(
+            *resources,
+            oneof=True,
+            request_priority=self.batch["priority"]
+        )
+        #record waiting for a machine or space
         if self.env.now() > start:
-            row = make_row(self.batch, step_name, "waiting", start, self.env.now())
+            row = make_row(
+                self.batch, step_name, "waiting", start, self.env.now()
+            )
             row["for"] = "a machine"
             self.rows.append(row)
-        #give back the machine the batch got
+        #return the machine and the resource that was claimed
         for i in range(len(can_use)):
-            if self.isclaiming(can_use[i]["resource"]):
-                #return machine dict
-                return can_use[i]
-
+            if self.isclaiming(can_use[i][1]):
+                return can_use[i][0], can_use[i][1]
 
     #wait for enough workers that can do this step
     def get_workers(self, step_name, count, duration):
@@ -462,51 +499,129 @@ class Batch(sim.Component):
                 self.release(assigned[k]["resource"])
 
 
-    #process is what the batch does n runs it on the simulation clock
+    #process loads that can use individual machine spaces
+    def process_individual_loads(self, step, kind):
+        remaining = self.batch["pieces"]
+        active_loads = []
+        while remaining > 0:
+            #create a separate simulation component for each load
+            load = MachineLoad(
+                parent_batch=self,
+                step=step,
+                kind=kind,
+                remaining=remaining
+            )
+            active_loads.append(load)
+            #wait until the load gets a machine or space
+            while load.assigned_pieces is None:
+                self.passivate()
+            #remove the pieces assigned to this load
+            remaining = remaining - load.assigned_pieces
+            #when full machines process one load at a time
+            if load.loading_mode != "One by one":
+                while not load.load_finished:
+                    self.passivate()
+        #wait until all loads finish before the next recipe step
+        while any(not load.load_finished for load in active_loads):
+            self.passivate()
+
+    #process is what the batch does on the simulation clock
     def process(self):
         #wait until the order can start
         not_before = self.batch["notBeforeMinutes"]
-
         if not_before is not None and not_before > self.env.now():
             self.hold(not_before - self.env.now())
-
         steps = self.batch["recipe"]["steps"]
-
         for i in range(len(steps)):
             step = steps[i]
             kind = find_kind(self.config, step["step"])
-
             #only Machine and Hands-on machine steps use a machine
             if kind == "Machine" or kind == "Hands-on machine":
-                remaining = self.batch["pieces"]
-
-                #run as many loads as needed for the batch
-                while remaining > 0:
-                    machine = self.get_machine(step["step"])
-
-                    #get the capacity of the selected machine in pieces
-                    capacity = get_machine_capacity(
-                        self.config, self.batch["recipe"], machine
-                    )
-
-                    #take as many pieces as the machine can hold
-                    load = min(remaining, capacity)
-
-                    #run the load through its parts
-                    parts = get_parts(self.config, self.batch, step, load)
-                    self.process_parts(step, kind, parts, machine)
-
-                    #release the machine after the load is done
-                    self.release(machine["resource"])
-
-                    #remove the finished pieces from the remaining amount
-                    remaining = remaining - load
-
+                #check if this step can use a one by one machine
+                individual = any(
+                    step["step"] in machine["canDo"]
+                    and machine["loads"] == "One by one"
+                    for machine in self.machines
+                )
+                if individual:
+                    self.process_individual_loads(step, kind)
+                else:
+                    remaining = self.batch["pieces"]
+                    #run as many loads as needed for the batch
+                    while remaining > 0:
+                        machine, resource = self.get_machine(step["step"])
+                        capacity = get_machine_capacity(
+                            self.config, self.batch["recipe"], machine
+                        )
+                        load = min(remaining, capacity)
+                        parts = get_parts(
+                            self.config, self.batch, step, load
+                        )
+                        self.process_parts(step, kind, parts, machine)
+                        #release the machine after the load is done
+                        self.release(resource)
+                        remaining = remaining - load
             else:
                 #By hand and Wait steps do not need a machine
                 parts = get_parts(self.config, self.batch, step)
                 self.process_parts(step, kind, parts, None)
-    
+
+
+#one machine load acts independently on the simulation clock
+class MachineLoad(Batch):
+    def setup(self, parent_batch, step, kind, remaining):
+        #use the same configuration, rows, machines and workers
+        super().setup(
+            parent_batch.config,
+            parent_batch.batch,
+            parent_batch.rows,
+            parent_batch.machines,
+            parent_batch.workers
+        )
+        self.parent_batch = parent_batch
+        self.step = step
+        self.kind = kind
+        self.remaining = remaining
+        self.assigned_pieces = None
+        self.loading_mode = None
+        self.load_finished = False
+    def process(self):
+        #get a machine or an individual machine space
+        machine, resource = self.get_machine(self.step["step"])
+        self.loading_mode = machine["loads"]
+        if self.loading_mode == "One by one":
+            #take only one individual unit
+            loads = get_one_by_one_loads(
+                self.config,
+                self.batch["recipe"],
+                machine,
+                self.remaining
+            )
+            self.assigned_pieces = loads[0]
+        else:
+            #take as many pieces as the whole machine can hold
+            capacity = get_machine_capacity(
+                self.config, self.batch["recipe"], machine
+            )
+            self.assigned_pieces = min(self.remaining, capacity)
+        #let the parent batch schedule another load
+        if self.parent_batch.ispassive():
+            self.parent_batch.activate()
+        #process this load using the recipe's configured times
+        parts = get_parts(
+            self.config,
+            self.batch,
+            self.step,
+            self.assigned_pieces
+        )
+        self.process_parts(self.step, self.kind, parts, machine)
+        #release only the resource used by this load
+        self.release(resource)
+        self.load_finished = True
+        #notify the parent batch that this load finished
+        if self.parent_batch.ispassive():
+            self.parent_batch.activate()
+            
 
 #run the night and give back every row of the event log
 def run_night(config, scenario):
