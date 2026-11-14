@@ -205,15 +205,70 @@ def make_machines(config, scenario):
             })
     #return entire machine dict list
     return machines
-    
+
+
+#make tonight's workers from the staff list
+def make_workers(config, scenario):
+    workers = []
+    staff = scenario["staff"]
+    roles = config["roles"]
+    start_clock = scenario["startClock"]
+    role_counts = {}
+
+    for i in range(len(staff)):
+        role = staff[i]["role"]
+        can_do = None
+
+        #find the steps this role can do
+        for j in range(len(roles)):
+            if roles[j]["name"] == role:
+                can_do = roles[j]["canDo"]
+                break
+
+        #stop engine if the role is not in config
+        if can_do is None:
+            raise ConfigError(role + " is not on the Roles tab.")
+
+        #convert shift times into simulation minutes
+        shift_start = clock_to_minutes(staff[i]["shiftStart"], start_clock)
+        shift_end = clock_to_minutes(staff[i]["shiftEnd"], start_clock)
+
+        if shift_start is None or shift_end is None:
+            raise ConfigError(role + " must have a shift start and end.")
+
+        if shift_end == shift_start:
+            raise ConfigError(role + " must have different shift start and end times.")
+
+        if shift_end < shift_start:
+            shift_end = shift_end + 24 * 60
+
+        #create each worker separately
+        for j in range(staff[i]["count"]):
+            role_counts[role] = role_counts.get(role, 0) + 1
+            name = role + " " + str(role_counts[role])
+
+            workers.append({
+                "name": name,
+                "role": role,
+                "canDo": can_do,
+                "shiftStart": shift_start,
+                "shiftEnd": shift_end,
+                "busyUntil": 0,
+                "resource": sim.Resource(name)
+            })
+
+    return workers
+
+
 #one batch acts over time on sim clock
 class Batch(sim.Component):
     #setup runs once when the batch is made n it keep what the batch needs
-    def setup(self, config, batch, rows, machines):
+    def setup(self, config, batch, rows, machines, workers):
         self.config = config
         self.batch = batch
         self.rows = rows
         self.machines = machines
+        self.workers = workers
     #wait for a free machine that can do this step and give back the one the batch get
     def get_machine(self, step_name):
         #every machine tonight that Can do lists this step, must be in Equipment list order
@@ -242,6 +297,65 @@ class Batch(sim.Component):
             if self.isclaiming(can_use[i]["resource"]):
                 #return machine dict
                 return can_use[i]
+
+
+    #wait for enough workers that can do this step
+    def get_workers(self, step_name, count, duration):
+        start = self.env.now()
+
+        #a step that needs staff must have at least one worker
+        if count < 1:
+            raise ConfigError(step_name + " must have at least one worker.")
+
+        while True:
+            now = self.env.now()
+            can_use = []
+
+            #find workers that can do the step and have enough shift time
+            for i in range(len(self.workers)):
+                worker = self.workers[i]
+
+                if step_name in worker["canDo"]:
+                    available = max(now, worker["shiftStart"], worker["busyUntil"])
+
+                    if available + duration <= worker["shiftEnd"]:
+                        can_use.append([available, worker])
+
+            #stop engine if not enough workers can do the step
+            if len(can_use) < count:
+                raise ConfigError("Not enough workers can do " + step_name + " within their shifts.")
+
+            #find the workers that become available first
+            can_use.sort(key=lambda x: x[0])
+            ready_time = can_use[count - 1][0]
+
+            #wait until enough workers are available
+            if ready_time > now:
+                self.hold(ready_time - now)
+                continue
+
+            assigned = []
+            resources = []
+
+            #reserve all workers needed for this step
+            for i in range(count):
+                worker = can_use[i][1]
+                worker["busyUntil"] = now + duration
+                assigned.append(worker)
+                resources.append(worker["resource"])
+
+            #request all the selected workers together
+            self.request(*resources, oneof=False)
+
+            #record how long the batch waited for workers
+            if self.env.now() > start:
+                row = make_row(self.batch, step_name, "waiting", start, self.env.now())
+                row["for"] = "a worker"
+                self.rows.append(row)
+
+            return assigned
+
+            
     #process is what the batch does n runs it on the simulation clock
     def process(self):
         steps = self.batch["recipe"]["steps"]
@@ -255,16 +369,40 @@ class Batch(sim.Component):
                 machine = self.get_machine(step["step"])
             #each part must start when the last part ends
             for j in range(len(parts)):
+                part_kind = parts[j][0]
+                duration = parts[j][1]
+                assigned = []
+                #Machine needs workers only for load and unload
+                #Hands-on machine and By hand need workers the whole time
+                needs_workers = (
+                    (kind == "Machine" and part_kind in ["load", "unload"])
+                    or kind == "Hands-on machine"
+                    or kind == "By hand"
+                )
+                if needs_workers:
+                    assigned = self.get_workers(
+                        step["step"], step["workers"], duration
+                    )
                 start = self.env.now()
-                row = make_row(self.batch, step["step"], parts[j][0], start, start + parts[j][1])
-                #a row on a machine step is about the machine
-                if machine is not None:
-                    row["who"] = machine["name"]
-                    row["type"] = "machine"
-                self.rows.append(row)
-                #hold pauses this batch for the part's minutes while the clock moves on
-                self.hold(parts[j][1])
-            #the batch keeps the machine through load, run and unload, and finally lets it go for the next batch
+                #give back a row for each worker
+                for k in range(len(assigned)):
+                    row = make_row(self.batch, step["step"], part_kind, start, start + duration)
+                    row["who"] = assigned[k]["name"]
+                    row["type"] = "worker"
+                    self.rows.append(row)
+                #give back machine or batch rows
+                if machine is not None or not needs_workers:
+                    row = make_row(self.batch, step["step"], part_kind, start, start + duration)
+                    if machine is not None:
+                        row["who"] = machine["name"]
+                        row["type"] = "machine"
+                    self.rows.append(row)
+                #hold pauses this batch for the part's minutes
+                self.hold(duration)
+                #release the workers after their part is done
+                for k in range(len(assigned)):
+                    self.release(assigned[k]["resource"])
+            #release the machine after the entire step is done
             if machine is not None:
                 self.release(machine["resource"])
 
@@ -277,9 +415,11 @@ def run_night(config, scenario):
     env = sim.Environment()
     #make tonight machines after the clock
     machines = make_machines(config, scenario)
+    #make tonight workers after the clock
+    workers = make_workers(config, scenario)
     #setup every batch into schedule, each one must start its process at minute 0
     for i in range(len(batches)):
-        Batch(config=config, batch=batches[i], rows=rows, machines=machines)
+        Batch(config=config, batch=batches[i], rows=rows, machines=machines, workers=workers)
     #move the clock until there isnt any batch left to do
     env.run()
     return rows
