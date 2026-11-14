@@ -59,11 +59,14 @@ def get_orders(config, scenario):
         #build new dict for each orders
         orders.append({
             "item": order["item"],
+            "priority": i + 1,
             "quantity": order["quantity"],
             "unit": order["unit"],
             "deadline": order["deadline"],
             #convert to minutes from start clock
             "deadlineMinutes": clock_to_minutes(order["deadline"], start_clock),
+            #convert not before time into minutes
+            "notBeforeMinutes": clock_to_minutes(order.get("notBefore", ""), start_clock),
             #copy recipe from config
             "recipe": recipe
         })
@@ -133,6 +136,8 @@ def make_batches(config, orders):
                 "name": order["item"] + " " + str(j + 1),
                 "item": order["item"],
                 "pieces": batch_pieces,
+                "priority": order["priority"],
+                "notBeforeMinutes": order["notBeforeMinutes"],
                 #recipe from config's recipe
                 "recipe": recipe
             })
@@ -286,7 +291,7 @@ class Batch(sim.Component):
         #read sim clock and get current time
         start = self.env.now()
         #batch pause n request waits until one of the machines is free. when more than one is free it takes the first one in the list
-        self.request(*resources, oneof=True)
+        self.request(*resources, oneof=True, request_priority=self.batch["priority"])
         #the batch have waited so write a waiting row from start until now
         if self.env.now() > start:
             row = make_row(self.batch, step_name, "waiting", start, self.env.now())
@@ -306,6 +311,9 @@ class Batch(sim.Component):
         #a step that needs staff must have at least one worker
         if count < 1:
             raise ConfigError(step_name + " must have at least one worker.")
+
+        #check worker availability in order priority
+        self.hold(0, priority=self.batch["priority"])
 
         while True:
             now = self.env.now()
@@ -331,7 +339,7 @@ class Batch(sim.Component):
 
             #wait until enough workers are available
             if ready_time > now:
-                self.hold(ready_time - now)
+                self.hold(ready_time - now, priority=self.batch["priority"])
                 continue
 
             assigned = []
@@ -345,7 +353,7 @@ class Batch(sim.Component):
                 resources.append(worker["resource"])
 
             #request all the selected workers together
-            self.request(*resources, oneof=False)
+            self.request(*resources, oneof=False, request_priority=self.batch["priority"])
 
             #record how long the batch waited for workers
             if self.env.now() > start:
@@ -358,6 +366,10 @@ class Batch(sim.Component):
             
     #process is what the batch does n runs it on the simulation clock
     def process(self):
+        #wait until the order can start
+        not_before = self.batch["notBeforeMinutes"]
+        if not_before is not None and not_before > self.env.now():
+            self.hold(not_before - self.env.now())
         steps = self.batch["recipe"]["steps"]
         for i in range(len(steps)):
             step = steps[i]
