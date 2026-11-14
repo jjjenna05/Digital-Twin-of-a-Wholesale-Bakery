@@ -111,7 +111,43 @@ def get_batch_size(config, recipe):
             return pieces_per_unit(config, recipe, "Batches")
     #stop engine if this recipe has no Batches row
     raise ConfigError(recipe["name"] + " has no Batches row in its Capacity.")
-    
+
+
+#convert machine capacity into Pieces using recipe capacity
+def get_machine_capacity(config, recipe, equipment):
+    capacity = equipment["capacity"]
+    amount = capacity["amount"]
+    unit = capacity["unit"]
+
+    #stop engine if machine capacity is missing or invalid
+    if amount is None or amount <= 0:
+        raise ConfigError(equipment["name"] + " must have a positive capacity.")
+
+    #convert the machine's capacity into pieces
+    pieces = math.floor(amount * pieces_per_unit(config, recipe, unit))
+
+    if pieces <= 0:
+        raise ConfigError(equipment["name"] + " cannot hold one piece of " + recipe["name"] + ".")
+
+    return pieces
+
+
+#split a batch into loads that fit in the machine
+def split_loads(pieces, capacity):
+    loads = []
+
+    if capacity <= 0:
+        raise ConfigError("Machine capacity must be positive.")
+
+    #make each load as large as the machine can hold
+    while pieces > 0:
+        load = min(pieces, capacity)
+        loads.append(load)
+        pieces = pieces - load
+
+    return loads
+
+
 #turn each order into batches, for example 200 Glazed Donuts is 120 + 80, 2 batches
 def make_batches(config, orders):
     batches = []
@@ -163,25 +199,37 @@ def make_row(batch, step_name, kind, start, end):
         "end": end
     }
 #the parts of one step, each part is [kind of row, minutes], the step's kind decide which time counts
-def get_parts(config, batch, step):
+def get_parts(config, batch, step, pieces=None):
     kind = find_kind(config, step["step"])
+    #use the whole batch if a load quantity is not given
+    if pieces is None:
+        pieces = batch["pieces"]
+    #find how many units the processing time applies to
+    per = step.get("per", "load")
+    multiplier = 1
+    if per != "load":
+        unit_pieces = pieces_per_unit(config, batch["recipe"], per)
+        if unit_pieces <= 0:
+            raise ConfigError(per + " must have a positive conversion.")
+        multiplier = pieces / unit_pieces
     if kind == "Machine":
         #half the staff time is to load, then the machine time, then half the staff time is to unload
-        half = step["staffTime"] / 2
-        parts = [["load", half], ["run", step["machineTime"]], ["unload", half]]
+        half = step["staffTime"] * multiplier / 2
+        parts = [["load", half], ["run", step["machineTime"] * multiplier], ["unload", half]]
     #if hands-on machine, machine is busy entire time
     elif kind == "Hands-on machine":
-        parts = [["run", step["machineTime"]]]
+        parts = [["run", step["machineTime"] * multiplier]]
     #if by hand, worker is busy entire time
     elif kind == "By hand":
-        parts = [["work", step["staffTime"]]]
+        parts = [["work", step["staffTime"] * multiplier]]
     #just entire wait time
     elif kind == "Wait":
-        parts = [["wait", step["waitTime"]]]
+        parts = [["wait", step["waitTime"] * multiplier]]
     else:
         #stop the engine if this step is not on the steps tab
         raise ConfigError(step["step"] + " in " + batch["recipe"]["name"] + " is not on the Steps tab.")
     return parts
+
 #find how many of this machine are on tonight's equipment list, 0 if it is not there
 def find_count(scenario, name):
     tonight = scenario["equipment"]
@@ -205,6 +253,8 @@ def make_machines(config, scenario):
             machines.append({
                 "name": name,
                 "canDo": equipment[i]["canDo"],
+                "capacity": equipment[i]["capacity"],
+                "loads": equipment[i]["loads"],
                 #a resource is something only one batch can use at a time
                 "resource": sim.Resource(name)
             })
@@ -364,59 +414,99 @@ class Batch(sim.Component):
             return assigned
 
             
+    #run the parts of one load or step
+    def process_parts(self, step, kind, parts, machine):
+        #each part must start when the last part ends
+        for j in range(len(parts)):
+            part_kind = parts[j][0]
+            duration = parts[j][1]
+            assigned = []
+
+            #Machine needs workers only for load and unload
+            #Hands-on machine and By hand need workers the whole time
+            needs_workers = (
+                (kind == "Machine" and part_kind in ["load", "unload"])
+                or kind == "Hands-on machine"
+                or kind == "By hand"
+            )
+
+            if needs_workers:
+                assigned = self.get_workers(
+                    step["step"], step["workers"], duration
+                )
+
+            start = self.env.now()
+
+            #give back a row for each worker
+            for k in range(len(assigned)):
+                row = make_row(self.batch, step["step"], part_kind, start, start + duration)
+                row["who"] = assigned[k]["name"]
+                row["type"] = "worker"
+                self.rows.append(row)
+
+            #give back machine or batch rows
+            if machine is not None or not needs_workers:
+                row = make_row(self.batch, step["step"], part_kind, start, start + duration)
+
+                if machine is not None:
+                    row["who"] = machine["name"]
+                    row["type"] = "machine"
+
+                self.rows.append(row)
+
+            #hold pauses this batch for the part's minutes
+            self.hold(duration)
+
+            #release the workers after their part is done
+            for k in range(len(assigned)):
+                self.release(assigned[k]["resource"])
+
+
     #process is what the batch does n runs it on the simulation clock
     def process(self):
         #wait until the order can start
         not_before = self.batch["notBeforeMinutes"]
+
         if not_before is not None and not_before > self.env.now():
             self.hold(not_before - self.env.now())
+
         steps = self.batch["recipe"]["steps"]
+
         for i in range(len(steps)):
             step = steps[i]
-            parts = get_parts(self.config, self.batch, step)
             kind = find_kind(self.config, step["step"])
+
             #only Machine and Hands-on machine steps use a machine
-            machine = None
             if kind == "Machine" or kind == "Hands-on machine":
-                machine = self.get_machine(step["step"])
-            #each part must start when the last part ends
-            for j in range(len(parts)):
-                part_kind = parts[j][0]
-                duration = parts[j][1]
-                assigned = []
-                #Machine needs workers only for load and unload
-                #Hands-on machine and By hand need workers the whole time
-                needs_workers = (
-                    (kind == "Machine" and part_kind in ["load", "unload"])
-                    or kind == "Hands-on machine"
-                    or kind == "By hand"
-                )
-                if needs_workers:
-                    assigned = self.get_workers(
-                        step["step"], step["workers"], duration
+                remaining = self.batch["pieces"]
+
+                #run as many loads as needed for the batch
+                while remaining > 0:
+                    machine = self.get_machine(step["step"])
+
+                    #get the capacity of the selected machine in pieces
+                    capacity = get_machine_capacity(
+                        self.config, self.batch["recipe"], machine
                     )
-                start = self.env.now()
-                #give back a row for each worker
-                for k in range(len(assigned)):
-                    row = make_row(self.batch, step["step"], part_kind, start, start + duration)
-                    row["who"] = assigned[k]["name"]
-                    row["type"] = "worker"
-                    self.rows.append(row)
-                #give back machine or batch rows
-                if machine is not None or not needs_workers:
-                    row = make_row(self.batch, step["step"], part_kind, start, start + duration)
-                    if machine is not None:
-                        row["who"] = machine["name"]
-                        row["type"] = "machine"
-                    self.rows.append(row)
-                #hold pauses this batch for the part's minutes
-                self.hold(duration)
-                #release the workers after their part is done
-                for k in range(len(assigned)):
-                    self.release(assigned[k]["resource"])
-            #release the machine after the entire step is done
-            if machine is not None:
-                self.release(machine["resource"])
+
+                    #take as many pieces as the machine can hold
+                    load = min(remaining, capacity)
+
+                    #run the load through its parts
+                    parts = get_parts(self.config, self.batch, step, load)
+                    self.process_parts(step, kind, parts, machine)
+
+                    #release the machine after the load is done
+                    self.release(machine["resource"])
+
+                    #remove the finished pieces from the remaining amount
+                    remaining = remaining - load
+
+            else:
+                #By hand and Wait steps do not need a machine
+                parts = get_parts(self.config, self.batch, step)
+                self.process_parts(step, kind, parts, None)
+    
 
 #run the night and give back every row of the event log
 def run_night(config, scenario):
