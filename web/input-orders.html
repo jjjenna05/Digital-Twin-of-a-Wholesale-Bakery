@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Orders</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="nav.js" defer></script>
+    <style>
+        /* small extras for this page, everything else comes from style.css */
+        .start-time { margin-bottom: 24px; }
+        .start-time input { width: 140px; }
+        .empty-row td { color: var(--hint); font-weight: 400 !important; }
+        .break-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+        .break-row input { flex: 1; min-width: 0; }
+    </style>
+</head>
+<body>
+   <nav class="navBar">
+      <span class="navTitle">Bakery</span>
+        <div class="navLinks">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="config.html">Config</a>
+            <a href="input-orders.html" class="active">Orders</a>
+            <a href="compare.html">Compare</a>
+         </div>
+         <div class="navUser">
+            <span id="userName"></span>
+            <button id="logoutBtn" type="button">Log out</button>
+         </div>
+   </nav>
+
+   <main class="config">
+    <h1>
+       <select id="inputs-pick" class="config-pick" aria-label="Saved inputs">
+           <!-- input-orders.js adds the saved names -->
+           <option value="" disabled selected>Tonight</option>
+       </select>
+    </h1>
+      <div class="configTabs">
+         <button type="button" class="active" data-tab="orders-tab">Orders</button>
+         <button type="button" data-tab="staff-tab">Staff</button>
+         <button type="button" data-tab="equipment-tab">Equipment</button>
+         <button type="button" data-tab="stock-tab">Stock</button>
+         <button type="button" data-tab="saved-tab">Saved Inputs</button>
+      </div>
+
+      <!-- ORDERS -->
+      <section id="orders-tab">
+         <div class="field inline start-time">
+            <label>Night starts at <input id="start-clock" type="time"></label>
+            <p class="error" id="start-clock-error"></p>
+         </div>
+         <table class="list">
+            <thead>
+               <tr>
+                  <th>Item</th>
+                  <th>Quantity</th>
+                  <th>Deadline</th>
+                  <th>Not before</th>
+                  <th></th>
+               </tr>
+            </thead>
+            <tbody id="orders-row"></tbody>
+         </table>
+         <div class="table-footer">
+            <div class="footer-line"></div>
+            <button type="button" id="add-order" class="add-button">+ Add Order</button>
+         </div>
+         <dialog id="order-dialog" class="dialog">
+            <form id="order-form" novalidate>
+               <h2 id="order-dialog-header">Add Order</h2>
+               <div class="field">
+                  <label>Item <select name="product"></select></label>
+                  <p class="error" id="order-item-error"></p>
+               </div>
+               <div class="field">
+                  <label>Quantity
+                     <span class="pair">
+                        <input name="quantity" type="number" min="1">
+                        <select name="unit"></select>
+                     </span>
+                  </label>
+                  <p class="error" id="order-quantity-error"></p>
+               </div>
+               <div class="row">
+                  <div class="field">
+                     <label>Deadline <input name="deadline" type="time"></label>
+                     <p class="error" id="order-deadline-error"></p>
+                  </div>
+                  <div class="field">
+                     <label>Not before (Optional) <input name="notBefore" type="time"></label>
+                  </div>
+               </div>
+               <div class="dialog-buttons">
+                  <button type="button" id="cancel-order" class="secondary">Cancel</button>
+                  <button type="submit" class="primary">Save</button>
+               </div>
+            </form>
+         </dialog>
+      </section>
+
+      <!-- STAFF -->
+      <section id="staff-tab" hidden>
+         <table class="list">
+            <thead>
+               <tr>
+                  <th>Role</th>
+                  <th>Count</th>
+                  <th>Shift</th>
+                  <th>Breaks</th>
+                  <th>After shift</th>
+                  <th></th>
+               </tr>
+            </thead>
+            <tbody id="staff-row"></tbody>
+         </table>
+         <div class="table-footer">
+            <div class="footer-line"></div>
+            <button type="button" id="add-staff" class="add-button">+ Add Staff</button>
+         </div>
+         <dialog id="staff-dialog" class="dialog">
+            <form id="staff-form" novalidate>
+               <h2 id="staff-dialog-header">Add Staff</h2>
+               <div class="row">
+                  <div class="field">
+                     <label>Role <select name="role"></select></label>
+                     <p class="error" id="staff-role-error"></p>
+                  </div>
+                  <div class="field">
+                     <label>Count <input name="count" type="number" min="1"></label>
+                     <p class="error" id="staff-count-error"></p>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="field">
+                     <label>Shift start <input name="shiftStart" type="time"></label>
+                  </div>
+                  <div class="field">
+                     <label>Shift end <input name="shiftEnd" type="time"></label>
+                  </div>
+               </div>
+               <p class="error" id="staff-shift-error"></p>
+               <fieldset class="choices">
+                  <legend>Breaks (Optional)</legend>
+                  <!-- input-orders.js adds one row per break: minutes + start time -->
+                  <div id="break-rows"></div>
+                  <button type="button" id="add-break" class="add-step">Add break</button>
+                  <p class="error" id="staff-breaks-error"></p>
+               </fieldset>
+               <div class="field">
+                  <label>After shift
+                     <select name="afterShift">
+                        <option>Goes home</option>
+                        <option>Stays until done</option>
+                     </select>
+                  </label>
+               </div>
+               <div class="dialog-buttons">
+                  <button type="button" id="cancel-staff" class="secondary">Cancel</button>
+                  <button type="submit" class="primary">Save</button>
+               </div>
+            </form>
+         </dialog>
+      </section>
+
+      <!-- EQUIPMENT -->
+      <section id="equipment-tab" hidden>
+         <table class="list">
+            <thead>
+               <tr>
+                  <th>Name</th>
+                  <th>Count tonight</th>
+                  <th>Available</th>
+                  <th></th>
+               </tr>
+            </thead>
+            <tbody id="equipment-row"></tbody>
+         </table>
+         <div class="table-footer">
+            <div class="footer-line"></div>
+            <button type="button" id="add-equipment" class="add-button">+ Add Equipment</button>
+         </div>
+         <dialog id="equipment-dialog" class="dialog">
+            <form id="equipment-form" novalidate>
+               <h2 id="equipment-dialog-header">Add Equipment</h2>
+               <div class="row">
+                  <div class="field">
+                     <label>Name <select name="name"></select></label>
+                     <p class="error" id="equipment-name-error"></p>
+                  </div>
+                  <div class="field">
+                     <label>Count tonight <input name="count" type="number" min="0"></label>
+                     <p class="error" id="equipment-count-error"></p>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="field">
+                     <label>Available from (Optional) <input name="from" type="time"></label>
+                  </div>
+                  <div class="field">
+                     <label>Available to (Optional) <input name="to" type="time"></label>
+                  </div>
+               </div>
+               <p class="hint">Leave both empty if it's available all night. Use count 0 if it's down tonight.</p>
+               <div class="dialog-buttons">
+                  <button type="button" id="cancel-equipment" class="secondary">Cancel</button>
+                  <button type="submit" class="primary">Save</button>
+               </div>
+            </form>
+         </dialog>
+      </section>
+
+      <!-- STOCK -->
+      <section id="stock-tab" hidden>
+         <table class="list">
+            <thead>
+               <tr>
+                  <th>Item</th>
+                  <th>Amount</th>
+                  <th>Already past</th>
+                  <th></th>
+               </tr>
+            </thead>
+            <tbody id="stock-row"></tbody>
+         </table>
+         <div class="table-footer">
+            <div class="footer-line"></div>
+            <button type="button" id="add-stock" class="add-button">+ Add Stock</button>
+         </div>
+         <dialog id="stock-dialog" class="dialog">
+            <form id="stock-form" novalidate>
+               <h2 id="stock-dialog-header">Add Stock</h2>
+               <div class="field">
+                  <label>Item <select name="product"></select></label>
+                  <p class="error" id="stock-item-error"></p>
+               </div>
+               <div class="field">
+                  <label>Amount
+                     <span class="pair">
+                        <input name="amount" type="number" min="1">
+                        <select name="unit"></select>
+                     </span>
+                  </label>
+                  <p class="error" id="stock-amount-error"></p>
+               </div>
+               <div class="field">
+                  <label>Already past <select name="alreadyPast"></select></label>
+                  <p class="error" id="stock-past-error"></p>
+               </div>
+               <div class="dialog-buttons">
+                  <button type="button" id="cancel-stock" class="secondary">Cancel</button>
+                  <button type="submit" class="primary">Save</button>
+               </div>
+            </form>
+         </dialog>
+      </section>
+
+      <!-- SAVED INPUTS -->
+      <section id="saved-tab" hidden>
+         <button type="button" id="save-inputs" class="primary save-config">Save current inputs</button>
+         <p class="error" id="save-inputs-button-error"></p>
+         <table class="list">
+            <thead>
+               <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th></th>
+               </tr>
+            </thead>
+            <tbody id="saved-row"></tbody>
+         </table>
+         <dialog id="save-inputs-dialog" class="dialog">
+            <form id="save-inputs-form" novalidate>
+               <h2 id="save-inputs-dialog-header">Save inputs</h2>
+               <div class="field">
+                  <label>Name <input name="name" maxlength="20"></label>
+                  <p class="error" id="save-inputs-error"></p>
+               </div>
+               <div class="field">
+                  <label>Description (Optional) <textarea name="description" maxlength="250"></textarea></label>
+               </div>
+               <div class="dialog-buttons">
+                  <button type="button" id="cancel-save-inputs" class="secondary">Cancel</button>
+                  <button type="submit" class="primary">Save</button>
+               </div>
+            </form>
+         </dialog>
+      </section>
+
+      <!-- one delete dialog shared by every tab -->
+      <dialog id="delete-dialog" class="dialog">
+         <h2 id="delete-dialog-header"></h2>
+         <p id="delete-dialog-text"></p>
+         <div class="dialog-buttons">
+            <button type="button" id="cancel-delete" class="secondary">Cancel</button>
+            <button type="button" id="confirm-delete" class="delete">Delete</button>
+         </div>
+      </dialog>
+   </main>
+   <script type="module" src="input-orders.js"></script>
+</body>
+</html>
