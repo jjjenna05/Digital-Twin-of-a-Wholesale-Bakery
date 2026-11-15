@@ -13,6 +13,11 @@
         .empty-row td { color: var(--hint); font-weight: 400 !important; }
         .break-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
         .break-row input { flex: 1; min-width: 0; }
+        /* long names/descriptions wrap onto new lines instead of stretching the table */
+        #saved-row tr:not(.empty-row) td { height: auto; padding-top: 16px; padding-bottom: 16px; vertical-align: top; overflow-wrap: anywhere; }
+        #saved-row tr:not(.empty-row) td:nth-child(1) { width: 20%; }
+        #saved-row tr:not(.empty-row) td:nth-child(2) { width: 65%; max-width: 0; line-height: 1.5; }
+        #saved-row tr:not(.empty-row) td:nth-child(3) { width: 15%; }
     </style>
 </head>
 <body>

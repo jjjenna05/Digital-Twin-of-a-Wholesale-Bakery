@@ -682,8 +682,31 @@ function openSaveDialog(index) {
 
 document.getElementById("save-inputs").addEventListener("click", function () {
   saveButtonError.textContent = "";
+  //every tab needs something before it can be saved
+  const missing = [];
   if (inputs.orders.length === 0) {
-    saveButtonError.textContent = "Add at least one order before saving!";
+    missing.push("an order");
+  }
+  if (inputs.staff.length === 0) {
+    missing.push("staff");
+  }
+  //equipment with count 0 is down tonight, so it doesnt count
+  const hasEquipment = inputs.equipment.some(function (machine) {
+    return machine.count > 0;
+  });
+  if (hasEquipment === false) {
+    missing.push("equipment");
+  }
+  if (inputs.stock.length === 0) {
+    missing.push("stock");
+  }
+  if (missing.length > 0) {
+    //"a, b and c"
+    let list = missing[0];
+    if (missing.length > 1) {
+      list = missing.slice(0, -1).join(", ") + " and " + missing[missing.length - 1];
+    }
+    saveButtonError.textContent = "Add " + list + " before saving!";
     return;
   }
   //same inputs as a saved one, no need to save it again
