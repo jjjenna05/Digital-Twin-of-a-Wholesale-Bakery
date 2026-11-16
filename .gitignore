@@ -222,3 +222,6 @@ __marimo__/
 #macOS-hidden-files
 .DS_Store
 .LSOverride
+
+#simulation runs never commit
+data/runs/
