@@ -1,0 +1,99 @@
+/* Run simulation page */
+.runPage {
+    padding: 36px 80px;
+}
+.runPage .back {
+    font-size: 14px;
+    color: var(--dark);
+    text-decoration: none;
+}
+.runPage h1 {
+    margin: 12px 0 32px;
+}
+.runForm {
+    max-width: 480px;
+    font-size: 14px;
+}
+.runForm .field {
+    margin-bottom: 24px;
+}
+/* grey hint text inside the empty Name box */
+.runForm input::placeholder {
+    color: var(--hint);
+}
+.runButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 32px;
+}
+.runButtons button,
+.runButtons a,
+.loadingBox button {
+    height: 41px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+.runButtons a {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+.runButtons button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/* loading screen covers the whole page */
+.loadingScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.95);
+}
+.loadingScreen[hidden] {
+    display: none;
+}
+.loadingBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+}
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 5px solid var(--grey-button);
+    border-top-color: var(--dark);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+.loadingText {
+    margin: 12px 0 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--dark);
+}
+.loadingName {
+    margin: 0 0 12px;
+    font-size: 14px;
+    color: var(--hint);
+}
+@media (prefers-reduced-motion: reduce) {
+    .spinner { animation-duration: 3s; }
+}
+@media (max-width: 720px) {
+    .runPage { padding: 24px; }
+}
