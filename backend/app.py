@@ -117,10 +117,9 @@ def load_scenario():
 def load_config():
     return read_json(DATA_DIR / "config.sample.json")
 
-#the engine's answer; copied from the sample until the engine is ready (read only)
+#engine's answer for this config and scenario
 def run_engine(scenario, config):
-    log = read_json(DATA_DIR / "eventlog.sample.json")
-    return {"startClock": log["startClock"], "rows": log["rows"], "summary": log["summary"]}
+    return run_night(config, scenario, include_summary=True)
 
 #Saves Name
 def run_file_name(name):
