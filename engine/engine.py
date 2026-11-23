@@ -196,7 +196,9 @@ def make_batches(config, orders):
                 "name": item + " " + str(batch_counts[item]),
                 "item": item,
                 "pieces": batch_pieces,
-                "priority": order["priority"],
+                "priority": len(batches) + 1,
+                #the order this batch belongs to
+                "order": order["priority"],
                 "notBeforeMinutes": order["notBeforeMinutes"],
                 #recipe from config's recipe
                 "recipe": recipe
@@ -235,7 +237,7 @@ def get_parts(config, batch, step, pieces=None):
         unit_pieces = pieces_per_unit(config, batch["recipe"], per)
         if unit_pieces <= 0:
             raise ConfigError(per + " must have a positive conversion.")
-        multiplier = pieces / unit_pieces
+        multiplier = math.ceil(round(pieces / unit_pieces, 6))
     if kind == "Machine":
         #half the staff time is to load, then the machine time, then half the staff time is to unload
         half = step["staffTime"] * multiplier / 2
@@ -445,6 +447,8 @@ class Batch(sim.Component):
         for j in range(len(parts)):
             part_kind = parts[j][0]
             duration = parts[j][1]
+            if duration == 0:
+                continue
             assigned = []
             #Machine needs workers only for load and unload
             #Hands-on machine and By hand need workers the whole time
@@ -454,8 +458,9 @@ class Batch(sim.Component):
                 or kind == "By hand"
             )
             if needs_workers:
+                workers = step.get("workers") or 1
                 assigned = self.get_workers(
-                    step["step"], step["workers"], duration
+                    step["step"], workers, duration
                 )
             start = self.env.now()
             #give back a row for each worker
@@ -522,21 +527,21 @@ class Batch(sim.Component):
                 if individual:
                     self.process_individual_loads(step, kind)
                 else:
+                    machine, resource = self.get_machine(step["step"])
+                    capacity = get_machine_capacity(
+                        self.config, self.batch["recipe"], machine
+                    )
                     remaining = self.batch["pieces"]
                     #run as many loads as needed for the batch
                     while remaining > 0:
-                        machine, resource = self.get_machine(step["step"])
-                        capacity = get_machine_capacity(
-                            self.config, self.batch["recipe"], machine
-                        )
                         load = min(remaining, capacity)
                         parts = get_parts(
                             self.config, self.batch, step, load
                         )
                         self.process_parts(step, kind, parts, machine)
-                        #release the machine after the load is done
-                        self.release(resource)
                         remaining = remaining - load
+                    #release the machine after the last load is done
+                    self.release(resource)
             else:
                 #By hand and Wait steps do not need a machine
                 parts = get_parts(self.config, self.batch, step)
@@ -601,7 +606,7 @@ class MachineLoad(Batch):
             self.parent_batch.activate()
 
 #make the summary of tonight's simulation
-def make_summary(orders, batches):
+def make_summary(orders, batches, workers, rows):
     summary_orders = []
     finish = 0
     for i in range(len(orders)):
@@ -609,7 +614,7 @@ def make_summary(orders, batches):
         #find all batches that belong to this order
         order_batches = [
             batch for batch in batches
-            if batch["priority"] == order["priority"]
+            if batch["order"] == order["priority"]
         ]
         #check that the order has batches
         if len(order_batches) == 0:
@@ -645,9 +650,29 @@ def make_summary(orders, batches):
         })
         #find when the entire night finishes
         finish = max(finish, ready)
+    #each person's working, waiting and break minutes while on shift tonight
+    summary_staff = []
+    for i in range(len(workers)):
+        worker = workers[i]
+        #add up the minutes of this person's worker rows
+        working = 0
+        for j in range(len(rows)):
+            if rows[j]["type"] == "worker" and rows[j]["who"] == worker["name"]:
+                working = working + rows[j]["end"] - rows[j]["start"]
+        #minutes on shift from the shift start until the night finishes
+        on_shift = max(0, min(worker["shiftEnd"], finish) - worker["shiftStart"])
+        #no breaks in the engine yet
+        on_break = 0
+        summary_staff.append({
+            "who": worker["name"],
+            "working": working,
+            "waiting": on_shift - working - on_break,
+            "onBreak": on_break
+        })
     return {
         "finish": finish,
-        "orders": summary_orders
+        "orders": summary_orders,
+        "staff": summary_staff
     }
 
 #run the night and give back the event log and summary
@@ -672,7 +697,7 @@ def run_night(config, scenario, include_summary=False):
             "scenario": scenario["name"],
             "startClock": scenario["startClock"],
             "rows": rows,
-            "summary": make_summary(orders, batches)
+            "summary": make_summary(orders, batches, workers, rows)
         }
     return rows
 
