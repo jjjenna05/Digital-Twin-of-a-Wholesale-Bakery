@@ -105,7 +105,7 @@
       "capacity": {
         "amount": 4, "unit": "Racks"
       },
-      "loads": "When full",
+      "loads": "One by one",
       "switchTime": { "amount": 0, "unit": "min" },
       "switchedBy": null,
       "warmUpTime": { "amount": 15, "unit": "min" },

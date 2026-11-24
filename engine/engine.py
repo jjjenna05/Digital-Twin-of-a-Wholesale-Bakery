@@ -1,6 +1,6 @@
+
 import json
 import math
-#import path from path library
 from pathlib import Path
 import salabim as sim
 #data folder
@@ -256,6 +256,41 @@ def get_parts(config, batch, step, pieces=None):
         raise ConfigError(step["step"] + " in " + batch["recipe"]["name"] + " is not on the Steps tab.")
     return parts
 
+#turn a time key like {"amount": 1, "unit": "hr"} into minutes, blank means 0
+def time_in_minutes(time):
+    if time is None or time.get("amount") is None:
+        return 0
+    amount = time["amount"]
+    unit = time.get("unit") or "min"
+    if amount < 0:
+        raise ConfigError("Times cannot be negative.")
+    if unit == "hr":
+        return amount * 60
+    if unit == "min":
+        return amount
+    if unit == "sec":
+        return amount / 60
+    raise ConfigError(unit + " is not a time unit, use hr, min or sec.")
+
+#find the first "One by one" machine tonight that can do this step, None if there is none
+def find_one_by_one(machines, step_name):
+    for i in range(len(machines)):
+        if step_name in machines[i]["canDo"] and machines[i]["loads"] == "One by one":
+            return machines[i]
+    return None
+
+#make one machine warm-up row
+def make_warmup_row(machine, start, end):
+    return {
+        "who": machine["name"],
+        "type": "machine",
+        "kind": "warmup",
+        "batch": "",
+        "step": "",
+        "start": start,
+        "end": end
+    }
+
 #find how many of this machine are on tonight's equipment list, 0 if it is not there
 def find_count(scenario, name):
     tonight = scenario["equipment"]
@@ -291,6 +326,10 @@ def make_machines(config, scenario):
                 for k in range(int(amount)):
                     slot_name = name + " slot " + str(k + 1)
                     slots.append(sim.Resource(slot_name))
+            #how many people a recipe switch keeps busy, blank means the machine switches alone
+            switched_by = equipment[i].get("switchedBy") or 0
+            if switched_by < 0:
+                raise ConfigError(name + " cannot be switched by fewer than 0 workers.")
             machines.append({
                 "name": name,
                 "canDo": equipment[i]["canDo"],
@@ -298,7 +337,17 @@ def make_machines(config, scenario):
                 "loads": equipment[i]["loads"],
                 "slots": slots,
                 #a resource for the entire machine
-                "resource": sim.Resource(name)
+                "resource": sim.Resource(name),
+                #minutes to change from one recipe to another
+                "switchTime": time_in_minutes(equipment[i].get("switchTime")),
+                "switchedBy": switched_by,
+                #minutes to warm up before the first load of the night
+                "warmUpTime": time_in_minutes(equipment[i].get("warmUpTime")),
+                "turnOn": equipment[i].get("turnOn"),
+                #minute the warm-up ends, None until the warm-up starts
+                "warmUntil": None,
+                #recipe of the last batch the machine ran, None before the first batch
+                "lastRecipe": None
             })
     #return entire machine dict list
     return machines
@@ -349,15 +398,28 @@ def make_workers(config, scenario):
             })
     return workers
 
-#one batch acts over time on sim clock
+#one batch, or one part of a batch, acts over time on sim clock
+#a batch starts as one part with all its pieces, then can break into parts (for example one part per rack)
+#each part moves to its next step by itself, and parts join back together when a step needs the whole batch
 class Batch(sim.Component):
-    #setup runs once when the batch is made n it keep what the batch needs
-    def setup(self, config, batch, rows, machines, workers):
+    #setup runs once when the batch or part is made n it keep what the part needs
+    def setup(self, config, batch, rows, machines, workers, shared=None,
+              pieces=None, step_index=0, unit_part=False):
         self.config = config
         self.batch = batch
         self.rows = rows
         self.machines = machines
         self.workers = workers
+        #things every batch shares tonight, like the batches waiting at each machine step
+        self.shared = shared
+        #a new batch starts as one part with all its pieces
+        if pieces is None:
+            pieces = batch["pieces"]
+        self.pieces = pieces
+        #the step this part starts at
+        self.step_index = step_index
+        #True when this part is already one unit (for example one rack) of the step it starts at
+        self.unit_part = unit_part
     #wait for a free machine or machine space that can do this step
     def get_machine(self, step_name):
         can_use = []
@@ -396,33 +458,41 @@ class Batch(sim.Component):
         for i in range(len(can_use)):
             if self.isclaiming(can_use[i][1]):
                 return can_use[i][0], can_use[i][1]
+    #find the workers that can do the step, each with the minute they are free
+    def free_workers(self, step_name, duration):
+        now = self.env.now()
+        can_use = []
+        #find workers that can do the step and have enough shift time
+        for i in range(len(self.workers)):
+            worker = self.workers[i]
+            if step_name in worker["canDo"]:
+                available = max(now, worker["shiftStart"], worker["busyUntil"])
+                if available + duration <= worker["shiftEnd"]:
+                    can_use.append([available, worker])
+        #find the workers that become available first
+        can_use.sort(key=lambda x: x[0])
+        return can_use
     #wait for enough workers that can do this step
-    def get_workers(self, step_name, count, duration):
+    #priority decides who goes first when people are free at the same minute, lower goes first
+    def get_workers(self, step_name, count, duration, priority=None):
         start = self.env.now()
+        if priority is None:
+            priority = self.batch["priority"]
         #a step that needs staff must have at least one worker
         if count < 1:
             raise ConfigError(step_name + " must have at least one worker.")
         #check worker availability in order priority
-        self.hold(0, priority=self.batch["priority"])
+        self.hold(0, priority=priority)
         while True:
             now = self.env.now()
-            can_use = []
-            #find workers that can do the step and have enough shift time
-            for i in range(len(self.workers)):
-                worker = self.workers[i]
-                if step_name in worker["canDo"]:
-                    available = max(now, worker["shiftStart"], worker["busyUntil"])
-                    if available + duration <= worker["shiftEnd"]:
-                        can_use.append([available, worker])
+            can_use = self.free_workers(step_name, duration)
             #stop engine if not enough workers can do the step
             if len(can_use) < count:
                 raise ConfigError("Not enough workers can do " + step_name + " within their shifts.")
-            #find the workers that become available first
-            can_use.sort(key=lambda x: x[0])
             ready_time = can_use[count - 1][0]
             #wait until enough workers are available
             if ready_time > now:
-                self.hold(ready_time - now, priority=self.batch["priority"])
+                self.hold(ready_time - now, priority=priority)
                 continue
             assigned = []
             resources = []
@@ -433,16 +503,18 @@ class Batch(sim.Component):
                 assigned.append(worker)
                 resources.append(worker["resource"])
             #request all the selected workers together
-            self.request(*resources, oneof=False, request_priority=self.batch["priority"])
+            self.request(*resources, oneof=False, request_priority=priority)
             #record how long the batch waited for workers
             if self.env.now() > start:
                 row = make_row(self.batch, step_name, "waiting", start, self.env.now())
                 row["for"] = "a worker"
                 self.rows.append(row)
             return assigned
-    
+
     #run the parts of one load or step
-    def process_parts(self, step, kind, parts, machine):
+    #workers can be given when a part of a batch uses fewer people than the step's Workers box
+    #others are the names of other batches whose pieces share this load
+    def process_parts(self, step, kind, parts, machine, workers=None, others=None):
         #each part must start when the last part ends
         for j in range(len(parts)):
             part_kind = parts[j][0]
@@ -458,9 +530,15 @@ class Batch(sim.Component):
                 or kind == "By hand"
             )
             if needs_workers:
-                workers = step.get("workers") or 1
+                count = workers
+                if count is None:
+                    count = step.get("workers") or 1
+                #a finished machine is emptied before anyone starts a new load
+                priority = None
+                if part_kind == "unload":
+                    priority = 0
                 assigned = self.get_workers(
-                    step["step"], workers, duration
+                    step["step"], count, duration, priority
                 )
             start = self.env.now()
             #give back a row for each worker
@@ -475,135 +553,279 @@ class Batch(sim.Component):
                 if machine is not None:
                     row["who"] = machine["name"]
                     row["type"] = "machine"
+                    #list every batch in a shared load
+                    if others:
+                        row["batches"] = [self.batch["name"]] + others
                 self.rows.append(row)
             #hold pauses this batch for the part's minutes
             self.hold(duration)
             #release the workers after their part is done
             for k in range(len(assigned)):
                 self.release(assigned[k]["resource"])
-    #process loads that can use individual machine spaces
-    def process_individual_loads(self, step, kind):
-        remaining = self.batch["pieces"]
-        active_loads = []
-        while remaining > 0:
-            #create a separate simulation component for each load
-            load = MachineLoad(
-                parent_batch=self,
-                step=step,
-                kind=kind,
-                remaining=remaining
-            )
-            active_loads.append(load)
-            #wait until the load gets a machine or space
-            while load.assigned_pieces is None:
-                self.passivate()
-            #remove the pieces assigned to this load
-            remaining = remaining - load.assigned_pieces
-            #when full machines process one load at a time
-            if load.loading_mode != "One by one":
-                while not load.load_finished:
-                    self.passivate()
-        #wait until all loads finish before the next recipe step
-        while any(not load.load_finished for load in active_loads):
+
+    #a machine warms up before its first load of the night, the batch waits for it
+    def warm_up(self, machine, step_name):
+        if machine["warmUpTime"] <= 0:
+            return
+        #"When first needed" starts the warm-up when the first batch arrives
+        if machine["warmUntil"] is None:
+            now = self.env.now()
+            machine["warmUntil"] = now + machine["warmUpTime"]
+            self.rows.append(make_warmup_row(machine, now, machine["warmUntil"]))
+        #nobody is busy during a warm-up, only the batch waits
+        if machine["warmUntil"] > self.env.now():
+            start = self.env.now()
+            self.hold(machine["warmUntil"] - start)
+            row = make_row(self.batch, step_name, "waiting", start, self.env.now())
+            row["for"] = "warm-up"
+            self.rows.append(row)
+
+    #make one copy of this part for each whole unit (for example one per rack), the last one can be smaller
+    def split(self, step_index, unit):
+        sizes = split_loads(self.pieces, pieces_per_unit(self.config, self.batch["recipe"], unit))
+        for i in range(len(sizes)):
+            Batch(config=self.config, batch=self.batch, rows=self.rows,
+                  machines=self.machines, workers=self.workers, shared=self.shared,
+                  pieces=sizes[i], step_index=step_index, unit_part=True)
+
+    #wait for the whole batch at this step, only the last part to arrive goes on with every piece
+    def gather(self, step_index):
+        gathered = self.batch["gathered"]
+        gathered[step_index] = gathered.get(step_index, 0) + self.pieces
+        if gathered[step_index] < self.batch["pieces"]:
+            return False
+        self.pieces = self.batch["pieces"]
+        return True
+
+    #give this part's pieces to the batch's machine job for this step, then wait until they are all done
+    def join_job(self, step_index):
+        key = self.batch["name"] + " " + str(step_index)
+        jobs = self.shared["jobs"]
+        if key not in jobs:
+            jobs[key] = MachineJob(config=self.config, batch=self.batch, rows=self.rows,
+                                   machines=self.machines, workers=self.workers,
+                                   shared=self.shared, step_index=step_index)
+            #batches of the same recipe at the same step can share loads
+            same_step = self.batch["recipe"]["name"] + " " + str(step_index)
+            self.shared["sameStep"].setdefault(same_step, []).append(jobs[key])
+        job = jobs[key]
+        #free is not in a load yet, left is not done yet
+        entry = {"part": self, "free": self.pieces, "left": self.pieces}
+        job.entries.append(entry)
+        job.arrived = job.arrived + self.pieces
+        if job.ispassive():
+            job.activate()
+        while entry["left"] > 0:
             self.passivate()
-    #process is what the batch does on the simulation clock
+
+    #run one unit of this part in a one by one machine space
+    def run_one_by_one(self, step, kind):
+        machine, resource = self.get_machine(step["step"])
+        self.warm_up(machine, step["step"])
+        parts = get_parts(self.config, self.batch, step, self.pieces)
+        self.process_parts(step, kind, parts, machine)
+        machine["lastRecipe"] = self.batch["recipe"]["name"]
+        self.release(resource)
+
+    #process is what the batch or part does on the simulation clock
     def process(self):
         #wait until the order can start
         not_before = self.batch["notBeforeMinutes"]
         if not_before is not None and not_before > self.env.now():
             self.hold(not_before - self.env.now())
         steps = self.batch["recipe"]["steps"]
-        for i in range(len(steps)):
+        i = self.step_index
+        while i < len(steps):
             step = steps[i]
             kind = find_kind(self.config, step["step"])
-            #only Machine and Hands-on machine steps use a machine
+            per = step.get("per") or "load"
             if kind == "Machine" or kind == "Hands-on machine":
-                #check if this step can use a one by one machine
-                individual = any(
-                    step["step"] in machine["canDo"]
-                    and machine["loads"] == "One by one"
-                    for machine in self.machines
-                )
-                if individual:
-                    self.process_individual_loads(step, kind)
+                one_by_one = find_one_by_one(self.machines, step["step"])
+                #a person works a Hands-on machine on the whole batch
+                if kind == "Hands-on machine":
+                    if not self.gather(i):
+                        return
+                    self.join_job(i)
+                elif one_by_one is not None:
+                    #break into one part per whole unit, each part takes its own space
+                    if not self.unit_part:
+                        self.split(i, one_by_one["capacity"]["unit"])
+                        return
+                    self.run_one_by_one(step, kind)
                 else:
-                    machine, resource = self.get_machine(step["step"])
-                    capacity = get_machine_capacity(
-                        self.config, self.batch["recipe"], machine
-                    )
-                    remaining = self.batch["pieces"]
-                    #run as many loads as needed for the batch
-                    while remaining > 0:
-                        load = min(remaining, capacity)
-                        parts = get_parts(
-                            self.config, self.batch, step, load
-                        )
-                        self.process_parts(step, kind, parts, machine)
-                        remaining = remaining - load
-                    #release the machine after the last load is done
-                    self.release(resource)
-            else:
-                #By hand and Wait steps do not need a machine
-                parts = get_parts(self.config, self.batch, step)
+                    #a "When full" machine runs full loads for the batch
+                    self.join_job(i)
+            elif kind == "By hand":
+                if per == "load":
+                    #a person does one job on all of the batch
+                    if not self.gather(i):
+                        return
+                    parts = get_parts(self.config, self.batch, step, self.pieces)
+                    self.process_parts(step, kind, parts, None)
+                else:
+                    #break into one part per unit, each part is done by itself
+                    if not self.unit_part:
+                        self.split(i, per)
+                        return
+                    #a batch never gets more people than its Workers box says, even in many parts
+                    key = self.batch["name"] + " " + str(i)
+                    limits = self.shared["peopleLimits"]
+                    if key not in limits:
+                        limits[key] = sim.Resource(key, capacity=step.get("workers") or 1)
+                    self.request(limits[key], request_priority=self.batch["priority"])
+                    parts = get_parts(self.config, self.batch, step, self.pieces)
+                    self.process_parts(step, kind, parts, None, workers=1)
+                    self.release(limits[key])
+            elif kind == "Wait":
+                #a Wait step set to per unit breaks into one part per unit
+                if per != "load" and not self.unit_part:
+                    self.split(i, per)
+                    return
+                #each part counts its own time from when it arrives
+                parts = get_parts(self.config, self.batch, step, self.pieces)
                 self.process_parts(step, kind, parts, None)
-            
-        #record when the entire batch is finished
-        self.batch["ready"] = self.env.now()
+            else:
+                #stop the engine if this step is not on the steps tab
+                raise ConfigError(step["step"] + " in " + self.batch["recipe"]["name"] + " is not on the Steps tab.")
+            self.unit_part = False
+            i = i + 1
+        #the batch is ready when its last part is done
+        self.batch["donePieces"] = self.batch["donePieces"] + self.pieces
+        if self.batch["donePieces"] >= self.batch["pieces"]:
+            self.batch["ready"] = self.env.now()
 
-#one machine load acts independently on the simulation clock
-class MachineLoad(Batch):
-    def setup(self, parent_batch, step, kind, remaining):
-        #use the same configuration, rows, machines and workers
-        super().setup(
-            parent_batch.config,
-            parent_batch.batch,
-            parent_batch.rows,
-            parent_batch.machines,
-            parent_batch.workers
-        )
-        self.parent_batch = parent_batch
-        self.step = step
-        self.kind = kind
-        self.remaining = remaining
-        self.assigned_pieces = None
-        self.loading_mode = None
-        self.load_finished = False
+#one batch's loads at one "When full" machine step
+#it keeps one machine until the batch's last load is out, and a load starts on a full load or the batch's last piece
+class MachineJob(Batch):
+    def setup(self, config, batch, rows, machines, workers, shared, step_index):
+        super().setup(config, batch, rows, machines, workers, shared, step_index=step_index)
+        #each entry is one part waiting here: {"part", "free", "left"}
+        self.entries = []
+        #pieces of this batch that have arrived at this step
+        self.arrived = 0
+    #pieces of this batch waiting here that are not in a load yet
+    def own_free(self):
+        return sum(entry["free"] for entry in self.entries)
+    #True when every piece of this batch has arrived and is in a load
+    def all_loaded(self):
+        return self.arrived >= self.batch["pieces"] and self.own_free() == 0
+    #take waiting pieces for one load, this batch's parts first, then other batches of the same recipe
+    def take_load(self, capacity):
+        load = []
+        room = capacity
+        for entry in self.entries:
+            take = min(entry["free"], room)
+            if take > 0:
+                entry["free"] = entry["free"] - take
+                room = room - take
+                load.append([entry, take])
+        others = []
+        #batches never share at the step that makes the batch itself, for example Mix
+        if self.step_index > 0 and room > 0:
+            same_step = self.batch["recipe"]["name"] + " " + str(self.step_index)
+            jobs = self.shared["sameStep"].get(same_step, [])
+            #other batches go in the orders list order
+            jobs = sorted(jobs, key=lambda job: job.batch["priority"])
+            for job in jobs:
+                if job is self or room <= 0:
+                    continue
+                took = False
+                for entry in job.entries:
+                    take = min(entry["free"], room)
+                    if take > 0:
+                        entry["free"] = entry["free"] - take
+                        room = room - take
+                        load.append([entry, take])
+                        took = True
+                if took:
+                    others.append(job.batch["name"])
+                    #let the other batch check if it still has pieces to load
+                    if job.ispassive():
+                        job.activate()
+        return load, others
+    #a machine changing to a different recipe waits its switch time first
+    #give back False when the people for the switch are busy, so the machine was let go
+    def switch(self, machine, resource, step):
+        recipe = self.batch["recipe"]["name"]
+        last = machine["lastRecipe"]
+        #the first batch of the night and batches of the same recipe never switch
+        if last is None or last == recipe or machine["switchTime"] <= 0:
+            return True
+        minutes = machine["switchTime"]
+        count = machine["switchedBy"]
+        assigned = []
+        if count > 0:
+            can_use = self.free_workers(step["step"], minutes)
+            if len(can_use) < count:
+                raise ConfigError("Not enough workers can switch " + machine["name"] + " within their shifts.")
+            ready_time = can_use[count - 1][0]
+            #until the people are free, the machine is not kept for this batch
+            if ready_time > self.env.now():
+                self.release(resource)
+                start = self.env.now()
+                self.hold(ready_time - start, priority=self.batch["priority"])
+                row = make_row(self.batch, step["step"], "waiting", start, self.env.now())
+                row["for"] = "a worker"
+                self.rows.append(row)
+                return False
+            assigned = self.get_workers(step["step"], count, minutes)
+        start = self.env.now()
+        #a machine row for the switch and a worker row for each person it keeps busy
+        row = make_row(self.batch, step["step"], "switch", start, start + minutes)
+        row["who"] = machine["name"]
+        row["type"] = "machine"
+        self.rows.append(row)
+        for k in range(len(assigned)):
+            row = make_row(self.batch, step["step"], "switch", start, start + minutes)
+            row["who"] = assigned[k]["name"]
+            row["type"] = "worker"
+            self.rows.append(row)
+        self.hold(minutes)
+        for k in range(len(assigned)):
+            self.release(assigned[k]["resource"])
+        machine["lastRecipe"] = recipe
+        return True
     def process(self):
-        #get a machine or an individual machine space
-        machine, resource = self.get_machine(self.step["step"])
-        self.loading_mode = machine["loads"]
-        if self.loading_mode == "One by one":
-            #take only one individual unit
-            loads = get_one_by_one_loads(
-                self.config,
-                self.batch["recipe"],
-                machine,
-                self.remaining
-            )
-            self.assigned_pieces = loads[0]
-        else:
-            #take as many pieces as the whole machine can hold
-            capacity = get_machine_capacity(
-                self.config, self.batch["recipe"], machine
-            )
-            self.assigned_pieces = min(self.remaining, capacity)
-        #let the parent batch schedule another load
-        if self.parent_batch.ispassive():
-            self.parent_batch.activate()
-        #process this load using the recipe's configured times
-        parts = get_parts(
-            self.config,
-            self.batch,
-            self.step,
-            self.assigned_pieces
-        )
-        self.process_parts(self.step, self.kind, parts, machine)
-        #release only the resource used by this load
+        step = self.batch["recipe"]["steps"][self.step_index]
+        kind = find_kind(self.config, step["step"])
+        while True:
+            #a batch takes the first free machine in the equipment list
+            machine, resource = self.get_machine(step["step"])
+            #other batches may have already loaded all of this batch's pieces
+            if self.all_loaded():
+                self.release(resource)
+                return
+            if self.switch(machine, resource, step):
+                break
+        self.warm_up(machine, step["step"])
+        capacity = get_machine_capacity(self.config, self.batch["recipe"], machine)
+        while not self.all_loaded():
+            #wait for a full load or for the batch's last piece
+            start = self.env.now()
+            while not self.all_loaded():
+                free = self.own_free()
+                if free >= capacity or (self.arrived >= self.batch["pieces"] and free > 0):
+                    break
+                self.passivate()
+            if self.env.now() > start:
+                row = make_row(self.batch, step["step"], "waiting", start, self.env.now())
+                row["for"] = "a full load"
+                self.rows.append(row)
+            load, others = self.take_load(capacity)
+            if len(load) == 0:
+                break
+            pieces = sum(item[1] for item in load)
+            parts = get_parts(self.config, self.batch, step, pieces)
+            self.process_parts(step, kind, parts, machine, others=others)
+            machine["lastRecipe"] = self.batch["recipe"]["name"]
+            #parts move on as soon as all their own pieces are done
+            for item in load:
+                entry = item[0]
+                entry["left"] = entry["left"] - item[1]
+                if entry["left"] <= 0 and entry["part"].ispassive():
+                    entry["part"].activate()
+        #let the machine go after the batch's last load is out
         self.release(resource)
-        self.load_finished = True
-        #notify the parent batch that this load finished
-        if self.parent_batch.ispassive():
-            self.parent_batch.activate()
 
 #make the summary of tonight's simulation
 def make_summary(orders, batches, workers, rows):
@@ -686,10 +908,29 @@ def run_night(config, scenario, include_summary=False):
     machines = make_machines(config, scenario)
     #make tonight workers after the clock
     workers = make_workers(config, scenario)
+    #machines set to "At shift start" start warming up at minute 0
+    for i in range(len(machines)):
+        machine = machines[i]
+        if machine["warmUpTime"] > 0 and machine["turnOn"] != "When first needed":
+            machine["warmUntil"] = machine["warmUpTime"]
+            rows.append(make_warmup_row(machine, 0, machine["warmUntil"]))
+    #things every batch shares tonight
+    shared = {
+        #each batch's machine job at each "When full" step
+        "jobs": {},
+        #jobs of the same recipe at the same step, so they can share loads
+        "sameStep": {},
+        #how many people a batch in many parts can use at one step
+        "peopleLimits": {}
+    }
     #setup every batch into schedule
     for i in range(len(batches)):
+        #pieces waiting to join back together at each step
+        batches[i]["gathered"] = {}
+        #pieces that finished every step
+        batches[i]["donePieces"] = 0
         Batch(config=config, batch=batches[i], rows=rows,
-              machines=machines, workers=workers)
+              machines=machines, workers=workers, shared=shared)
     #move the clock until there isnt any batch left to do
     env.run()
     if include_summary:
