@@ -536,7 +536,7 @@ class Batch(sim.Component):
                 #a finished machine is emptied before anyone starts a new load
                 priority = None
                 if part_kind == "unload":
-                    priority = 0
+                    priority = self.batch["priority"] / (self.batch["priority"]+1)
                 assigned = self.get_workers(
                     step["step"], count, duration, priority
                 )
