@@ -25,52 +25,39 @@
     <main>
         <h1>Compare Scenarios</h1>
 
-        <div class="tabs" role="tablist">
-            <button class="tab active" role="tab">Scen 1</button>
-            <button class="tab" role="tab">Scen 2</button>
+        <div class="tabs" role="tablist" aria-label="Choose a scenario">
+            <button id="scenario-1-tab" class="tab active" type="button" role="tab" aria-selected="true" aria-controls="scenario-1-panel">Scenario 1</button>
+            <button id="scenario-2-tab" class="tab" type="button" role="tab" aria-selected="false" aria-controls="scenario-2-panel">Scenario 2</button>
         </div>
 
-        <div class="table">
-            <div class="row head">
-                <span class="c1">Input Order</span>
-                <span class="c2">Bakery Config</span>
-            </div>
-            <div class="row body">
-                <span class="c1">Input 1</span>
-                <span class="c2">Config 1</span>
-                <div class="actions">
-                    <button type="button">Save</button>
-                    <button type="button" class="delete">Delete</button>
+        <p id="selection-error" class="selection-error" role="alert" hidden></p>
+        <section id="scenario-1-panel" class="scenario-panel" role="tabpanel" aria-labelledby="scenario-1-tab">
+            <h2>Scenario 1</h2>
+            <div class="table" role="table" aria-label="Saved simulations for Scenario 1">
+                <div class="row head" role="row">
+                    <span class="c1" role="columnheader">Simulation Name</span>
+                    <span class="c2" role="columnheader">Order Name</span>
+                    <span class="c3" role="columnheader">Bakery Config Name</span>
+                    <span class="actions" aria-hidden="true"></span>
                 </div>
+                <div class="simulation-rows" data-scenario="1"></div>
             </div>
-            <div class="row body">
-                <span class="c1">Input 2</span>
-                <span class="c2">Config 2</span>
-                <div class="actions">
-                    <button type="button">Save</button>
-                    <button type="button" class="delete">Delete</button>
+        </section>
+        <section id="scenario-2-panel" class="scenario-panel" role="tabpanel" aria-labelledby="scenario-2-tab" hidden>
+            <h2>Scenario 2</h2>
+            <div class="table" role="table" aria-label="Saved simulations for Scenario 2">
+                <div class="row head" role="row">
+                    <span class="c1" role="columnheader">Simulation Name</span>
+                    <span class="c2" role="columnheader">Order Name</span>
+                    <span class="c3" role="columnheader">Bakery Config Name</span>
+                    <span class="actions" aria-hidden="true"></span>
                 </div>
+                <div class="simulation-rows" data-scenario="2"></div>
             </div>
-            <div class="row body">
-                <span class="c1">Input 2</span>
-                <span class="c2">Config 1</span>
-                <div class="actions">
-                    <button type="button">Save</button>
-                    <button type="button" class="delete">Delete</button>
-                </div>
-            </div>
-        </div>
+        </section>
     </main>
 
-    <button type="button" class="next">Next</button>
-
-    <script>
-                document.querySelectorAll('.tab').forEach(function (tab) {
-                    tab.addEventListener('click', function () {
-                        document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
-                        tab.classList.add('active');
-                    });
-                });
-    </script>
+    <button type="button" class="next" id="compare-button">Compare</button>
+    <script src="compare.js" defer></script>
 </body>
 </html>

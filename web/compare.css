@@ -44,6 +44,15 @@ h1 {
     }
 
 /* --- Data Table --- */
+.scenario-panel h2 {
+    margin: 26px 0 0 7px;
+    font-size: 20px;
+}
+
+.scenario-panel[hidden] {
+    display: none;
+}
+
 .table {
     margin-top: 32px;
 }
@@ -53,6 +62,7 @@ h1 {
     align-items: center;
     padding: 0 20px;
     font-size: 14px;
+    gap: 20px;
 }
 
 .head {
@@ -82,37 +92,52 @@ h1 {
         background: #e5e5e5;
     }
 
-    .head .c1,
-    .body .c1 {
-        width: 300px;
-    }
+.head .c1, .body .c1,
+.head .c2, .body .c2,
+.head .c3, .body .c3 {
+    flex: 1;
+    min-width: 0;
+}
 
-    .head .c2,
-    .body .c2 {
-        flex: 1;
-    }
+.body .c1 {
+    font-weight: 600;
+}
 
-    .body .c1 {
-        font-weight: 600;
-    }
+.simulation-row {
+    min-height: 56px;
+    border-bottom: 1px solid #eee;
+}
+
+.simulation-row.selected {
+    background: #f4f7f4;
+}
+
+.empty-state {
+    padding: 24px 20px;
+    color: #666;
+}
+
+.selection-error {
+    margin: 20px 7px 0;
+    color: #b42318;
+}
 
  /*--- Row Actions & Controls --- */
 .actions {
     display: flex;
-    gap: 33px;
-    padding-right: 25px;
+    justify-content: flex-end;
+    width: 110px;
+    flex: 0 0 110px;
 }
 
-    .actions button {
+.actions button {
         background: none;
-        border: 0;
+        border: 1px solid #555;
+        border-radius: 6px;
+        padding: 8px 16px;
         font: inherit;
         font-size: 14px;
         cursor: pointer;
-    }
-
-    .actions .delete {
-        color: #d32f2f;
     }
 
 .next {
@@ -133,3 +158,34 @@ h1 {
     .next:hover {
         background: #555;
     }
+
+.next:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+@media (max-width: 760px) {
+    main {
+        padding: 28px 18px 110px;
+    }
+
+    .row {
+        gap: 10px;
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .actions {
+        width: auto;
+        flex-basis: auto;
+    }
+
+    .actions button {
+        padding: 7px 10px;
+    }
+
+    .next {
+        right: 18px;
+        bottom: 24px;
+    }
+}

@@ -1,0 +1,147 @@
+main.comparison {
+  --report-ink: #202723;
+  --report-muted: #68736d;
+  --report-line: #e1e7e2;
+  --report-green: #315f48;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 42px 48px 80px;
+  color: var(--report-ink);
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.eyebrow, .scenarioLabel {
+  margin: 0 0 8px;
+  color: var(--report-green);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+}
+
+.comparison h1 {
+  margin: 0;
+  font-size: clamp(30px, 4vw, 42px);
+  line-height: 1.1;
+}
+
+.reportIntro {
+  margin: 12px 0 0;
+  color: var(--report-muted);
+  font-size: 16px;
+}
+
+.pdfButton {
+  flex: 0 0 auto;
+  padding: 10px 16px;
+  border: 1px solid #cbd4cd;
+  border-radius: 7px;
+  color: var(--report-ink);
+  background: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+.pdfButton:hover { background: #f4f7f4; }
+
+.reportStatus {
+  padding: 14px 16px;
+  border: 1px solid #ead6a6;
+  border-radius: 8px;
+  color: #654d1c;
+  background: #fffaf0;
+}
+.reportStatus:empty { display: none; }
+
+.scenarioCards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.scenarioCard {
+  padding: 24px;
+  border: 1px solid var(--report-line);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgb(30 55 38 / 4%);
+}
+.scenarioCard h2 {
+  margin: 0 0 22px;
+  overflow-wrap: anywhere;
+  font-size: 23px;
+}
+.scenarioCard h2 { margin-bottom: 4px; font-size: 36px; }
+.metricCaption { margin: 0; color: var(--report-muted); font-size: 14px; }
+.metricFooter { display: flex; align-items: baseline; gap: 8px; margin-top: 24px; }
+.metricFooter span:first-child { color: var(--report-green); font-size: 18px; font-weight: 700; }
+.metricFooter span:last-child { color: var(--report-muted); font-size: 13px; }
+.scenarioCard dl {
+  display: grid;
+  grid-template-columns: minmax(130px, .8fr) minmax(0, 1.2fr);
+  gap: 12px 16px;
+  margin: 0;
+  font-size: 14px;
+}
+.scenarioCard dt { color: var(--report-muted); }
+.scenarioCard dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+
+.reportSection { margin-top: 44px; }
+.sectionHeading { display: flex; justify-content: space-between; align-items: end; margin-bottom: 10px; }
+.sectionHeading h2 { margin: 0; font-size: 24px; }
+.hint { margin: 0 0 18px; color: var(--report-muted); font-size: 14px; }
+
+.tableWrap { overflow-x: auto; border: 1px solid var(--report-line); border-radius: 10px; }
+.dataTable { width: 100%; border-collapse: collapse; font-size: 14px; }
+.dataTable th {
+  padding: 14px 16px;
+  color: #47534b;
+  background: #f2f5f2;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.dataTable td { padding: 14px 16px; border-top: 1px solid var(--report-line); vertical-align: top; }
+.dataTable tbody tr:nth-child(even) { background: #fbfcfb; }
+.dataTable td:first-child { font-weight: 600; }
+.tableEmpty { color: var(--report-muted); text-align: center; }
+.dataTable .bad { color: #b42318; }
+.dataTable .good { color: var(--report-green); }
+
+.actions { display: flex; justify-content: space-between; gap: 16px; margin-top: 42px; }
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px;
+  padding: 11px 22px;
+  border: 0;
+  border-radius: 7px;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn.light { color: var(--report-ink); background: #e9eeea; }
+.btn.dark { color: #fff; background: var(--report-green); }
+.btn:hover { filter: brightness(.96); }
+
+@media (max-width: 700px) {
+  main.comparison { padding: 28px 18px 56px; }
+  .pageHeader { align-items: flex-start; flex-direction: column; }
+  .scenarioCards { grid-template-columns: 1fr; }
+  .scenarioCard { padding: 20px; }
+  .dataTable { min-width: 540px; }
+}
+@media print {
+  .navBar, .pdfButton, .actions { display: none !important; }
+  main.comparison { max-width: none; padding: 0; }
+  .scenarioCard { box-shadow: none; break-inside: avoid; }
+  .reportSection { break-inside: avoid; }
+  .tableWrap { overflow: visible; }
+}
