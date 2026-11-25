@@ -130,6 +130,25 @@ h1 {
   margin-top: 52px;
 }
 
+.reportMessage {
+  margin: 0 0 24px;
+  font-size: 16px;
+  color: var(--muted);
+}
+
+.reportMessage.error {
+  margin: 0 0 24px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #c62828;
+}
+
+.emptyNote {
+  margin: 0 0 20px;
+  font-size: 15px;
+  color: #6f6f6f;
+}
+
 .lateSection h2 {
   margin: 0;
   font-size: 24px;

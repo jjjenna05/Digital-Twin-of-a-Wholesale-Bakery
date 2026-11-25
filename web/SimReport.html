@@ -34,298 +34,66 @@
       </div>
     </div>
 
-    <div class="tableWrap">
-      <table class="resultsTable">
-        <thead>
-          <tr>
-            <th scope="col" class="col-item">Item</th>
-            <th scope="col" class="col-quantity">Quantity</th>
-            <th scope="col" class="col-due">Due</th>
-            <th scope="col" class="col-ready">Ready</th>
-            <th scope="col" class="col-status">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Glazed Donuts</td>
-            <td>200 Pieces</td>
-            <td>02:00</td>
-            <td>02:31</td>
-            <td><span class="status late">Late 31 min</span></td>
-          </tr>
-          <tr>
-            <td>Chocolate Donuts</td>
-            <td>100 Pieces</td>
-            <td>03:00</td>
-            <td>02:36</td>
-            <td><span class="status">On time</span></td>
-          </tr>
-          <tr>
-            <td>Conchas</td>
-            <td>12 Dozens (144 pieces)</td>
-            <td>03:00</td>
-            <td>02:45</td>
-            <td><span class="status">On time</span></td>
-          </tr>
-          <tr>
-            <td>Croissants</td>
-            <td>300 Pieces</td>
-            <td>04:00</td>
-            <td>03:14</td>
-            <td><span class="status">On time</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <p class="reportMessage" id="reportMessage" role="status">Loading results...</p>
 
-    <section class="lateSection" aria-labelledby="late-title">
-      <h2 id="late-title">Find out why Glazed Donuts was 31 min late</h2>
-      <p class="sectionNote">Every wait of 3 minutes or more listed below in order</p>
-
-      <ol class="timeline">
-        <li>
-          <span class="stamp">At <strong>22:17</strong></span>
-          <p class="event">
-            Glazed Donuts batch 1 was waiting for a Free Proofer A for 75 min.
-            <span class="detail">Because proofer A was not free. It was busy with croissants job until 23:32.</span>
-          </p>
-        </li>
-        <li>
-          <span class="stamp">At <strong>00:14</strong></span>
-          <p class="event">
-            Glazed Donuts batch 1 was waiting for Fryer A to warm up for 10 min.
-            <span class="detail">It takes 10 minutes to warm up the fryer when first needed.</span>
-          </p>
-        </li>
-        <li>
-          <span class="stamp">At <strong>00:54</strong></span>
-          <p class="event">
-            Glazed Donuts batch 1 was waiting for a Decorator for 66 min.
-            <span class="detail">Decorator was not on schedule until 02:00.</span>
-          </p>
-        </li>
-        <li>
-          <span class="stamp">At <strong>02:09</strong></span>
-          <p class="event">
-            Glazed Donuts batch 1 was waiting for a Packer for 13 min.
-            <span class="detail">Packer was packing Croissants batch 1 until 02:22.</span>
-          </p>
-        </li>
-        <li>
-          <span class="stamp">At <strong>02:31</strong></span>
-          <p class="event">
-            Glazed Donuts were ready but 31 min late and the 02:00 deadline was not met.
-          </p>
-        </li>
-      </ol>
-    </section>
-
-    <section class="breakdowns" aria-label="Staff and equipment breakdown">
-      <div class="breakdown">
-        <h2>Staff working breakdown</h2>
-
-        <div class="breakdownRow">
-          <span class="rowLabel">Baker 1</span>
-          <div class="bar" role="img" aria-label="58 min working, 3 h 42 min waiting">
-            <span class="working" data-minutes="58"></span>
-            <span class="waiting" data-minutes="222"></span>
-          </div>
-          <span class="rowValue">58 min working, 3 h 42 min waiting</span>
-        </div>
-
-        <div class="breakdownRow">
-          <span class="rowLabel">Baker 2</span>
-          <div class="bar" role="img" aria-label="24 min working, 4 h 20 min waiting">
-            <span class="working" data-minutes="24"></span>
-            <span class="waiting" data-minutes="260"></span>
-          </div>
-          <span class="rowValue">24 min working, 4 h 20 min waiting</span>
-        </div>
-
-        <div class="breakdownRow">
-          <span class="rowLabel">Packer 1</span>
-          <div class="bar" role="img" aria-label="49 min working, 25 min waiting">
-            <span class="working" data-minutes="49"></span>
-            <span class="waiting" data-minutes="25"></span>
-          </div>
-          <span class="rowValue">49 min working, 25 min waiting</span>
-        </div>
-
-        <div class="breakdownRow">
-          <span class="rowLabel">Decorator 1</span>
-          <div class="bar" role="img" aria-label="19 min working, 55 min waiting">
-            <span class="working" data-minutes="19"></span>
-            <span class="waiting" data-minutes="55"></span>
-          </div>
-          <span class="rowValue">19 min working, 55 min waiting</span>
-        </div>
-
-        <div class="legend">
-          <span><i class="working"></i>working</span>
-          <span><i class="waiting"></i>waiting for work</span>
-        </div>
-      </div>
-
-      <div class="breakdown">
-        <h2>Equipment Usage breakdown</h2>
-        <p class="breakdownNote">Share of the 6 h production run</p>
-
-        <div class="breakdownRow equipmentRow">
-          <span class="rowLabel">Oven A</span>
-          <div class="bar" role="img" aria-label="1 h in use, waiting for worker, switching, idle">
-            <span class="inUse" data-minutes="60"></span>
-            <span class="waitingForWorker" data-minutes="20"></span>
-            <span class="switching" data-minutes="10"></span>
-            <span class="idle" data-minutes="270"></span>
-          </div>
-          <span class="rowValue">1 h in use</span>
-        </div>
-
-        <div class="breakdownRow equipmentRow">
-          <span class="rowLabel">Oven B</span>
-          <div class="bar" role="img" aria-label="48 min in use, waiting for worker, idle">
-            <span class="inUse" data-minutes="48"></span>
-            <span class="waitingForWorker" data-minutes="12"></span>
-            <span class="idle" data-minutes="300"></span>
-          </div>
-          <span class="rowValue">48 min in use</span>
-        </div>
-
-        <div class="breakdownRow equipmentRow">
-          <span class="rowLabel">Mixer A</span>
-          <div class="bar" role="img" aria-label="51 min in use, waiting for worker, switching, idle">
-            <span class="inUse" data-minutes="51"></span>
-            <span class="waitingForWorker" data-minutes="20"></span>
-            <span class="switching" data-minutes="10"></span>
-            <span class="idle" data-minutes="279"></span>
-          </div>
-          <span class="rowValue">51 min in use</span>
-        </div>
-
-        <div class="breakdownRow equipmentRow">
-          <span class="rowLabel">Proofer A</span>
-          <div class="bar" role="img" aria-label="4 h 16 min in use, waiting for worker, warming up, idle">
-            <span class="inUse" data-minutes="256"></span>
-            <span class="waitingForWorker" data-minutes="25"></span>
-            <span class="warming" data-minutes="15"></span>
-            <span class="idle" data-minutes="64"></span>
-          </div>
-          <span class="rowValue">4 h 16 min in use</span>
-        </div>
-
-        <div class="breakdownRow equipmentRow">
-          <span class="rowLabel">Fryer</span>
-          <div class="bar" role="img" aria-label="32 min in use, waiting for worker, idle">
-            <span class="inUse" data-minutes="32"></span>
-            <span class="waitingForWorker" data-minutes="10"></span>
-            <span class="idle" data-minutes="318"></span>
-          </div>
-          <span class="rowValue">32 min in use</span>
-        </div>
-
-        <div class="breakdownRow equipmentRow">
-          <span class="rowLabel">Sheeter</span>
-          <div class="bar" role="img" aria-label="20 min in use, waiting for worker, idle">
-            <span class="inUse" data-minutes="20"></span>
-            <span class="waitingForWorker" data-minutes="15"></span>
-            <span class="idle" data-minutes="325"></span>
-          </div>
-          <span class="rowValue">20 min in use</span>
-        </div>
-
-        <div class="legend">
-          <span><i class="inUse"></i>in use</span>
-          <span><i class="waitingForWorker"></i>waiting for worker</span>
-          <span><i class="switching"></i>switching</span>
-          <span><i class="warming"></i>warming up</span>
-          <span><i class="idle"></i>idle</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="stepsSection" aria-labelledby="steps-title">
-      <h2 id="steps-title">Time per step</h2>
+    <div id="report" hidden>
       <div class="tableWrap">
-        <table class="stepsTable">
+        <table class="resultsTable">
           <thead>
             <tr>
-              <th scope="col">Product</th>
-              <th scope="col">Mix</th>
-              <th scope="col">Laminate</th>
-              <th scope="col">Proof</th>
-              <th scope="col">Bake</th>
-              <th scope="col">Fry</th>
-              <th scope="col">Finish</th>
-              <th scope="col">Pack</th>
-              <th scope="col">Cool</th>
-              <th scope="col">Total</th>
+              <th scope="col" class="col-item">Item</th>
+              <th scope="col" class="col-quantity">Quantity</th>
+              <th scope="col" class="col-due">Due</th>
+              <th scope="col" class="col-ready">Ready</th>
+              <th scope="col" class="col-status">Status</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Donut mix</td>
-              <td>17 min</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>17 min</td>
-            </tr>
-            <tr>
-              <td>Croissants</td>
-              <td>17 min</td>
-              <td>20 min</td>
-              <td>124 min</td>
-              <td>60 min</td>
-              <td></td>
-              <td>26 min</td>
-              <td></td>
-              <td></td>
-              <td>4 h 7 min</td>
-            </tr>
-            <tr>
-              <td>Conchas</td>
-              <td>17 min</td>
-              <td></td>
-              <td>47 min</td>
-              <td>48 min</td>
-              <td></td>
-              <td></td>
-              <td>9 min</td>
-              <td></td>
-              <td>2 h 1 min</td>
-            </tr>
-            <tr>
-              <td>Glazed Donuts</td>
-              <td></td>
-              <td></td>
-              <td>42 min</td>
-              <td></td>
-              <td>20 min</td>
-              <td>9 min</td>
-              <td>9 min</td>
-              <td>10 min</td>
-              <td>1 h 30 min</td>
-            </tr>
-            <tr>
-              <td>Chocolate Donuts</td>
-              <td></td>
-              <td></td>
-              <td>42 min</td>
-              <td></td>
-              <td>12 min</td>
-              <td>10 min</td>
-              <td>5 min</td>
-              <td>10 min</td>
-              <td>1 h 19 min</td>
-            </tr>
-          </tbody>
+          <tbody id="ordersBody"></tbody>
         </table>
       </div>
-    </section>
+
+      <!-- one "Find out why" section per late order, filled by SimReport.js -->
+      <div id="lateSections" hidden></div>
+
+      <section class="breakdowns" aria-label="Staff and equipment breakdown">
+        <div class="breakdown" id="staffBreakdown">
+          <h2>Staff working breakdown</h2>
+
+          <div class="legend">
+            <span><i class="working"></i>working</span>
+            <span><i class="waiting"></i>waiting for work</span>
+          </div>
+        </div>
+
+        <div class="breakdown" id="equipmentBreakdown">
+          <h2>Equipment Usage breakdown</h2>
+          <p class="breakdownNote" id="equipmentNote"></p>
+
+          <div class="legend">
+            <span><i class="inUse"></i>in use</span>
+            <span><i class="waitingForWorker"></i>waiting for worker</span>
+            <span><i class="switching"></i>switching</span>
+            <span><i class="warming"></i>warming up</span>
+            <span><i class="idle"></i>idle</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="stepsSection" aria-labelledby="steps-title">
+        <h2 id="steps-title">Time per step</h2>
+        <div class="tableWrap">
+          <table class="stepsTable">
+            <thead>
+              <tr id="stepsHead">
+                <th scope="col">Product</th>
+                <th scope="col" id="stepsTotalHead">Total</th>
+              </tr>
+            </thead>
+            <tbody id="stepsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
 
     <div class="actions">
       <button class="secondaryButton" id="newSimulation" type="button">New simulation</button>

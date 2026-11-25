@@ -537,9 +537,16 @@ class Batch(sim.Component):
                 priority = None
                 if part_kind == "unload":
                     priority = self.batch["priority"] / (self.batch["priority"]+1)
+                wait_start = self.env.now()
                 assigned = self.get_workers(
                     step["step"], count, duration, priority
                 )
+                #record the machine waiting for a worker while this batch holds it
+                if machine is not None and self.env.now() > wait_start:
+                    row = make_row(self.batch, step["step"], "waitingForWorker", wait_start, self.env.now())
+                    row["who"] = machine["name"]
+                    row["type"] = "machine"
+                    self.rows.append(row)
             start = self.env.now()
             #give back a row for each worker
             for k in range(len(assigned)):
@@ -827,8 +834,35 @@ class MachineJob(Batch):
         #let the machine go after the batch's last load is out
         self.release(resource)
 
+#add up minutes covered by rows, overlapping rows count once
+#one by one machines run many loads at the same time
+def covered_minutes(rows):
+    ranges = sorted([row["start"], row["end"]] for row in rows if row["end"] > row["start"])
+    total = 0
+    current_start = None
+    current_end = None
+    for start, end in ranges:
+        if current_end is None or start > current_end:
+            if current_end is not None:
+                total = total + current_end - current_start
+            current_start = start
+            current_end = end
+        else:
+            current_end = max(current_end, end)
+    if current_end is not None:
+        total = total + current_end - current_start
+    return total
+
+#the batch names in a row, a shared load lists every batch in it
+def row_batches(row):
+    if row.get("batches"):
+        return row["batches"]
+    if row.get("batch"):
+        return [row["batch"]]
+    return []
+
 #make the summary of tonight's simulation
-def make_summary(orders, batches, workers, rows):
+def make_summary(orders, batches, workers, rows, machines=None):
     summary_orders = []
     finish = 0
     for i in range(len(orders)):
@@ -891,10 +925,92 @@ def make_summary(orders, batches, workers, rows):
             "waiting": on_shift - working - on_break,
             "onBreak": on_break
         })
+    #each machine's in use, waiting for worker, switching, warming up and idle minutes
+    summary_equipment = []
+    for machine in machines or []:
+        machine_rows = [
+            row for row in rows
+            if row["type"] == "machine" and row["who"] == machine["name"]
+        ]
+        in_use = covered_minutes([
+            row for row in machine_rows if row["kind"] in ["load", "run", "unload"]
+        ])
+        waiting_for_worker = covered_minutes([
+            row for row in machine_rows if row["kind"] == "waitingForWorker"
+        ])
+        switching = covered_minutes([
+            row for row in machine_rows if row["kind"] == "switch"
+        ])
+        warming_up = covered_minutes([
+            row for row in machine_rows if row["kind"] == "warmup"
+        ])
+        busy = in_use + waiting_for_worker + switching + warming_up
+        summary_equipment.append({
+            "name": machine["name"],
+            "inUse": in_use,
+            "waitingForWorker": waiting_for_worker,
+            "switching": switching,
+            "warmingUp": warming_up,
+            "idle": max(0, finish - busy)
+        })
+    #which order item each batch belongs to
+    batch_item = {}
+    for i in range(len(orders)):
+        for batch in batches:
+            if batch["order"] == orders[i]["priority"]:
+                batch_item[batch["name"]] = orders[i]["item"]
+    #how long each item spent at each step, from its first batch starting the step to its last batch finishing it
+    summary_steps = []
+    for i in range(len(orders)):
+        order = orders[i]
+        names = set(
+            batch["name"] for batch in batches
+            if batch["order"] == order["priority"]
+        )
+        spans = {}
+        for row in rows:
+            if not row.get("step"):
+                continue
+            if not any(name in names for name in row_batches(row)):
+                continue
+            if row["step"] not in spans:
+                spans[row["step"]] = [row["start"], row["end"]]
+            else:
+                spans[row["step"]][0] = min(spans[row["step"]][0], row["start"])
+                spans[row["step"]][1] = max(spans[row["step"]][1], row["end"])
+        if len(spans) == 0:
+            continue
+        first_start = min(span[0] for span in spans.values())
+        ready = max(batch["ready"] for batch in batches if batch["name"] in names)
+        summary_steps.append({
+            "item": order["item"],
+            "steps": [
+                {"step": step, "minutes": span[1] - span[0]}
+                for step, span in spans.items()
+            ],
+            "total": ready - first_start
+        })
+    #every time a batch waited, for the Find out why sections
+    summary_waits = []
+    for row in rows:
+        if row["type"] == "batch" and row["kind"] == "waiting":
+            summary_waits.append({
+                "item": batch_item.get(row["batch"], row["batch"]),
+                "batch": row["batch"],
+                "step": row["step"],
+                "start": row["start"],
+                "minutes": row["end"] - row["start"],
+                "for": row.get("for", ""),
+                #the engine does not record why yet
+                "because": ""
+            })
     return {
         "finish": finish,
         "orders": summary_orders,
-        "staff": summary_staff
+        "staff": summary_staff,
+        "equipment": summary_equipment,
+        "timePerStep": summary_steps,
+        "waits": summary_waits
     }
 
 #run the night and give back the event log and summary
@@ -938,7 +1054,7 @@ def run_night(config, scenario, include_summary=False):
             "scenario": scenario["name"],
             "startClock": scenario["startClock"],
             "rows": rows,
-            "summary": make_summary(orders, batches, workers, rows)
+            "summary": make_summary(orders, batches, workers, rows, machines)
         }
     return rows
 
