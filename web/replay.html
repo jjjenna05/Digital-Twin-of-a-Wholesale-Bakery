@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Replay</title>
+   <link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="replay.css">
+   <script src="nav.js" defer></script>
+</head>
+<body>
+   <nav class="navBar">
+      <span class="navTitle">Bakery</span>
+      <div class="navLinks">
+         <a href="dashboard.html">Dashboard</a>
+         <a href="config.html">Config</a>
+         <a href="compare.html">Compare</a>
+      </div>
+      <div class="navUser">
+         <span id="userName"></span>
+         <button id="logoutBtn" type="button">Log out</button>
+      </div>
+   </nav>
+
+   <main class="replay">
+      <div class="replay-header">
+         <h1 id="replay-title">Replay</h1>
+         <a id="back-to-results" class="back-button" href="dashboard.html">Back to results</a>
+      </div>
+      <p id="replay-message" class="replay-message"></p>
+      <div id="replay-content" hidden>
+         <div class="replay-top">
+            <div id="replay-floor-host" class="floor-host">
+               <div id="replay-floor" class="floor"></div>
+            </div>
+            <div class="replay-side">
+               <div>
+                  <h3>Orders</h3>
+                  <div id="replay-orders"></div>
+               </div>
+               <div id="replay-legend" class="replay-legend"></div>
+               <div id="replay-card" class="replay-card"></div>
+            </div>
+         </div>
+         <div class="play-bar">
+            <button type="button" id="play-button">Play</button>
+            <select id="speed-pick" aria-label="Speed">
+               <option value="Real time">Real time</option>
+               <option value="Slow">Slow</option>
+               <option value="Normal" selected>Normal</option>
+               <option value="Fast">Fast</option>
+            </select>
+            <span id="replay-clock" class="replay-clock"></span>
+            <input type="range" id="time-slider" min="0" max="1" step="1" value="0" aria-label="Time">
+         </div>
+         <div id="replay-timeline" class="timeline"></div>
+      </div>
+   </main>
+   <script type="module" src="replay.js"></script>
+</body>
+</html>
