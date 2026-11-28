@@ -4,7 +4,8 @@ import { startUnitsTab } from "./config-units.js";
 import { startStepsTab } from "./config-steps.js";
 import { startRecipesTab } from "./config-recipes.js";
 import { startPreferencesTab } from "./config-preferences.js";
-
+import { startLayoutTab } from "./config-layout.js";
+import { showLayoutTab } from "./config-layout.js";
 
 // helper function to fill the amount correctly. if user dont type, return None
 export function showAmount(value) {
@@ -50,6 +51,7 @@ async function loadConfig() {
   startRolesTab(configData);
   startRecipesTab(configData);
   startPreferencesTab(configData);
+  startLayoutTab(configData);
 }
 loadConfig();
 
@@ -67,6 +69,10 @@ function showTab(sectionID, userClickButton) {
     tabButtons[i].classList.remove("active");
   }
   userClickButton.classList.add("active");
+  //the floor measures its box so draw after its tab is visible
+  if (sectionID === "layout-tab") {
+    showLayoutTab();
+  }
 }
 for(let i = 0; i <tabButtons.length; i++) {
   tabButtons[i].addEventListener("click", function () {

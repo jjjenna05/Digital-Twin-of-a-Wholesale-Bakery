@@ -298,6 +298,7 @@ async function loadRun() {
     showMessage("No run selected. Run a simulation to see its results.", true);
     return;
   }
+  document.getElementById("replayLink").href = "replay.html?run=" + encodeURIComponent(runName);
 
   try {
     const response = await fetch("/api/runs/" + encodeURIComponent(runName), { cache: "no-store" });

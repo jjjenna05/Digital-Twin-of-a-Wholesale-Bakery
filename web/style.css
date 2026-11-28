@@ -182,6 +182,9 @@ table.list td:first-child{
     font-size: 14px;
     overflow: visible;
 }
+html:has(dialog[open]) {
+   overflow: hidden;
+}
 .dialog::backdrop {
    background: rgba(0, 0, 0, 0.4);
 }
@@ -577,3 +580,286 @@ select.error-box {
 }
 .downloadOptions button:hover, .downloadOptions button:focus-visible { background: #f2f2f2; }
 @media print { .downloadMenu { display: none; } }
+/* layout tab: the floor seen from above */
+.floor-host {
+   position: relative;
+   height: 600px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   overflow: hidden;
+   border: 1px solid var(--grey-button);
+   border-radius: 8px;
+   background: #fafafa;
+}
+.floor {
+   position: relative;
+   flex-shrink: 0;
+   background-color: white;
+   /* grey grid lines, config-layout.js sets the square size */
+   background-image: linear-gradient(to right, #ececec 1px, transparent 1px), linear-gradient(to bottom, #ececec 1px, transparent 1px);
+   /* the walls */
+   outline: 3px solid var(--dark);
+   user-select: none;
+   touch-action: none;
+}
+.floor-host.placing .floor {
+   cursor: crosshair;
+}
+.piece {
+   position: absolute;
+   cursor: grab;
+}
+.piece .picture {
+   position: absolute;
+}
+.piece svg,
+.thumb svg {
+   display: block;
+   width: 100%;
+   height: 100%;
+   overflow: visible;
+}
+/* lines keep their width when a picture is stretched */
+.piece svg *,
+.thumb svg * {
+   vector-effect: non-scaling-stroke;
+}
+/* picture parts: b body, dt detail, ln line, fr front bar, fr2 door line, ar area */
+.piece .b,
+.thumb .b {
+   fill: white;
+   stroke: var(--dark);
+   stroke-width: 1.5;
+}
+.piece .dt,
+.thumb .dt,
+.piece .ln,
+.thumb .ln {
+   fill: none;
+   stroke: #9a9a9a;
+   stroke-width: 1.2;
+}
+.piece .fr,
+.thumb .fr {
+   fill: var(--dark);
+}
+.piece .fr2,
+.thumb .fr2 {
+   stroke: var(--dark);
+   stroke-width: 3;
+}
+.piece .ar,
+.thumb .ar {
+   fill: rgba(0, 0, 0, 0.03);
+   stroke: var(--border);
+   stroke-width: 1.5;
+   stroke-dasharray: 5 4;
+}
+.piece .wl,
+.thumb .wl {
+   fill: none;
+   stroke: var(--border);
+   stroke-width: 1.2;
+}
+.piece.fresh .b,
+.piece.fresh .ar,
+.piece.fresh .ln {
+   stroke-dasharray: 4 3;
+}
+.piece.fresh .b {
+   stroke: #9a9a9a;
+}
+.piece-name {
+   position: absolute;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   height: 15px;
+   padding: 0 2px;
+   font-size: 10px;
+   line-height: 15px;
+   text-align: center;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+.piece.selected {
+   z-index: 3;
+   outline: 2px solid var(--dark);
+   outline-offset: 2px;
+}
+/* a new piece under the mouse: green where it fits, red where it does not */
+.piece.ghost {
+   z-index: 4;
+   pointer-events: none;
+   opacity: 0.9;
+}
+.piece.ghost.ok {
+   background: rgba(33, 205, 42, 0.18);
+   outline: 2px solid #21cd2a;
+}
+.piece.ghost.bad {
+   background: rgba(211, 47, 47, 0.14);
+   outline: 2px solid var(--error);
+}
+/* drag this corner to size the piece */
+.handle {
+   position: absolute;
+   right: -7px;
+   bottom: -7px;
+   width: 12px;
+   height: 12px;
+   background: white;
+   border: 2px solid var(--dark);
+   border-radius: 2px;
+   cursor: nwse-resize;
+}
+/* size, Turn, Edit, Remove over the selected piece */
+.tools {
+   position: absolute;
+   z-index: 5;
+   display: flex;
+   align-items: center;
+   gap: 4px;
+   padding: 4px;
+   background: white;
+   border: 1px solid var(--grey-button);
+   border-radius: 8px;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+   white-space: nowrap;
+}
+.tools span {
+   padding: 0 6px;
+   font-size: 12px;
+   color: var(--hint);
+}
+.tools button {
+   height: 26px;
+   padding: 0 10px;
+   border: 0;
+   border-radius: 6px;
+   background: var(--grey-button);
+   color: var(--dark);
+   font-family: inherit;
+   font-size: 12px;
+   font-weight: 600;
+   cursor: pointer;
+}
+.tools .remove {
+    background: var(--error);
+    color: white;
+    font-weight: 500;
+}
+.tools button:disabled {
+   opacity: 0.4;
+   cursor: not-allowed;
+}
+/* + and - on each wall */
+.edge {
+   position: absolute;
+   z-index: 2;
+   display: flex;
+   gap: 4px;
+}
+.edge button {
+   width: 22px;
+   height: 22px;
+   padding: 0;
+   border: 0;
+   border-radius: 50%;
+   background: var(--grey-button);
+   color: var(--dark);
+   font-family: inherit;
+   font-size: 15px;
+   font-weight: 700;
+   line-height: 22px;
+   cursor: pointer;
+}
+.edge button:disabled {
+   opacity: 0.35;
+   cursor: default;
+}
+.edge.top {
+   left: 50%;
+   top: -36px;
+   transform: translateX(-50%);
+}
+.edge.bottom {
+   left: 50%;
+   bottom: -36px;
+   transform: translateX(-50%);
+}
+.edge.left {
+   left: -36px;
+   top: 50%;
+   transform: translateY(-50%);
+   flex-direction: column;
+}
+.edge.right {
+   right: -36px;
+   top: 50%;
+   transform: translateY(-50%);
+   flex-direction: column;
+}
+/* 1 tile = boxes at the bottom left */
+.floor-note {
+   position: absolute;
+   left: 12px;
+   bottom: 10px;
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   font-size: 13px;
+   color: var(--dark);
+}
+.floor-note input {
+   box-sizing: border-box;
+   width: 54px;
+   height: 30px;
+   padding: 0 8px;
+   border: 1px solid var(--border);
+   border-radius: 6px;
+   font-family: inherit;
+   font-size: 13px;
+}
+.floor-size {
+   margin-left: 8px;
+   color: var(--hint);
+}
+/* add to floor dialog: one card per thing */
+.layout-dialog {
+   width: 720px;
+}
+.layout-dialog h3 {
+   margin: 0 0 8px;
+   font-size: 14px;
+}
+.cards {
+   display: grid;
+   grid-template-columns: repeat(6, 1fr);
+   gap: 10px;
+   margin-bottom: 18px;
+}
+.card {
+   padding: 8px 4px 6px;
+   border: 1px solid var(--grey-button);
+   border-radius: 8px;
+   background: white;
+   color: black;
+   font-family: inherit;
+   font-size: 12px;
+   cursor: pointer;
+}
+.card:hover {
+   background: var(--table-head);
+}
+.card.picked {
+   border-color: var(--dark);
+   box-shadow: inset 0 0 0 1px var(--dark);
+}
+.thumb {
+   width: 60px;
+   height: 60px;
+   margin: 0 auto 6px;
+}

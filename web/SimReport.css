@@ -54,6 +54,11 @@ h1 {
   background: #f5f5f5;
 }
 
+.replayLink {
+  margin-left: auto;
+  text-decoration: none;
+}
+
 .tableWrap {
   overflow-x: auto;
 }
