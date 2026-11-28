@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Comparison Report | Bakery</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="comparisonReport.css">
+  <script src="nav.js" defer></script>
+</head>
+<body>
+  <nav class="navBar">
+    <span class="navTitle">Bakery</span>
+    <div class="navLinks">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="config.html">Config</a>
+      <a href="compare.html" class="active">Compare</a>
+    </div>
+    <div class="navUser">
+      <span id="userName"></span>
+      <button id="logoutBtn" type="button">Log out</button>
+    </div>
+  </nav>
+
+  <main class="comparison">
+    <header class="pageHeader">
+      <div>
+        <p class="eyebrow">SIMULATION ANALYSIS</p>
+        <h1>Comparison report</h1>
+        <p class="reportIntro">Review the selected simulation data side by side.</p>
+      </div>
+      <button class="pdfButton" id="downloadPdf" type="button">Download PDF</button>
+    </header>
+
+    <p id="report-status" class="reportStatus" role="status"></p>
+
+    <section class="scenarioCards" aria-label="Compared event logs">
+      <article class="scenarioCard">
+        <p class="scenarioLabel">SCENARIO 1</p>
+        <h2 id="scenario-1-finish">—</h2>
+        <p class="metricCaption">All orders ready</p>
+        <div class="metricFooter"><span id="scenario-1-on-time">—</span><span>orders on time</span></div>
+      </article>
+      <article class="scenarioCard">
+        <p class="scenarioLabel">SCENARIO 2</p>
+        <h2 id="scenario-2-finish">—</h2>
+        <p class="metricCaption">All orders ready</p>
+        <div class="metricFooter"><span id="scenario-2-on-time">—</span><span>orders on time</span></div>
+      </article>
+    </section>
+
+    <section class="reportSection">
+      <div class="sectionHeading">
+        <div><p class="eyebrow">ORDER BREAKDOWN</p><h2>Orders</h2></div>
+      </div>
+      <div class="tableWrap">
+        <table class="dataTable">
+          <thead><tr><th>Item</th><th>Quantity</th><th>Due</th><th>Ready · Scenario 1</th><th>Ready · Scenario 2</th><th>Difference</th></tr></thead>
+          <tbody id="orders-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="reportSection">
+      <div class="sectionHeading"><div><p class="eyebrow">WAIT ANALYSIS</p><h2>Where time was spent waiting</h2></div></div>
+      <p class="hint">Wait events are listed directly from each event log.</p>
+      <div class="tableWrap">
+        <table class="dataTable">
+          <thead><tr><th>Item / step</th><th>Waiting for</th><th>Scenario 1</th><th>Scenario 2</th></tr></thead>
+          <tbody id="waits-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="reportSection">
+      <div class="sectionHeading"><div><p class="eyebrow">PRODUCTION DETAIL</p><h2>Time per step</h2></div></div>
+      <div class="tableWrap">
+        <table class="dataTable">
+          <thead><tr><th>Item / step</th><th>Scenario 1</th><th>Scenario 2</th></tr></thead>
+          <tbody id="steps-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="reportSection">
+      <div class="sectionHeading"><div><p class="eyebrow">LABOR</p><h2>Staff breakdown</h2></div></div>
+      <div class="tableWrap">
+        <table class="dataTable">
+          <thead><tr><th>Staff member</th><th>Working · Scenario 1</th><th>Waiting · Scenario 1</th><th>Break · Scenario 1</th><th>Working · Scenario 2</th><th>Waiting · Scenario 2</th><th>Break · Scenario 2</th></tr></thead>
+          <tbody id="staff-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="reportSection">
+      <div class="sectionHeading"><div><p class="eyebrow">EQUIPMENT</p><h2>Equipment usage</h2></div></div>
+      <div class="tableWrap">
+        <table class="dataTable">
+          <thead><tr><th>Equipment</th><th>In use · Scenario 1</th><th>Waiting for worker · Scenario 1</th><th>Switching · Scenario 1</th><th>Warming up · Scenario 1</th><th>Unavailable · Scenario 1</th><th>Idle · Scenario 1</th><th>In use · Scenario 2</th><th>Waiting for worker · Scenario 2</th><th>Switching · Scenario 2</th><th>Warming up · Scenario 2</th><th>Unavailable · Scenario 2</th><th>Idle · Scenario 2</th></tr></thead>
+          <tbody id="equipment-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="actions">
+      <a href="compare.html" class="btn light">Change scenarios</a>
+      <button class="btn dark" id="download-report" type="button">Download report</button>
+    </div>
+  </main>
+  <script src="comparisonReport.js" defer></script>
+</body>
+</html>
