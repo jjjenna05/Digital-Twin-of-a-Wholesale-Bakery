@@ -4,6 +4,7 @@ import { startRolesTab } from "./config-roles.js";
 import { startUnitsTab } from "./config-units.js";
 import { startStepsTab } from "./config-steps.js";
 import { startRecipesTab } from "./config-recipes.js";
+import { startLayoutTab } from "./config-layout.js";
 
 let config = null;
 //get data from async cal
@@ -193,4 +194,5 @@ configPick.addEventListener("change", function () {
   startUnitsTab(config);
   startRolesTab(config);
   startRecipesTab(config);
+  startLayoutTab(config);
 });

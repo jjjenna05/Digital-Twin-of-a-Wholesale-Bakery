@@ -33,6 +33,7 @@
          <button type="button" data-tab="units-tab">Units</button>
          <button type="button" data-tab="roles-tab">Roles</button>
          <button type="button" data-tab="equipment-tab">Equipment</button>
+         <button type="button" data-tab="layout-tab">Layout</button>
          <button type="button" data-tab="recipe-tab" >Recipe</button>
          <button type="button" data-tab="preferences-tab" >Saved Configurations</button>
       </div>     
@@ -151,6 +152,28 @@
                       <button type="button" id="cancel-delete" class="secondary">Cancel</button>
                       <button type="button" id="confirm-delete" class="delete">Delete</button>
                   </div>
+            </dialog>
+         </section>
+         <section id="layout-tab" hidden>
+            <div id="layout-floor-host" class="floor-host">
+               <div id="layout-floor" class="floor"></div>
+               <div class="floor-note">
+                  <span>1 tile =</span>
+                  <input id="layout-tile-size">
+                  <input id="layout-tile-unit">
+                  <span id="layout-floor-size" class="floor-size"></span>
+               </div>
+            </div>
+            <div class="table-footer">
+               <div class="footer-line"></div>
+               <button type="button" id="add-layout" class="add-button">+ Add More</button>
+            </div>
+            <dialog id="layout-dialog" class="dialog layout-dialog">
+               <h2 id="layout-dialog-header">Add to floor</h2>
+               <div id="layout-dialog-body"></div>
+               <div class="dialog-buttons">
+                  <button type="button" id="cancel-layout" class="secondary">Cancel</button>
+               </div>
             </dialog>
          </section>
          <section id="steps-tab">
