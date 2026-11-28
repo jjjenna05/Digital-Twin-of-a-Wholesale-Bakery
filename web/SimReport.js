@@ -11,10 +11,6 @@ document.querySelectorAll(".bar").forEach((bar) => {
   });
 });
 
-document.getElementById("downloadPdf").addEventListener("click", () => {
-  window.print();
-});
-
 document.getElementById("newSimulation").addEventListener("click", () => {
   window.location.href = "order-entry.html";
 });

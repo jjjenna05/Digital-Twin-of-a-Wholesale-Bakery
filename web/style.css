@@ -560,3 +560,20 @@ select.error-box {
    padding: 0;
    cursor: pointer;
 }
+
+/* Download menu (PDF / CSV) on report pages */
+.downloadMenu { position: relative; flex: 0 0 auto; }
+.downloadOptions {
+  position: absolute; right: 0; top: calc(100% + 4px); z-index: 20;
+  min-width: 100%; padding: 4px 0;
+  background: #fff; border: 1px solid #cfcfcf; border-radius: 7px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+.downloadOptions[hidden] { display: none; }
+.downloadOptions button {
+  display: block; width: 100%; padding: 8px 16px;
+  background: none; border: 0; text-align: left;
+  font: inherit; font-size: 14px; color: #222; cursor: pointer; white-space: nowrap;
+}
+.downloadOptions button:hover, .downloadOptions button:focus-visible { background: #f2f2f2; }
+@media print { .downloadMenu { display: none; } }

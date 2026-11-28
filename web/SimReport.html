@@ -25,7 +25,13 @@
   <main>
     <div class="pageHeader">
       <h1>Results</h1>
-      <button class="pdfButton" id="downloadPdf" type="button">Download</button>
+      <div class="downloadMenu" data-csv-name="simulation-report.csv">
+        <button class="pdfButton" id="downloadBtn" type="button" aria-haspopup="menu" aria-expanded="false">Download &#9662;</button>
+        <div class="downloadOptions" role="menu" hidden>
+          <button type="button" role="menuitem" data-format="pdf">PDF</button>
+          <button type="button" role="menuitem" data-format="csv">CSV</button>
+        </div>
+      </div>
     </div>
 
     <div class="tableWrap">
@@ -328,5 +334,6 @@
   </main>
 
   <script src="SimReport.js"></script>
+  <script src="download.js"></script>
 </body>
 </html>
